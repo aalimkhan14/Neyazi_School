@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            label{
+                width: 32.5%;
+            }
+            .th:nth-child(1), .th:nth-child(9){
+                width: 5%;
+            }
+            tr td:nth-child(9){
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 5px;
+            }
+            /* filter */
+            fieldset{
+              display: flex;
+              width: 250px;
+              height: 60px;
+              border: none;
+              position: relative;
+              left: -20px;
+              top: 16px;
+            }
+            fieldset div{
+              display: flex;
+              flex-direction: column;
+              justify-content: start !important;
+              justify-content: center !important;
+              width: 100%;
+              height: 50%;
+            }
+            fieldset label{
+              display: flex !important;
+              flex-direction: row;
+              justify-content: start;
+              align-items: center;
+              width: 50%;
+              height: 100%;
+            }
+            fieldset input{
+              width: 18px !important;
+              margin-left: 10px !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="rparent">
+        <form id="sell_registration" class="rcover">
+            <div id="rheader">فروش جنس</div>
+            <div id="rcontent">
+                <div id="one">
+                    <input type="hidden" id="id" name="id">
+                    <label for="customer">اسم مشتری:<input id="customer" name="customer" type="text" required></label>
+                    <label for="catagory" id="lcatagory">کتگوری:
+                        <select name="catagory" id="catagory" required></select>
+                    </label>
+                    <label for="goods" id="lgoods">جنس:
+                        <select name="goods" id="goods" required></select>
+                    </label>            
+                </div>
+                <div id="two">
+                    <label for="price">قیمت جنس:<input id="price" name="price" type="number" required></label>  
+                    <label for="quantity">تعداد:<input id="quantity" name="quantity" type="number" required></label>
+                    <label for="total_price">قیمت مجموع:<input id="total_price" type="number"></label>
+                </div>
+            </div>
+            <div id="rfooter">
+                <input type="submit" id="save" value="ثبت کردن" />
+                <input type="button" value="ثبت کردن" id="save1" style="display: none;">
+                <input type="reset" id="exit" value="پاک کردن" />
+            </div>
+        </form>
+        <div class="rcover">
+            <div id="rheader">اجناس فروخته شده</div>
+            <div id="rcontent">
+                <div id="searchbar" class="search_bar">
+                    <div id="right" class="sright">
+                        <input type="text" class="search_table" id="searchtable" placeholder="جستجو . . ."/>
+                        <fieldset>
+                          <div>
+                              <label for="goods"><input type="radio" name="filter" id="goods" value="goods">جنس</label>
+                              <label for="customer"><input type="radio" name="filter" id="customer" value="customer" checked>مشتری</label>
+                          </div>
+                         </fieldset>
+                        <select id="sffilter" class="s_f_filter">
+                            <option value="" selected>همه کتگوری</option>
+                        </select>
+                    </div>
+                    <div id="left" class="sleft"></div>
+                </div>
+                <table>
+                    <thead>
+                        <th class="th">نمبر</th>
+                        <th class="th">اسم مشتری</th>
+                        <th class="th">کتگوری</th>
+                        <th class="th">جنس</th>
+                        <th class="th">قیمت</th>
+                        <th class="th">تعداد</th>
+                        <th class="th">قیمت مجموع</th>
+                        <th class="th">تاریخ فروش</th>
+                        <th class="th">عملکرد</th>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+                <div id="rfooter">
+                        <div id="pagination" style="text-align: center; margin-top: 20px">
+                            <div id="pagination-buttons"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="./../../js/Date_Elemet.js"></script>
+        <script>
+
+
+            var storageData = [];
+
+            async function loadCatagory(){
+              let catagory = document.getElementById('sffilter');
+              let catagoryf = document.getElementById('catagory');
+
+              catagory.innerHTML = '<option value="">همه کتگوری</option>';
+              catagoryf.innerHTML = '<option value=""></option>';
+            
+              const res = await fetch('http://localhost:3000/storage');
+              const data = await res.json();
+              storageData = data.data; // ✅ keep for filtering later
+            
+              // get unique categories
+              const uniqueCats = [...new Set(storageData.map(s => s.catagory))];
+            
+              uniqueCats.forEach((cat) => {
+                catagory.innerHTML += `<option value="${cat}">${cat}</option>`;
+                catagoryf.innerHTML += `<option value="${cat}">${cat}</option>`;
+              });
+            }
+            loadCatagory();
+
+
+            document.getElementById("catagory").addEventListener("change", function () {
+              const selectedCat = this.value;
+              const goodsSelect = document.getElementById("goods");
+              goodsSelect.innerHTML = '<option value=""></option>';
+
+              const filteredGoods = storageData.filter(item => item.catagory === selectedCat);
+
+              filteredGoods.forEach((item) => {
+                goodsSelect.innerHTML += `<option value="${item.name}" data-price="${item.sellamount}">${item.name}</option>`;
+              });
+            });
+
+            document.getElementById("goods").addEventListener("change", function () {
+              const selectedOption = this.options[this.selectedIndex];
+              const priceInput = document.getElementById("price");
+
+              if (selectedOption && selectedOption.dataset.price) {
+                priceInput.value = selectedOption.dataset.price;
+              } else {
+                priceInput.value = "";
+              }
+            });
+
+            document.getElementById('quantity').addEventListener('input', () => {
+              let pr = parseInt(document.getElementById('price').value) || 0;
+              let qu = parseInt(document.getElementById('quantity').value) || 0;
+              let total = pr * qu;
+
+              document.getElementById('total_price').value = total; // ✅ update field
+            });
+
+            // send data
+
+            document.getElementById("sell_registration").addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const form = e.target; 
+                // Build a JSON object from form fields
+                const data = {
+                    customer: form.customer.value,
+                    catagory: form.catagory.value,
+                    goods: form.goods.value,
+                    price: form.price.value,
+                    quantity: form.quantity.value,
+                }; 
+                try {
+                    const response = await fetch("http://localhost:3000/sell", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json",},
+                        body: JSON.stringify(data),
+                    });
+                    if (response.ok) {
+                        showModal({
+                          	title: "موفقیت",
+                          	message: "جنس فروخته شده ثبت شد.",
+                          	icon: "success",
+                        });
+                        form.reset();
+                        showSellData();
+                    } else {
+                        alert("خطا در ثبت .");
+                        console.log(response);
+                    }
+                } catch (error) {
+                    console.error("Error: ", error);
+                    alert("خطا در اتصال به سرور");
+                }
+            });
+
+             // show sell data
+            function showSellData() {
+              const rowsPerPage = 10;
+              let currentPage = 1;
+              let totalPages = 1;
+
+              const searchInput = document.getElementById("searchtable");
+              const filterBySelect = document.getElementById("sffilter"); // category dropdown
+              const filterRadios = document.querySelectorAll("input[name='filter']"); // ✅ goods/customer radio
+              const tbody = document.getElementById("tbody");
+              const paginationButtons = document.getElementById("pagination-buttons");
+
+              // ✅ Helper: get selected radio (goods/customer)
+              function getSelectedRadio() {
+                const checked = document.querySelector("input[name='filter']:checked");
+                return checked ? checked.value : "customer"; // default
+              }
+            
+              async function fetchAndRender() {
+                const search = searchInput.value;
+                const filterBy = filterBySelect.value;
+                const filterField = getSelectedRadio(); // ✅ goods or customer
+              
+                const response = await fetch(
+                  `http://localhost:3000/sell?search=${encodeURIComponent(search)}&filterBy=${encodeURIComponent(filterField)}&category=${encodeURIComponent(filterBy)}&page=${currentPage}&limit=${rowsPerPage}`
+                );
+              
+                const result = await response.json();
+              
+                if (!Array.isArray(result.data)) {
+                  console.error("❌ result.data is not an array:", result);
+                  return;
+                }
+              
+                tbody.innerHTML = "";
+                result.data.forEach((sell) => {
+                  tbody.innerHTML += `
+                    <tr data-sell-id='${sell.id}' ondblclick="editPart(this.dataset.sellId)">
+                      <td>${sell.id}</td>
+                      <td>${sell.customer}</td>
+                      <td>${sell.catagory}</td>
+                      <td>${sell.goods}</td>
+                      <td>${sell.price}</td>
+                      <td>${sell.quantity}</td>
+                      <td>${sell.price * sell.quantity}</td>
+                      <td>${sell.createdAt ? toPersianDate(sell.createdAt) : ""}</td>
+                      <td>
+                        <div id="cover">
+                          <div id="action">
+                            <div id="action3" class='action3' onclick='deleteSell(${sell.id})' title="del"></div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>`;
+                });
+              
+                // ✅ Set delete SVG
+                setTimeout(() => {
+                  document.querySelectorAll(".action3").forEach((el) => (el.innerHTML = del));
+                }, 0);
+              
+                totalPages = Math.ceil(result.total / rowsPerPage);
+                renderPagination();
+              }
+            
+              function renderPagination() {
+                paginationButtons.innerHTML = "";
+              
+                function addButton(label, page, disabled = false, active = false) {
+                  const btn = document.createElement("button");
+                  btn.textContent = label;
+                  btn.disabled = disabled;
+                  if (active) btn.style.backgroundColor = "#357edd";
+                  btn.addEventListener("click", () => {
+                    currentPage = page;
+                    fetchAndRender();
+                  });
+                  paginationButtons.appendChild(btn);
+                }
+              
+                addButton("<<", 1, currentPage === 1);
+                addButton("<", currentPage - 1, currentPage === 1);
+              
+                for (let i = 1; i <= totalPages; i++) {
+                  if (
+                    i === currentPage ||
+                    i <= 4 ||
+                    i === totalPages ||
+                    Math.abs(currentPage - i) <= 1
+                  ) {
+                    addButton(i, i, false, i === currentPage);
+                  }
+                }
+              
+                addButton(">", currentPage + 1, currentPage === totalPages);
+                addButton(">>", totalPages, currentPage === totalPages);
+              }
+            
+              // ✅ Listeners
+              searchInput.addEventListener("input", () => {
+                currentPage = 1;
+                fetchAndRender();
+              });
+            
+              filterBySelect.addEventListener("change", () => {
+                currentPage = 1;
+                fetchAndRender();
+              });
+            
+              filterRadios.forEach((radio) => {
+                radio.addEventListener("change", () => {
+                  currentPage = 1;
+                  fetchAndRender();
+                });
+              });
+            
+              const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+            
+              // First Load
+              fetchAndRender();
+            }
+            showSellData();
+
+            // storage Delete function
+            function deleteSell(id) {
+
+              async function apply(){
+            const confirmed = await showModal({
+            title: "حذف",
+            message: "آیا می‌خواهید جنس فروخته شده را حذف نمایید؟",
+            type: "ok-cancel"
+          });
+        
+          if (confirmed) {
+            console.log("User confirmed ✅");
+             fetch(`http://localhost:3000/sell/${id}`, {
+                  method: "DELETE",
+                })
+                  .then(async (response) => {
+                    if (!response.ok) {
+                      throw new Error("خطا در حذف جنس");
+                    }
+                  
+                    const data = await response.json(); // ✅ Works because backend sends JSON now
+                    showModal({
+                     	title: "موفقیت",
+                     	message: "جنس فروخته شده موفقانه حذف شد.",
+                     	icon: "success",
+                    });
+                    showSellData(); // ✅ Reload table
+                  })
+                  .catch((error) => {
+                    console.error("❌ خطا در اتصال یا سرور:", error);
+                    alert("خطا در اتصال یا سرور");
+                  });
+          } else {
+            this.close();
+            console.log("User cancelled ❌");
+          }
+        }
+        apply();
+            }
+
+            function editPart(sellId){
+                document.getElementById('save').style.display = 'none';
+                document.getElementById('save1').style.display = 'flex';
+                fetch(`http://localhost:3000/sell/${sellId}`).then(res => res.json()).then(sell => {
+                    if(!sell) return;
+                    console.log(sell.id)
+                    document.getElementById('id').value = sell.id;
+                    document.getElementById('customer').value = sell.customer;
+                    document.getElementById('catagory').value = sell.catagory;
+                    document.getElementById('goods').value = sell.goods;
+                    document.getElementById('price').value = sell.price;
+                    document.getElementById('quantity').value = sell.quantity;
+                })
+            }
+            document.getElementById('save1').addEventListener('click', function () {
+                const form = document.getElementById('sell_registration');
+
+                // Collect form data as JSON object
+                const data = {
+                    customer: form.customer.value,
+                    catagory: form.catagory.value,
+                    goods: form.goods.value,
+                    price: form.price.value,
+                    quantity: form.quantity.value,
+                };
+
+                const id = document.getElementById('id').value.trim();
+
+                fetch(`/sell/${id}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json',},
+                    body: JSON.stringify(data)
+                }).then(res => {
+                if (!res.ok) throw new Error("Server error");
+                    return res.json();
+                }).then(data => {
+                    showModal({
+                      	title: "موفقیت",
+                      	message: "تغییرات موفقانه ثبت شد.",
+                      	icon: "success",
+                    });
+                    showSellData();
+                }).catch(err => {
+                    console.error("خطا در تغییر داده:", err);
+                    alert("خطا در ذخیره تغییرات ❌");
+                });
+            });
+
+
+
+            document.getElementById('exit').addEventListener('click', ()=>{
+            document.getElementById('save1').style.display= 'none';
+            document.getElementById('save').style.display= 'flex';
+    })
+          
+        </script>
+    </body>
+</html>

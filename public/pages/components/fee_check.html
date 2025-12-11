@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>رسید پرداخت فیس</title>
+    <style>
+      body {
+        font-family: "Tahoma", monospace;
+        margin: 0;
+        padding: 20px;
+        background: white;
+      }
+
+      @media print {
+        @page {
+          size: 80mm auto;
+          margin: 0;
+          text-align: left;
+        }
+        body {
+          padding: 0;
+          text-align: left;
+
+        }
+      }
+
+      .thermal-invoice {
+        width: 64mm;
+        height: 140mm;
+        font-size: 12px;
+        font-family: monospace;
+        padding: 10px;
+        border: 1px solid #000;
+        border-radius: 4px;
+        background-color: #f9fbff;
+      }
+
+      .header {
+        text-align: center;
+        border-bottom: 2px dashed #000;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+      }
+
+      .logo-placeholder {
+        width: 60px;
+        height: 40px;
+        margin: 0 auto 5px auto;
+        background-color: #ddd;
+        border-radius: 4px;
+      }
+
+      .school-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #000;
+      }
+
+      .section {
+        border-top: 2px dashed #000;
+        border-bottom: 2px dashed #000;
+        padding: 8px 0;
+        margin-bottom: 10px;
+      }
+
+      .section-title {
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 5px;
+        border-bottom: 1px dashed #000;
+        padding-bottom: 3px;
+        color: #000;
+      }
+
+      .info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        margin-bottom: 3px;
+      }
+
+      .label {
+        font-weight: bold;
+      }
+
+      .highlight {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 4px;
+        font-weight: bold;
+        padding: 4px;
+        margin-top: 5px;
+      }
+
+      .footer {
+        text-align: center;
+        border-top: 2px dashed #000;
+        padding-top: 10px;
+        font-size: 10px;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="thermal-invoice">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo-placeholder"></div>
+        <div class="school-name">مکتب خصوصی نیازی افغان</div>
+        <div class="title">بل رسید فیس</div>
+      </div>
+
+      <!-- Student Info -->
+      <div class="section">
+        <div class="section-title">مشخصات شاگرد</div>
+        <div class="info">
+          <span class="label">اسم شاگرد:</span>
+          <div class="value" id="student_name"></div>
+        </div>
+        <div class="info">
+          <span class="label">ولد:</span>
+          <div class="value" id="student_fname"></div>
+        </div>
+        <div class="info">
+          <span class="label">صنف:</span>
+          <div class="value" id="student_class"></div>
+        </div>
+        <div class="info">
+          <span class="label">ماه:</span>
+          <div class="value" id="student_month"></div>
+        </div>
+        <div class="info">
+          <span class="label">تاریخ پرداخت:</span>
+          <div class="value" id="payment_date"></div>
+        </div>
+      </div>
+
+      <!-- Fee Info -->
+      <div class="section">
+        <div class="section-title">فیس مکتب</div>
+        <div class="info">
+          <span class="label">فیس قابل پرداخت:</span>
+          <div class="value" id="payable_amount"></div>
+        </div>
+        <div class="info">
+          <span class="label">فیس پرداخت شده:</span>
+          <div class="value" id="payed_amount"></div>
+        </div>
+        <div class="info highlight">
+          <span class="label">فیس باقیمانده:</span>
+          <div class="value" id="restOfFee"></div>
+        </div>
+      </div>
+
+      <!-- Transport Info -->
+      <div class="section">
+        <div class="section-title">ترانسپورت</div>
+        <div class="info">
+          <span class="label">ترانسپورت قابل پرداخت:</span>
+          <div class="value" id="payable_transport">۵۰۰ افغانی</div>
+        </div>
+        <div class="info">
+          <span class="label">ترانسپورت پرداخت شده:</span>
+          <div class="value" id="payed_transport">۲۵۰ افغانی</div>
+        </div>
+        <div class="info highlight">
+          <span class="label">ترانسپورت باقیمانده:</span>
+          <div class="value" id="restOfTransport">۲۵۰ افغانی</div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        کندز، افغانستان <br />
+        شماره تماس: 1745 549 074 <br />
+      </div>
+    </div>
+    <script>
+      function toEnglishDigits(str) {
+        return str.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+      }
+
+      function toPersianDate(isoDate) {
+        const date = new Date(isoDate);
+        return date.toLocaleDateString("fa-AF");
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const feeId = params.get("id");
+
+      if (feeId) {
+        fetch(`/fees/${feeId}`).then((res) => {
+            if (!res.ok) throw new Error("فیس دریافت نشد");
+            return res.json();
+          })
+          .then((fee) => {
+            document.getElementById("student_name").textContent = fee.name || "";
+            document.getElementById("student_fname").textContent = fee.fname || "";
+            document.getElementById("student_class").textContent = fee.fclass || "";
+            document.getElementById("student_month").textContent = fee.month || "";
+            document.getElementById("payment_date").textContent = fee.createdAt ? toPersianDate(fee.createdAt): "";
+            document.getElementById("payable_amount").textContent = fee.f_payable + "افغانی" || "0";
+            document.getElementById("payed_amount").textContent = fee.f_payed + "افغانی" || "0";
+            document.getElementById("restOfFee").textContent = fee.r_f + "افغانی" || "0";
+            document.getElementById("payable_transport").textContent = fee.t_payable + "افغانی" || "0";
+            document.getElementById("payed_transport").textContent = fee.t_payed + "افغانی" || "0";
+            document.getElementById("restOfTransport").textContent = fee.r_t + "افغانی" || "0";
+
+            // ✅ Notify the parent window (optional)
+            window.parent.postMessage("print-ready", "*");
+          })
+          .catch((err) => {
+            console.error("❌", err);
+            alert("خطا در دریافت اطلاعات فیس");
+          });
+      } else {
+        alert("آی دی فیس مشخص نیست");
+      }
+    </script>
+  </body>
+</html>

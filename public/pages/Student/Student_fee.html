@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      label {
+        width: 32.5%;
+      }
+      
+      /* add Style to rdate for register fee */
+      .search_bar .sright, .search_bar .sleft{
+        width: 40%;
+      }
+      .search_bar .sleft{
+        width: 60%;
+      }
+      .search_bar .sright input , .search_bar .sright select{
+        width: 45%;
+      }
+
+
+      #fee_lists #rcontent {
+        padding: 20px;
+        height: 700px;
+      }
+      /* Table class */
+      .th:nth-child(1) {
+        width: 5%;
+      }
+      tr td:nth-child(13) {
+        width: 5%;
+        height: 100%;
+      }
+
+      td {
+        vertical-align: middle;
+        padding: 5px 10px;
+      }
+      #searchModal{
+        width: 300px;
+        height: fit-content;
+        border: 1px solid #dfdfdf;
+        background-color: #efefef;
+        position: absolute;
+        top: 220px;
+        left: 885px;
+        z-index: 4;
+        border-radius: 10px;
+        display: none;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+        padding: 10px;
+      }
+      #searchModal #item {
+        width: 100%;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        border: 1px solid #fff;
+        padding: 10px;
+        margin: 3px 0;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        line-height: 140%;
+      }
+      #searchModal #item:hover {
+        background-color: #dcdcdc;
+      } 
+      #coverpic
+      {
+        width: 100px;
+        height: 100%;
+      }
+      #coverpic img{
+        width: 100%;
+        height: 100%;
+      }
+      .trace{
+        width: 500px;
+        height: fit-content;
+        display: flex;
+        gap: 12px;
+        margin-right: 30px;
+      }
+      .register{
+        display: flex;
+        flex-direction: column;
+        width: 65%;
+        height: 100%;
+        gap: 16px;
+        border-left: 1px solid #eee;
+        padding: 16px;
+      }
+      .register .up{
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+      }
+      .info{
+        width: 35%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+      }
+      .block{
+        width: 32%;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: space-between;
+      }
+      .block label{
+        width: 100%;
+      }
+      .content{
+        width: 100%;
+        height: 75%;
+        display: flex;
+        flex-direction: row;
+      }
+      .context{
+        width: 60%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 12px 0 12px 12px;
+        font-size: 16px;
+        font-weight: 600;
+        gap: 12px;
+      }
+      .radios div{
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+      }
+      .text{
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        justify-content: space-between;
+      }
+      .media{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid rgba(173, 216, 230, 1);
+        border-radius: 4px;
+        width: 40%;
+        height: 85%;
+      }
+      .text label, .radios label{
+        width: 50px;
+        height: 36px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
+      }
+      input[type='checkbox']{
+        width: 16px;
+        height: 16px;
+        margin: 5px;
+      }
+      #picture{
+        display: flex;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      fieldset{
+        display: flex;
+        flex-direction: row;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rparent">
+      <form id="fee" class="rcover">
+        <div id="rheader">
+          <div class="title">ثبت فیس شاگرد</div>
+          <div class="trace">
+            <input type="text" id="searchstudent" class="search_table" placeholder="جستجو . . ." />
+              <select name="" id="search_class_filter">
+                <option value="" selected>همه صنوف</option>
+              </select>
+          </div>
+        </div>
+        <div id="searchModal" style="display: none;"></div>
+        <div id="rcontent" style="display: flex; flex-direction: row; padding: 0;">
+
+          <div class="register">
+            <div class="up">
+              <div class="block">
+                <input type="hidden" id="id" name="id"/>
+                <input type="hidden" id="sid" name="sid"/>
+                <label for="name" class="twin">اسم:<input type="text" id="name" name="name" required  readonly/></label>
+                <label for="fname" class="twin">ولد:<input type="text" id="fname" name="fname" readonly /></label>
+                <label for="fclass" class="twin">صنف:<input type="text" id="fclass" name="fclass" readonly/></label>
+              </div>
+              <div class="block">
+                <label for="f_payable" class="twin">فیس قابل پرداخت:<input type="number" id="f_payable" name="f_payable" readonly /></label>
+                <label for="f_payed" class="twin">فیس پرداخت شده:<input type="number" id="f_payed" name="f_payed" required /></label>
+                <label for="r_f" class="twin">فیس باقیمانده:<input type="number" id="r_f" name="r_f" readonly/></label>
+              </div>
+              <div class="block">
+                <label for="t_payable" class="twin">ترانسپورت قابل پرداخت:<input type="number" id="t_payable" name="t_payable"  readonly/></label>
+                <label for="t_payed" class="twin">ترانسپورت پرداخت شده:<input type="number" id="t_payed" name="t_payed" /></label>
+                <label for="r_t" class="twin">ترانسپورت باقیمانده:<input type="number" id="r_t" name="r_t" readonly/></label>
+              </div>
+            </div>
+            <div class="down">
+              <label for="" class="radios">ماه ها:
+                  <fieldset id="months" name="months">
+                    <label for="1"><input  class="radio" name="month" id="1"  value="1" type="checkbox">1</label>
+                    <label for="2"><input  class="radio" name="month" id="2"  value="2" type="checkbox">2</label>
+                    <label for="3"><input  class="radio" name="month" id="3"  value="3" type="checkbox">3</label>
+                    <label for="4"><input  class="radio" name="month" id="4"  value="4" type="checkbox">4</label>
+                    <label for="5"><input  class="radio" name="month" id="5"  value="5" type="checkbox">5</label>
+                    <label for="6"><input  class="radio" name="month" id="6"  value="6" type="checkbox">6</label>
+                    <label for="7"><input  class="radio" name="month" id="7"  value="7" type="checkbox">7</label>
+                    <label for="8"><input  class="radio" name="month" id="8"  value="8" type="checkbox">8</label>
+                    <label for="9"><input  class="radio" name="month" id="9"  value="9" type="checkbox">9</label>
+                    <label for="10"><input class="radio" name="month" id="10" value="10" type="checkbox">10</label>
+                    <label for="11"><input class="radio" name="month" id="11" value="11" type="checkbox">11</label>
+                    <label for="12"><input class="radio" name="month" id="12" value="12" type="checkbox">12</label>
+                  </fieldset>
+                </label>
+            </div>
+          </div>
+          <div class="info">
+            <div class="content">
+              <div class="context">
+                <div class="text"><span>آی دی</span><span class="info_id"></span></div>
+                <div class="text"><span>اسم</span><span class="info_name"></span></div>
+                <div class="text"><span>ولد</span><span class="info_fname"></span></div>
+                <div class="text"><span>صنف</span><span class="info_class"></span></div>
+                <div class="text"><span>ماه ها</span><span class="info_months"></span></div>
+                <div class="text">
+                  <label for="1i"><input class="1" id="1i" type="checkbox" readonly>1</label>
+                  <label for="2i"><input class="2" id="2i" type="checkbox" readonly>2</label>
+                  <label for="3i"><input class="3" id="3i" type="checkbox" readonly>3</label>
+                  <label for="4i"><input class="4" id="4i" type="checkbox" readonly>4</label>
+                  <label for="5i"><input class="5" id="5i" type="checkbox" readonly>5</label>
+                  <label for="6i"><input class="6" id="6i" type="checkbox" readonly>6</label>
+                </div>
+                <div class="text">
+                  <label for="7i"><input  class="7" id="7i" type="checkbox"   readonly>7</label>
+                  <label for="8i"><input  class="8" id="8i" type="checkbox"   readonly>8</label>
+                  <label for="9i"><input  class="9" id="9i" type="checkbox"   readonly>9</label>
+                  <label for="10i"><input class="10" id="10i" type="checkbox" readonly>10</label>
+                  <label for="11i"><input class="11" id="11i" type="checkbox" readonly>11</label>
+                  <label for="12i"><input class="12" id="12i" type="checkbox" readonly>12</label>
+                </div>
+              </div>
+              <div class="media"><img id="picture" src="" alt=""></div>
+              <div class="payedMonths"></div>
+            </div>
+          </div>
+        </div>
+        <div id="rfooter">
+          <input type="submit" value="ثبت کردن" id="save" />
+          <input type="button" value="ثبت کردن" id="save1" style="display: none;">
+          <input type="reset" id="exit" value="پاک کردن" />
+        </div>
+      </form>
+
+      <div class="rcover" id="fee_lists">
+        <div id="rheader">فیس های ثبت شده</div>
+        <div id="rcontent" class="rcontent_feelist">
+          <div id="searchbar" class="search_bar">
+            <div id="right" class="sright">
+              <input type="text" class="search_table" id="searchtable" placeholder="جستجو . . ."/>
+              <select id="sffilter" class="s_f_filter">
+                <option value="sid">فلتر آی دی متعلم</option>
+                <option value="name" selected>فلتر اسم</option>
+              </select>
+            </div>
+            <div id="left" class="sleft"></div>
+          </div>
+          <table>
+            <thead>
+              <th class="th">آی دی</th>
+              <th class="th">اسم</th>
+              <th class="th">ولد</th>
+              <th class="th">صنف</th>
+              <th class="th">ماه</th>
+              <th class="th">فیس قابل پرداخت</th>
+              <th class="th">فیس پرداخت شده</th>
+              <th class="th">ترانسپورت قابل پرداخت</th>
+              <th class="th">ترانسپورت پرداخت شده</th>
+              <th class="th">فیس باقیمانده</th>
+              <th class="th">ترانسپورت باقیمانده</th>
+              <th class="th">تاریخ ثبت</th>
+              <th class="th">عملکرد</th>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div id="rfooter">
+          <div id="pagination" style="text-align: center; margin-top: 20px">
+            <div id="pagination-buttons"></div>
+          </div>
+        </div>
+        <div id="modal" class="modal">
+          <div id="modalContent" class="modal-content"></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="print_fee_frame" style="display: none"></iframe>
+    <script src="./../../js/Date_Elemet.js"></script>
+    <script>
+      datePicker('#rdate');
+    </script>
+  </body>
+  <script>
+    async function loadClassOptions() {
+      let search_class_filter = document.getElementById('search_class_filter');
+      const res = await fetch(`http://localhost:3000/classes`);
+      const data = await res.json();
+
+      data.data.forEach((classe) => {
+        const optionValue = `${classe.classlevel} ${classe.classmodify}`;
+        search_class_filter.innerHTML += `<option value="${optionValue}">${optionValue}</option>`;
+      });
+    }
+    loadClassOptions();
+
+    async function fetchStudents() {
+  const searchValue = document.getElementById('searchstudent').value.trim();
+  const classValue = document.getElementById('search_class_filter').value;
+  const searchModal = document.getElementById('searchModal');
+
+  // ---- Get current Persian year ----
+  const now = new Date();
+  const persianYear = yearPicker(now);
+
+  
+  
+  // ---- Build query params ----
+  const params = new URLSearchParams();
+  if (searchValue) params.append('name', searchValue);
+  if (classValue) params.append('classs', classValue);
+  params.append('academicYear', persianYear); // Filter by current Persian year
+
+  // ---- Fetch filtered students ----
+  const response = await fetch(`http://localhost:3000/upgradeClass?${params.toString()}`);
+  const result = await response.json();
+  
+  // ---- Clear modal ----
+  searchModal.innerHTML = '';
+
+  // ---- Handle empty results ----
+  if (!result.data || result.data.length === 0) {
+    searchModal.style.display = 'none';
+    return;
+  }
+
+  // ---- Show results ----
+  if (searchValue !== '') {
+    searchModal.style.display = 'flex';
+    result.data.forEach((student) => {
+      searchModal.innerHTML += `
+        <div id="item" onclick='loadStudent(${student.sid})'>
+          ${student.name} ولد ${student.fname}
+        </div>`;
+    });
+  } else {
+    searchModal.style.display = 'none';
+  }
+}
+
+
+    document.getElementById('searchstudent').addEventListener('input', fetchStudents);
+    document.getElementById('search_class_filter').addEventListener('change', fetchStudents);
+
+    document.addEventListener('click', function (event) {
+      const searchModal = document.getElementById('searchModal');
+      const searchInput = document.getElementById('searchstudent');
+
+      // Check if modal is open
+      if (searchModal.style.display === 'flex') {
+        // If the clicked element is NOT inside the modal or the input
+        if (!searchModal.contains(event.target) && event.target !== searchInput) {
+          searchModal.style.display = 'none';
+        }
+      }
+    });
+
+    // a function which gives the student by id
+    function loadStudent(sid) {
+      document.getElementById('searchstudent').value = '';
+      searchModal.style.display = 'none';
+      fetch(`/upgradeclass/sid/${sid}`)
+        .then((res) => {
+          if (!res.ok) {
+            if (res.status === 404)
+              throw new Error("متعلم با چنین آی دی پیدا نشد");
+            // throw new Error("خطا در دریافت اطلاعات");
+          }
+          return res.json();
+        })
+        .then((resData) => {
+          const student = resData.data; // <-- get the actual student object
+
+          document.getElementById("sid").value = student.sid || "";
+          document.getElementById("name").value = student.name || "";
+          document.getElementById("fname").value = student.fname || "";
+          document.getElementById("fclass").value = student.classs || "";
+          document.getElementById("f_payable").value = student.fee || "";
+          document.getElementById("f_payed").value = "";
+          document.getElementById("t_payed").value = "";
+          document.getElementById("r_f").value = "";
+          document.getElementById("r_t").value = "";
+
+          //for information part
+          document.querySelector('.info_id').innerHTML = student.sid || "";
+          document.querySelector('.info_name').innerHTML = student.name || "";
+          document.querySelector('.info_fname').innerHTML = student.fname || "";
+          document.querySelector('.info_class').innerHTML = student.classs || "";
+        })
+        .catch((err) => {
+          alert(err.message);
+          console.error("خطا:", err);
+        });
+        // second fetch to get picture 
+      fetch(`/students/${sid}`)
+        .then((res) => {
+          if (!res.ok) {
+            if (res.status === 404)
+              console.log("متعلم با چنین آی دی پیدا نشد");
+            // throw new Error("خطا در دریافت اطلاعات");
+          }
+          return res.json();
+        })
+        .then((resData) => {
+          document.getElementById("t_payable").value = resData.transport_fee/resData.q_o_month || "";
+          document.getElementById("picture").src = `/uploads/${resData.picture ? resData.picture : "default.png"}`;;
+        })
+        .catch((err) => {
+          // alert(err.message);
+          console.error("خطا:", err);
+        });
+      // third fetch to get already payed month
+      fetch(`/fees/sid/${sid}`)
+        .then((res) => {
+          if (!res.ok) {
+            if (res.status === 404)
+              console.log("متعلم با چنین آی دی پیدا نشد");
+            // throw new Error("خطا در دریافت اطلاعات");
+          }
+          return res.json();
+        })
+        .then((resData) => {
+          const fee = resData.data;
+          fee.forEach(element => {
+            const checkbox = document.getElementById(`${element.month}i`);
+            if (checkbox) {
+              checkbox.checked = true; // mark it as checked
+            }
+          });
+        })
+        .catch((err) => {
+          // alert(err.message);
+          console.error("خطا:", err);
+        });
+    }
+
+  document.getElementById('months').addEventListener('click', () => {
+   const checkboxes = document.querySelectorAll('#months input[type="checkbox"]');
+
+// Add event listener to each checkbox
+checkboxes.forEach(checkbox => {
+  checkbox.addEventListener('change', () => {
+    // Get all checked checkboxes
+    const checkedValues = Array.from(checkboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.value);
+
+    console.log('Checked values:', checkedValues);
+  });
+});
+  });
+    
+
+    // to update the r_f and r_t
+    document.getElementById("f_payed").addEventListener("input", function () {
+      const f_payable =
+        parseInt(document.getElementById("f_payable").value) || 0;
+      const f_payed = parseInt(document.getElementById("f_payed").value) || 0;
+      const r_f = f_payable - f_payed;
+      document.getElementById("r_f").value = r_f;
+    });
+
+    document.getElementById("t_payed").addEventListener("input", function () {
+      const t_payable =
+        parseInt(document.getElementById("t_payable").value) || 0;
+      const t_payed = parseInt(document.getElementById("t_payed").value) || 0;
+      const r_t = t_payable - t_payed;
+      document.getElementById("r_t").value = r_t;
+    });
+
+    document.getElementById("fee").addEventListener("submit", async function (e) {
+  e.preventDefault();
+  const form = e.target;
+
+  // Get all checked months as an array
+  const checkedMonths = Array.from(form.querySelectorAll('input[name="month"]:checked')).map(cb => cb.value);
+
+  if (checkedMonths.length === 0) {
+    alert("لطفاً حداقل یک ماه را انتخاب کنید.");
+    return;
+  }
+
+  // Build the JSON object from form fields
+  const data = {
+    sid: form.sid.value.trim(),
+    name: form.name.value.trim(),
+    fname: form.fname.value.trim(),
+    fclass: form.fclass.value.trim(),
+    months: checkedMonths, // send as array
+    f_payable: form.f_payable.value,
+    f_payed: form.f_payed.value,
+    t_payable: form.t_payable.value,
+    t_payed: form.t_payed.value,
+    r_f: form.r_f.value,
+    r_t: form.r_t.value,
+    academicYear: yearPicker(Date.now()),
+  };
+
+  try {
+    const response = await fetch("http://localhost:3000/fees", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // Show feedback about created and duplicate months
+      let message = "فیس متعلم موفقانه ثبت شد!\n";
+      if (result.created.length > 0) {
+        message += "ثبت شد: " + result.created.map(r => r.month).join(", ") + "\n";
+      }
+      if (result.duplicates && result.duplicates.length > 0) {
+        message += "تکراری و ثبت نشد: " + result.duplicates.join(", ");
+      }
+
+      showModal({
+				        	title: "موفقیت",
+				        	message: "فیس شاگرد موفقانه ثبت شد.",
+				        	icon: "success",
+				      });
+      
+      form.reset();
+      showFeeData();
+    } else {
+      alert("خطا در ثبت فیس متعلم.");
+      console.log(result);
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+    alert("خطا در اتصال به سرور");
+  }
+});
+
+    // get Data
+
+    function showFeeData() {
+      const rowsPerPage = 10;
+      let currentPage = 1;
+      let totalPages = 1;
+
+      const searchInput = document.getElementById("searchtable");
+      const filterBySelect = document.getElementById("sffilter");
+      const tbody = document.getElementById("tbody");
+      const paginationButtons = document.getElementById("pagination-buttons");
+
+      async function fetchAndRender() {
+        const search = searchInput.value;
+        const filterBy = filterBySelect.value;
+
+        const response = await fetch(`http://localhost:3000/fees?search=${encodeURIComponent(search)}&filterBy=${filterBy}&page=${currentPage}&limit=${rowsPerPage}`);
+
+        const result = await response.json();
+
+        if (!Array.isArray(result.data)) {
+          console.error("❌ result.data is not an array:", result);
+          return;
+        }
+
+        tbody.innerHTML = "";
+        result.data.forEach((fee) => {
+          tbody.innerHTML += `
+          <tr data-fee-id='${fee.id}' ondblclick="editPart(this.dataset.feeId)" >
+            <td>${fee.sid}</td>
+            <td>${fee.name}</td>
+            <td>${fee.fname}</td>
+            <td>${fee.fclass}</td>
+            <td>${fee.month}</td>
+            <td>${fee.f_payable}</td>
+            <td>${fee.f_payed}</td>
+            <td>${fee.t_payable}</td>
+            <td>${fee.t_payed}</td>
+            <td>${fee.r_f}</td>
+            <td>${fee.r_t}</td>
+            <td>${fee.createdAt ? toPersianDate(fee.createdAt) : ""}</td>
+            <td>
+              <div id="cover">
+                <div id="action">
+                  <div id='action1' class="action1" data-id="${fee.id}" onclick="printFee(this.dataset.id)" title="print"></div>
+                  <div id="action3" class='action3' onclick='deleteFee(${fee.id})' title="del"></div>
+                </div>
+              </div>
+            </td>
+          </tr>`;
+        });
+
+        // ✅ Set the SVG icons
+        setTimeout(() => {
+          document.querySelectorAll(".action1").forEach((el) => (el.innerHTML = checkprint));
+          document.querySelectorAll(".action3").forEach((el) => (el.innerHTML = del));
+        }, 0);
+
+        totalPages = Math.ceil(result.total / rowsPerPage);
+        renderPagination();
+      }
+
+      function renderPagination() {
+        paginationButtons.innerHTML = "";
+
+        function addButton(label, page, disabled = false, active = false) {
+          const btn = document.createElement("button");
+          btn.textContent = label;
+          btn.disabled = disabled;
+          if (active) btn.style.backgroundColor = "#357edd";
+          btn.addEventListener("click", () => {
+            currentPage = page;
+            fetchAndRender();
+          });
+          paginationButtons.appendChild(btn);
+        }
+
+        addButton("<<", 1, currentPage === 1);
+        addButton("<", currentPage - 1, currentPage === 1);
+
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            i === currentPage ||
+            i <= 4 ||
+            i === totalPages ||
+            Math.abs(currentPage - i) <= 1
+          ) {
+            addButton(i, i, false, i === currentPage);
+          }
+        }
+
+        addButton(">", currentPage + 1, currentPage === totalPages);
+        addButton(">>", totalPages, currentPage === totalPages);
+      }
+
+      // Listeners
+      searchInput.addEventListener("input", () => {
+        currentPage = 1;
+        fetchAndRender();
+      });
+
+      filterBySelect.addEventListener("change", () => {
+        currentPage = 1;
+        fetchAndRender();
+      });
+
+      const checkprint = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" width="18px"><path d="M6.96875 0C5.324219 0 3.96875 1.355469 3.96875 3L3.96875 8L3 8C1.34375 8 0 9.34375 0 11L0 17C0 18.65625 1.34375 20 3 20L3.96875 20L3.96875 23C3.96875 24.644531 5.324219 26 6.96875 26L18.96875 26C20.613281 26 21.96875 24.644531 21.96875 23L21.96875 20L23 20C24.65625 20 26 18.65625 26 17L26 11C26 9.34375 24.65625 8 23 8L21.96875 8L21.96875 3C21.96875 1.355469 20.613281 0 18.96875 0 Z M 6.96875 2L18.96875 2C19.53125 2 19.96875 2.4375 19.96875 3L19.96875 8L5.96875 8L5.96875 3C5.96875 2.4375 6.40625 2 6.96875 2 Z M 21.5 10C22.328125 10 23 10.671875 23 11.5C23 12.328125 22.328125 13 21.5 13C20.671875 13 20 12.328125 20 11.5C20 10.671875 20.671875 10 21.5 10 Z M 5.96875 15L19.96875 15L19.96875 23C19.96875 23.5625 19.53125 24 18.96875 24L6.96875 24C6.40625 24 5.96875 23.5625 5.96875 23 Z M 8 17L8 19L18 19L18 17 Z M 8 20L8 22L15 22L15 20Z" fill="#FFFFFF" /></svg>`;
+      const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+      // First Load
+      fetchAndRender();
+    }
+    showFeeData();
+
+    // Fee Delete function
+    function deleteFee(id) {
+        async function apply(){
+          const confirmed = await showModal({
+          title: "حذف",
+          message: "آیا می‌خواهید فیس حذف شود؟",
+          type: "ok-cancel"
+        });
+        
+        if (confirmed) {
+          console.log("User confirmed ✅");
+          fetch(`http://localhost:3000/fees/${id}`, {
+          method: "DELETE",
+        })
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error("خطا در حذف فیس");
+            }
+
+                const data = await response.json(); // ✅ Works because backend sends JSON now
+                showFeeData(); // ✅ Reload table
+              })
+              .catch((error) => {
+                console.error("❌ خطا در اتصال یا سرور:", error);
+                alert("خطا در اتصال یا سرور");
+              });
+            } else {
+              this.close();
+              console.log("User cancelled ❌");
+            }
+        }
+        apply();
+    }
+
+ function editPart(feeId) {
+  document.getElementById("save").style.display = "none";
+  document.getElementById("save1").style.display = "flex";
+
+  // ================================
+  // 1) Fetch the fee record
+  // ================================
+  fetch(`/fees/${feeId}`)
+    .then((res) => {
+      if (!res.ok) {
+        if (res.status === 404) throw new Error("فیس دریافت نشد");
+      }
+      return res.json();
+    })
+    .then((fee) => {
+      if (!fee) return;
+
+      const sid = fee.sid; // <-- use this everywhere
+
+      // fill fields
+      document.getElementById("id").value        = fee.id;
+      document.getElementById("sid").value       = sid || "";
+      document.getElementById("name").value      = fee.name || "";
+      document.getElementById("fname").value     = fee.fname || "";
+      document.getElementById("f_payable").value = fee.f_payable || "";
+      document.getElementById("f_payed").value   = fee.f_payed || "";
+      document.getElementById("t_payable").value = fee.t_payable || "";
+      document.getElementById("t_payed").value   = fee.t_payed || "";
+      document.getElementById("r_f").value       = fee.r_f || "";
+      document.getElementById("r_t").value       = fee.r_t || "";
+      document.getElementById("fclass").value    = fee.fclass || "";
+      document.getElementById(fee.month).checked = true;
+
+      // info section
+      document.querySelector(".info_id").innerHTML    = sid || "";
+      document.querySelector(".info_name").innerHTML  = fee.name || "";
+      document.querySelector(".info_fname").innerHTML = fee.fname || "";
+      document.querySelector(".info_class").innerHTML = fee.fclass || "";
+
+      // ================================
+      // 2) Fetch student picture
+      // ================================
+      fetch(`/students/${sid}`)
+        .then((res) => {
+          if (!res.ok) {
+            if (res.status === 404) throw new Error("متعلم پیدا نشد");
+          }
+          return res.json();
+        })
+        .then((student) => {
+          document.getElementById("picture").src =
+            `/uploads/${student.picture ? student.picture : "default.png"}`;
+        })
+        .catch((err) => {
+          alert(err.message);
+          console.error("Error in student fetch:", err);
+        });
+
+      // ================================
+      // 3) Fetch paid months
+      // ================================
+      return fetch(`/fees/sid/${sid}`);
+    })
+    .then((res) => {
+      if (!res) return; // prevent running if first fetch failed
+      if (!res.ok) {
+        if (res.status === 404) throw new Error("ماه‌های پرداخت‌شده یافت نشد");
+      }
+      return res.json();
+    })
+    .then((resData) => {
+      if (!resData) return;
+
+      const paidMonths = resData.data;
+      paidMonths.forEach((m) => {
+        const checkbox = document.getElementById(`${m.month}i`);
+        if (checkbox) checkbox.checked = true;
+      });
+    })
+    .catch((err) => {
+      alert(err.message);
+      console.error("FINAL ERROR:", err);
+    });
+}
+
+
+    
+    document.getElementById('save1').addEventListener('click', function () {
+      const form = document.getElementById('fee');
+
+      const checkedMonths = Array.from(form.querySelectorAll('input[name="month"]:checked')).map(cb => cb.value);
+
+      // Collect form data as JSON object
+      const data = {
+        month: checkedMonths,
+        sid: form.sid.value,
+        name: form.name.value,
+        fname: form.fname.value,
+        f_payable: form.f_payable.value,
+        f_payed: form.f_payed.value,
+        t_payable: form.t_payable.value,
+        t_payed: form.t_payed.value,
+        r_f: form.r_f.value,
+        r_t: form.r_t.value,
+        fclass: form.fclass.value,
+      };
+
+      const id = document.getElementById('id').value.trim();
+
+      fetch(`/fees/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      }).then(res => {
+        if (!res.ok) throw new Error("Server error");
+        return res.json();
+      }).then(data => {
+        alert("تغییرات موفقانه ذخیره شد ✅");
+        fee.reset();
+        showFeeData();
+      }).catch(err => {
+        console.error("خطا در تغییر فیس:", err);
+        alert("خطا در ذخیره تغییرات ❌");
+      });
+    });
+
+
+
+    document.getElementById('exit').addEventListener('click', ()=>{
+      document.getElementById('save1').style.display= 'none';
+      document.getElementById('save').style.display= 'flex';
+      let picture = document.getElementById('picture');
+      picture.src = "/uploads/default/jpg";
+
+      document.querySelector('.info_id').innerHTML = "";
+      document.querySelector('.info_name').innerHTML = "";
+      document.querySelector('.info_fname').innerHTML ="";
+      document.querySelector('.info_class').innerHTML = "";
+    })
+
+    // to print check fee
+    function printFee(feeId) {
+      if (!feeId) {
+        alert("آی دی فیس موجود نیست!");
+        return;
+      }
+
+      const iframe = document.getElementById("print_fee_frame");
+      if (!iframe) {
+        alert("Iframe برای چاپ پیدا نشد!");
+        return;
+      }
+
+      // Set the src (this starts loading the page)
+      iframe.src = `pages/components/fee_check.html?id=${feeId}`;
+
+      // Add listener only once
+      const onMessage = (event) => {
+        if (event.data === "print-ready") {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+          window.removeEventListener("message", onMessage); // Clean up
+        }
+      };
+
+      window.addEventListener("message", onMessage);
+    }
+  </script>
+  <script src="./../../js/Date_Elemet.js"></script>
+</html>

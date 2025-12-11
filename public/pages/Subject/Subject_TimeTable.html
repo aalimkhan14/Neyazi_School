@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .th:nth-child(11) {
+        width: 5%;
+      }
+      tr td:nth-child(11) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+      }
+      #right {
+        width: 70%;
+        display: flex;
+        justify-content: space-between;
+      }
+      #right * {
+        width: 32%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rparent">
+      <form id="timeTable" class="rcover">
+        <div id="rheader">ایجاد تقسیم اوقات درسی</div>
+        <div id="rcontent">
+          <div id="one">
+            <input type="hidden" id="id" name="id" />
+            <label for="weak"
+              >روز هفته:
+              <select name="week" id="week">
+                <option value="شنبه">شنبه</option>
+                <option value="یکشنبه">یکشنبه</option>
+                <option value="دو شنبه">دو شنبه</option>
+                <option value="سه شنبه">سه شنبه</option>
+                <option value="چهار شنبه">چهار شنبه</option>
+                <option value="پنجشنبه">پنجشنبه</option>
+              </select>
+            </label>
+            <label for="lessontime"
+              >ساعت درسی:
+              <select name="lessontime" id="lessontime">
+                <option value="اول">اول</option>
+                <option value="دوم">دوم</option>
+                <option value="سوم">سوم</option>
+                <option value="چهارم">چهارم</option>
+                <option value="پنجم">پنجم</option>
+                <option value="ششم">ششم</option>
+              </select>
+            </label>
+            <label for="classe"
+              >صنف:
+              <select name="classe" id="classe">
+                <option value="" disabled selected>انتخاب صنف</option>
+              </select>
+            </label>
+            <label for="subjectkind"
+              >نوعیت مضمون:
+              <select name="subjectkind" id="subjectkind">
+                <option value="" selected>انتخاب نوعیت مضمون</option>
+              </select>
+            </label>
+          </div>
+          <div id="two">
+            <label for="subject"
+              >مضمون:
+              <select name="subject" id="subject">
+                <option value="" disabled selected>انتخاب مضمون</option>
+              </select>
+            </label>
+            <label for="teacher"
+              >استاد:
+              <select name="teacher" id="teacher">
+                <option value="" disabled selected>انتخاب استاد</option>
+              </select>
+            </label>
+            <label for="starttime"
+              >وقت شروع درس:<input id="starttime" name="starttime" type="text"
+            /></label>
+            <label for="endtime"
+              >وقت ختم درس:<input id="endtime" name="endtime" type="text"
+            /></label>
+          </div>
+        </div>
+        <div id="rfooter">
+          <input type="submit" id="save" value="ثبت کردن" />
+          <input type="button" value="ثبت کردن" id="save1"style="display: none"/>
+          <input type="reset" id="exit" value="پاک کردن" />
+        </div>
+      </form>
+
+      <div class="rcover">
+        <div id="rheader">نمایش تقسیم اوقات صنف</div>
+        <div id="rcontent">
+          <div id="searchbar" class="search_bar">
+            <div id="right" class="sright">
+              <select id="day_filter" class="s_f_filter">
+                <option value="" selected>همه روزها</option>
+                <option value="شنبه">شنبه</option>
+                <option value="یکشنبه">یکشنبه</option>
+                <option value="دو شنبه">دو شنبه</option>
+                <option value="سه شنبه">سه شنبه</option>
+                <option value="چهار شنبه">چهار شنبه</option>
+                <option value="پنجشنبه">پنجشنبه</option>
+              </select>
+              <select id="lesson_time_filter" class="s_f_filter">
+                <option value="" selected >همه ساعات درسی</option>
+                <option value="اول">اول</option>
+                <option value="دوم">دوم</option>
+                <option value="سوم">سوم</option>
+                <option value="چهارم">چهارم</option>
+                <option value="پنجم">پنجم</option>
+                <option value="ششم">ششم</option>
+              </select>
+              <select id="class_filter" class="s_f_filter">
+                <option value="" selected>همه صنوف</option>
+              </select>
+            </div>
+            <div id="left" class="sleft"></div>
+          </div>
+          <table>
+            <thead>
+              <th class="th">نمبر</th>
+              <th class="th">روز هفته</th>
+              <th class="th">ساعت درسی</th>
+              <th class="th">صنف</th>
+              <th class="th">نوعیت مضمون</th>
+              <th class="th">مضمون</th>
+              <th class="th">استاد</th>
+              <th class="th">شروع درس</th>
+              <th class="th">ختم درس</th>
+              <th class="th">تاریخ ثبت</th>
+              <th class="th">عملکرد</th>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div id="rfooter">
+          <div id="pagination" style="text-align: center; margin-top: 20px">
+            <div id="pagination-buttons"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../../js/Date_Elemet.js"></script>
+    <script>
+      // Loading list of classes
+      async function loadClass() {
+        let classList = document.getElementById("classe");
+        let classFilter = document.getElementById("class_filter");
+        const res = await fetch("http://localhost:3000/classes");
+        const data = await res.json();
+        data.data.forEach((classe) => {
+          const optiontext = `${classe.classlevel} ${classe.classmodify}`;
+          classList.innerHTML += `<option value="${optiontext}">${optiontext}</option>`;
+          classFilter.innerHTML += `<option value="${optiontext}">${optiontext}</option>`;
+        });
+      }
+
+      async function loadTeacher() {
+        let teacherList = document.getElementById("teacher");
+        const res = await fetch("http://localhost:3000/teachers");
+        const data = await res.json();
+
+        data.data.forEach((teacher) => {
+          const optionValue = `${teacher.name} ${teacher.lname}`;
+          teacherList.innerHTML += `<option value="${optionValue}">${optionValue}</option>`;
+        }); 
+      }
+
+      async function loadSubjectkind() {
+        let subjectkind = document.getElementById("subjectkind");
+        const res = await fetch("http://localhost:3000/subject");
+        const data = await res.json();
+
+        const uniquekind = [...new Set(data.data.map((s) => s.catagory))];
+
+        uniquekind.forEach((catagory) => {
+          subjectkind.innerHTML += `<option value="${catagory}">${catagory}</option>`;
+        });
+      }
+
+      async function loadSubject() {
+  let selectedClassFull = document.getElementById("classe").value;   // e.g. "اول الف"
+  let selectedSubjectKind = document.getElementById("subjectkind").value;
+  let subjectList = document.getElementById("subject");
+
+  // clear old options
+  subjectList.innerHTML = `<option value="" disabled selected>انتخاب مضمون</option>`;
+
+  const res = await fetch("http://localhost:3000/subject");
+  const data = await res.json();
+
+  // Extract just the first word for filtering (e.g. "اول")
+  let selectedClassLevel = selectedClassFull ? selectedClassFull.split(" ")[0] : "";
+
+  // Filter subjects
+   let filtered = data.data.filter((s) => {
+    let matchClass = selectedClassLevel ? (s.classselection && s.classselection.startsWith(selectedClassLevel)) : true;
+    let matchKind = selectedSubjectKind ? s.catagory === selectedSubjectKind : true;
+    return matchClass && matchKind;
+  });
+
+  // Append filtered subjects
+  filtered.forEach((subject) => {
+    subjectList.innerHTML += `<option value="${subject.name}">${subject.name}</option>`;
+  });
+}
+
+
+
+      
+
+      loadClass();
+      loadTeacher();
+      loadSubjectkind();
+      loadSubject();
+
+      ["classe", "subjectkind"].forEach((id) => {
+        document.getElementById(id).addEventListener("change", loadSubject);
+      });
+
+
+      document.getElementById("timeTable").addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const form = e.target;
+          // Build a JSON object from form fields
+          const data = {
+            day: form.week.value,
+            lessonOrder: form.lessontime.value,
+            classe: form.classe.value,
+            subjectkind: form.subjectkind.value,
+            subject: form.subject.value,
+            teacher: form.teacher.value,
+            startTime: form.starttime.value,
+            endTime: form.endtime.value,
+          };
+          try {
+            const response = await fetch("http://localhost:3000/time_table", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            if (response.ok) {
+              showModal({
+                	title: "موفقیت",
+                	message: "مضمون موفقانه اضافه شد.",
+                	icon: "success",
+              });
+              form.reset();
+              showTimeTableData();
+            } else {
+              alert("خطا در ثبت مضمون.");
+              console.log(response);
+            }
+          } catch (error) {
+            console.error("Error: ", error);
+            alert("خطا در اتصال به سرور");
+          }
+        });
+
+      function showTimeTableData() {
+        const rowsPerPage = 10;
+        let currentPage = 1;
+        let totalPages = 1;
+
+        const searchInput = document.getElementById("searchtable");
+        const filterBySelect = document.getElementById("sffilter");
+        const tbody = document.getElementById("tbody");
+        const paginationButtons = document.getElementById("pagination-buttons");
+
+        async function fetchAndRender() {
+          // Get selected filter values
+          const dayFilter = document.getElementById("day_filter").value;
+          const lessonFilter =
+            document.getElementById("lesson_time_filter").value;
+          const classFilter = document.getElementById("class_filter").value;
+
+          let url = `http://localhost:3000/time_table?page=${currentPage}&limit=${rowsPerPage}`;
+
+          // Only add filter params if user selected something
+          if (dayFilter) url += `&day=${encodeURIComponent(dayFilter)}`;
+          if (lessonFilter)
+            url += `&lessonOrder=${encodeURIComponent(lessonFilter)}`;
+          if (classFilter) url += `&classe=${encodeURIComponent(classFilter)}`;
+
+          const response = await fetch(url);
+
+          const result = await response.json();
+
+          if (!Array.isArray(result.data)) {
+            console.error("❌ result.data is not an array:", result);
+            return;
+          }
+
+          tbody.innerHTML = "";
+          result.data.forEach((timeTable, index) => {
+            tbody.innerHTML += `
+                            <tr data-timetable-id='${
+                              timeTable.id
+                            }'  ondblclick="editPart(this.dataset.timetableId)">
+                                <td>${
+                                  (currentPage - 1) * rowsPerPage + index + 1
+                                }</td>
+                                <td>${timeTable.day}</td>
+                                <td>${timeTable.lessonOrder}</td>
+                                <td>${timeTable.classe}</td>
+                                <td>${timeTable.subjectkind}</td>
+                                <td>${timeTable.subject}</td>
+                                <td>${timeTable.teacher}</td>
+                                <td>${timeTable.startTime}</td>
+                                <td>${timeTable.endTime}</td>
+                                <td>${
+                                  timeTable.createdAt
+                                    ? toPersianDate(timeTable.createdAt)
+                                    : ""
+                                }</td>
+                                <td>
+                                    <div id="cover">
+                                        <div id="action">
+                                            <div id="action3" class='action3' onclick='deleteTimeTable(${
+                                              timeTable.id
+                                            })' title="del"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>`;
+          });
+          // ✅ Set the SVG icons
+          setTimeout(() => {
+            document
+              .querySelectorAll(".action3")
+              .forEach((el) => (el.innerHTML = del));
+          }, 0);
+
+          totalPages = Math.ceil(result.total / rowsPerPage);
+          renderPagination();
+        }
+
+        function renderPagination() {
+          paginationButtons.innerHTML = "";
+
+          function addButton(label, page, disabled = false, active = false) {
+            const btn = document.createElement("button");
+            btn.textContent = label;
+            btn.disabled = disabled;
+            if (active) btn.style.backgroundColor = "#357edd";
+            btn.addEventListener("click", () => {
+              currentPage = page;
+              fetchAndRender();
+            });
+            paginationButtons.appendChild(btn);
+          }
+
+          addButton("<<", 1, currentPage === 1);
+          addButton("<", currentPage - 1, currentPage === 1);
+
+          for (let i = 1; i <= totalPages; i++) {
+            if (
+              i === currentPage ||
+              i <= 4 ||
+              i === totalPages ||
+              Math.abs(currentPage - i) <= 1
+            ) {
+              addButton(i, i, false, i === currentPage);
+            }
+          }
+
+          addButton(">", currentPage + 1, currentPage === totalPages);
+          addButton(">>", totalPages, currentPage === totalPages);
+        }
+        const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+
+        ["day_filter", "lesson_time_filter", "class_filter"].forEach((id) => {
+          document.getElementById(id).addEventListener("change", () => {
+            currentPage = 1;
+            fetchAndRender();
+          });
+        });
+
+        // First Load
+        fetchAndRender();
+      }
+      showTimeTableData();
+
+      // Fee Delete function
+      function deleteTimeTable(id) {
+        async function apply(){
+            const confirmed = await showModal({
+            title: "حذف",
+            message: "آیا می‌خواهید مضمون درسی حذف شود؟",
+            type: "ok-cancel"
+          });
+        
+          if (confirmed) {
+            console.log("User confirmed ✅");
+            fetch(`http://localhost:3000/time_table/${id}`, {
+            method: "DELETE",
+          })
+            .then(async (response) => {
+              if (!response.ok) {
+                throw new Error("خطا در حذف مضمون");
+              }
+
+              const data = await response.json(); // ✅ Works because backend sends JSON now
+
+              showTimeTableData(); // ✅ Reload table
+            })
+            .catch((error) => {
+              console.error("❌ خطا در اتصال یا سرور:", error);
+              alert("خطا در اتصال یا سرور");
+            });
+          } else {
+            this.close();
+            console.log("User cancelled ❌");
+          }
+        }
+        apply();
+      }
+
+      function editPart(timetableId) {
+        document.getElementById("save").style.display = "none";
+        document.getElementById("save1").style.display = "flex";
+        fetch(`http://localhost:3000/time_table/${timetableId}`)
+          .then((res) => res.json())
+          .then((timeTable) => {
+            if (!timeTable) return;
+            console.log(timeTable.id);
+            document.getElementById("id").value = timeTable.id;
+            document.getElementById("week").value = timeTable.day;
+            document.getElementById("lessontime").value = timeTable.lessonOrder;
+            document.getElementById("classe").value = timeTable.classe;
+            document.getElementById("subjectkind").value = timeTable.subjectkind;
+            document.getElementById("subject").value = timeTable.subject;
+            document.getElementById("teacher").value = timeTable.teacher;
+            document.getElementById("starttime").value = timeTable.startTime;
+            document.getElementById("endtime").value = timeTable.endTime;
+          });
+      }
+      document.getElementById("save1").addEventListener("click", function () {
+        const form = document.getElementById("timeTable");
+
+        // Collect form data as JSON object
+        const data = {
+          day: form.week.value,
+          lessonOrder: form.lessontime.value,
+          classe: form.classe.value,
+          subjectkind: form.subjectkind.value,
+          subject: form.subject.value,
+          teacher: form.teacher.value,
+          startTime: form.starttime.value,
+          endTime: form.endtime.value,
+        };
+
+        const id = document.getElementById("id").value.trim();
+
+        fetch(`/time_table/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("Server error");
+            return res.json();
+          })
+          .then((data) => {
+            showModal({
+              	title: "موفقیت",
+              	message: "تغییرات موفقانه ثبت شد.",
+              	icon: "success",
+            });
+            showTimeTableData();
+          })
+          .catch((err) => {
+            console.error("خطا در تغییر داده:", err);
+            alert("خطا در ذخیره تغییرات ❌");
+          });
+      });
+
+      document.getElementById("exit").addEventListener("click", () => {
+        document.getElementById("save1").style.display = "none";
+        document.getElementById("save").style.display = "flex";
+      });
+    </script>
+  </body>
+</html>

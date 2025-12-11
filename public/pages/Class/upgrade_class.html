@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+    <html lang="ps" dir="rtl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            #rcontent { 
+                padding: 20px; 
+                height: 700px; 
+                overflow-y:auto; 
+            }
+            td { 
+                vertical-align: middle; 
+                padding: 5px 10px; 
+            }
+            #searchbar{
+                display: flex;
+                gap: 16px;
+            }
+            #searchbar select, #searchbar input{
+                width: 15%;
+            }
+            input[type=checkbox] {
+                width: 20px; 
+                height: 20px; 
+            }
+            .feeEdit, tr input[type=text] {
+                border: none; 
+                outline: none; 
+                width: fit-content; 
+                height: 100%;
+                display: flex; 
+                align-items: center; 
+                box-sizing: border-box;
+            }
+            .upgradeLabel { 
+                font-size: 1rem; 
+                font-weight: 500; 
+                display: flex; 
+                align-items: center; 
+                margin:0 5px; 
+            }
+            table { 
+                width:100%; 
+                border-collapse: collapse; 
+            }
+            th, td { 
+                border: 1px solid #ccc; 
+                text-align:center; 
+            }
+            button { 
+                cursor:pointer; 
+            }
+            .yearFilter {
+                margin-left:260px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="rparent">
+            <form id="upgrade_Class_Form" class="rcover">
+                <div id="rheader">ارتقا صنف</div>
+                <div id="rcontent">
+                    <div id="searchbar" class="search_bar" style="display:flex; gap:10px; margin-bottom:10px;">
+                        <input type="text" id="searchtable" placeholder="جستجو بر اساس اسم..." />
+                        <select name="" class="yearFilter"></select>
+                        <select id="from_class">
+                            <option value="">انتخاب صنف برای ارتقا</option>
+                        </select>
+                        <div class="upgradeLabel">ارتقا به</div>
+                        <select id="upgrade_to" required>
+                            <option value="">تعین صنف جدید</option>
+                        </select>
+                        <input type="submit" value="ارتقا دادن" />
+                    </div>
+          
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>نمبر</th>
+                                <th>اسم</th>
+                                <th>ولد</th>
+                                <th>فیس</th>
+                                <th>تعداد ماه</th>
+                                <th>صنف</th>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>عملکرد</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table_list"></tbody>
+                    </table>
+                </div>
+                    <div id="rfooter">
+                        <div id="pagination" style="text-align: center; margin-top: 20px">
+                        <div id="pagination-buttons"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+<script src="../../js//Date_Elemet.js"></script>
+<script>
+async function loadClassOptions() {
+  const res = await fetch("http://localhost:3000/classes");
+  const result = await res.json();
+  const fromSelect = document.getElementById("from_class");
+  const upgradeSelect = document.getElementById("upgrade_to");
+
+  fromSelect.innerHTML = `<option value="">انتخاب صنف برای ارتقا</option>`;
+  upgradeSelect.innerHTML = `<option value="">تعین صنف جدید</option>`;
+
+  result.data.forEach(c => {
+    const className = `${c.classlevel} ${c.classmodify}`;
+    fromSelect.innerHTML += `<option value="${className}">${className}</option>`;
+    upgradeSelect.innerHTML += `<option value="${className}">${className}</option>`;
+  });
+}
+
+async function loadYearOptions() {
+  const res = await fetch("http://localhost:3000/upgradeClass");
+  const result = await res.json();
+  const yearSelect = document.querySelector(".yearFilter");
+
+  yearSelect.innerHTML = `<option value="aaa">سال تعلیمی را انتخاب کنید</option>`;
+  const years = [...new Set(result.data.map(y => y.academicYear))].sort((a, b) => b - a);
+  years.forEach(y => {
+    yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+  });
+}
+
+async function showUpgradeClassData() {
+  const rowsPerPage = 10;
+  let currentPage = 1;
+  let totalPages = 1;
+
+  const tbody = document.getElementById("table_list");
+  const paginationButtons = document.getElementById("pagination-buttons");
+
+  async function fetchAndRender() {
+    const selectedClass = document.getElementById("from_class").value.trim();
+    const selectedYear = document.querySelector(".yearFilter").value.trim();
+    const searchName = document.getElementById("searchtable").value.trim();
+
+    if (!selectedClass) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">هیچ صنفی انتخاب نشده است</td></tr>`;
+      paginationButtons.innerHTML = "";
+      return;
+    }
+
+    const query = new URLSearchParams({
+      classs: selectedClass,
+      name: searchName,
+      page: currentPage,
+      limit: rowsPerPage,
+      academicYear: selectedYear || 'all'
+    });
+
+    const res = await fetch(`http://localhost:3000/upgradeClass?${query.toString()}`);
+    const result = await res.json();
+
+    tbody.innerHTML = "";
+    if (!result.data || result.data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">هیچ معلوماتی یافت نشد</td></tr>`;
+      paginationButtons.innerHTML = "";
+      return;
+    }
+
+    totalPages = result.totalPages || 1;
+    result.data.forEach((upgrade, index) => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
+          <td>
+            <input type="text" name="name" value="${upgrade.name}" readonly>
+            <input type="hidden" name="sid" value="${upgrade.sid}">
+          </td>
+          <td><input type="text" name="fname" value="${upgrade.fname}" readonly></td>
+          <td><input type="number" name="fee" class="feeEdit" value="${upgrade.fee}"></td>
+          <td><input type="number" name="q_o_month" class="feeEdit" value="${upgrade.q_o_month}"></td>
+          <td>${upgrade.classs}</td>
+          <td>
+            <input type="checkbox" class="selectRow">
+            <input type="hidden" name="academicYear" value="${upgrade.academicYear}">
+          </td>
+          <td>
+            <div id="cover">
+                <div id="action">
+                  <div id="action3" class='action3' onclick='deleteUpgrade(${upgrade.id})' title="del"></div>
+                </div>
+              </div>  
+          </td>
+        </tr>`;
+    });
+
+    setTimeout(() => {
+        document.querySelectorAll(".action3").forEach((el) => (el.innerHTML = del));
+    }, 0);
+
+    renderPagination();
+  }
+
+  function renderPagination() {
+    const paginationButtons = document.getElementById("pagination-buttons");
+    paginationButtons.innerHTML = "";
+
+    function addButton(label, page, disabled = false, active = false) {
+      const btn = document.createElement("button");
+      btn.textContent = label;
+      btn.disabled = disabled;
+      if (active) btn.style.backgroundColor = "#357edd";
+      btn.addEventListener("click", () => {
+        currentPage = page;
+        fetchAndRender();
+      });
+      paginationButtons.appendChild(btn);
+    }
+
+    addButton("<<", 1, currentPage === 1);
+    addButton("<", currentPage - 1, currentPage === 1);
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === currentPage || i <= 4 || i === totalPages || Math.abs(currentPage - i) <= 1) {
+        addButton(i, i, false, i === currentPage);
+      }
+    }
+    addButton(">", currentPage + 1, currentPage === totalPages);
+    addButton(">>", totalPages, currentPage === totalPages);
+  }
+
+  document.getElementById("from_class").addEventListener("change", () => {
+    currentPage = 1;
+    fetchAndRender();
+  });
+  document.getElementById("searchtable").addEventListener("input", () => {
+    currentPage = 1;
+    fetchAndRender();
+  });
+  document.querySelector(".yearFilter").addEventListener("change", () => {
+    currentPage = 1;
+    fetchAndRender();
+  });
+  document.getElementById("selectAll").addEventListener("change", function() {
+    document.querySelectorAll(".selectRow").forEach(chk => chk.checked = this.checked);
+  });
+
+  const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+      
+  fetchAndRender();
+}
+
+loadClassOptions();
+loadYearOptions();
+showUpgradeClassData();
+
+async function deleteUpgrade(id) {
+  async function apply(){
+            const confirmed = await showModal({
+            title: "حذف",
+            message: "آیا می‌خواهید شاگرد حذف شود؟",
+            type: "ok-cancel"
+          });
+        
+          if (confirmed) {
+            console.log("User confirmed ✅");
+            await fetch(`http://localhost:3000/upgradeClass/${id}`, { method: "DELETE" });
+            showUpgradeClassData();
+            loadYearOptions();
+          } else {
+            this.close();
+            console.log("User cancelled ❌");
+          }
+        }
+        apply();
+}
+
+
+
+document.getElementById("upgrade_Class_Form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const selectedRows = Array.from(document.querySelectorAll(".selectRow:checked"));
+  const upgradeTo = document.getElementById("upgrade_to").value.trim();
+  const currentYear = new Date();
+  const nextYear = parseInt(yearPicker(currentYear)) + 1; // ✅ next academic year
+
+  if (selectedRows.length === 0) {
+    alert("هیچ متعلم انتخاب نشده است.");
+    return;
+  }
+
+  if (!upgradeTo) {
+    alert("لطفاً صنف جدید را انتخاب کنید.");
+    return;
+  }
+
+  // Collect selected student data
+  const upgradeData = selectedRows.map(row => {
+    const tr = row.closest("tr");
+    return {
+      sid: tr.querySelector('input[name="sid"]').value,
+      name: tr.querySelector('input[name="name"]').value,
+      fname: tr.querySelector('input[name="fname"]').value,
+      fee: tr.querySelector('input[name="fee"]').value,
+      q_o_month: tr.querySelector('input[name="q_o_month"]').value,
+      classs: upgradeTo,
+      academicYear: nextYear   // ✅ set to current year + 1
+    };
+  });
+
+  async function apply(){
+            const confirmed = await showModal({
+            title: "ارتقا",
+            message: "آیا می‌خواهید ارتقا انجام شود؟",
+            type: "ok-cancel"
+          });
+        
+          if (confirmed) {
+            console.log("User confirmed ✅");
+            try {
+              const res = await fetch("http://localhost:3000/upgradeClass", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data: upgradeData })
+              });
+
+              const result = await res.json();
+
+              if (res.ok) {
+                showModal({
+                  	title: "موفقیت",
+                  	message: "ارقتا صنف موفقانه انجام شد.",
+                  	icon: "success",
+                });
+                showUpgradeClassData();
+                loadYearOptions();
+                document.getElementById("selectAll").checked = false;
+              } else {
+                alert(result.message || "خطا در ارتقا!");
+              }
+            } catch (err) {
+              console.error(err);
+              alert("ارتباط با سرور برقرار نشد.");
+            }
+          } else {
+            this.close();
+            console.log("User cancelled ❌");
+          }
+        }
+        apply();
+
+  
+});
+
+</script>
+
+    </body>
+</html>

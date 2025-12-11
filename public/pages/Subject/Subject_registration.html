@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #rparent{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: start;
+        }
+        #subject_registration{
+            width: 25%;
+        }
+        #display_subject{
+            width: 74.5%;
+        }
+        label{
+            width: 100%;  
+            margin-bottom: 10px;  
+        }
+        #one{
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+        /* Table */
+        .th:nth-child(1), .th:nth-child(6){
+            width: 5%;
+        }
+        tr td:nth-child(6){
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="rparent">
+    <form id="subject_registration" class="rcover">
+        <div id="rheader">ثبت مضامین</div>
+        <div id="rcontent">
+            <div id="one">
+                <input type="hidden" id="id" name="id">
+                <label for="name">نام مضمون:<input id="name" name="name" type="text" required></label>
+                <label for="catagory">نوعیت مضمون:
+                    <select name="catagory" id="catagory">
+                        <option value="" selected disabled>انتخاب نوعیت مضمون</option>
+                        <option value="عمومی">عمومی</option>
+                        <option value="تقویتی">تقویتی</option>
+                    </select>
+                </label>
+                <label for="classselection">انتخاب صنف:
+                    <select id="classselection" name="classselection" required>
+                        <option value="" disabled selected>انتخاب صنف</option>
+                        <option value="نرسری">نرسری</option>
+                        <option value="آماده گی">آماده گی</option>
+                        <option value="اول">اول</option>
+                        <option value="دوم">دوم</option>
+                        <option value="سوم">سوم</option>
+                        <option value="چهارم">چهارم</option>
+                        <option value="پنجم">پنجم</option>
+                        <option value="ششم">ششم</option>
+                        <option value="هفتم">هفتم</option>
+                        <option value="هشتم">هشتم</option>
+                        <option value="نهم">نهم</option>
+                        <option value="دهم">دهم</option>
+                        <option value="یازدهم">یازدهم</option>
+                        <option value="دوازدهم">دوازدهم</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div id="rfooter">
+            <input type="submit" id="save" value="ثبت کردن" />
+            <input type="button" value="ثبت کردن" id="save1" style="display: none;">
+            <input type="reset" id="exit" value="پاک کردن" />
+        </div>
+    </form>
+
+    <div id="display_subject" class="rcover">
+        <div id="rheader">لیست مضامین</div>
+        <div id="rcontent">
+            <div id="searchbar" class="search_bar">
+                    <div id="right" class="sright">
+                        <select id="class_filter" class="s_f_filter">
+                            <option value="" selected>همه صنوف</option>
+                        </select>
+                    </div>
+                    <div id="left" class="sleft"></div>
+                </div>
+            <table>
+                <thead>
+                    <th class="th">نمبر</th>
+                    <th class="th">نام مضمون</th>
+                    <th class="th">نوعیت مضمون</th>
+                    <th class="th">صنف</th>
+                    <th class="th">تاریخ</th>
+                    <th class="th">عملکرد</th>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+        <div id="rfooter">
+                <div id="pagination" style="text-align: center; margin-top: 20px">
+                    <div id="pagination-buttons"></div>
+              </div>
+            </div>
+    </div>
+    </div>
+        <script src="../../js/Date_Elemet.js"></script>
+        <script>
+
+            document.getElementById("subject_registration").addEventListener("submit", submitSubject);
+
+async function submitSubject(e) {
+    e.preventDefault();
+
+    const form = document.getElementById("subject_registration");
+
+    const data = {
+        name: form.name.value.trim(),
+        catagory: form.catagory.value.trim(),
+        classselection: form.classselection.value.trim(),
+    };
+
+    // validation
+    if (!data.name || !data.catagory || !data.classselection) {
+        showModal({
+            title: "خطا",
+            message: "لطفاً تمام خانه‌ها را تکمیل کنید.",
+            type: "ok"
+        });
+        return;
+    }
+
+    try {
+        const res = await fetch("/subject", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || "Server error");
+        }
+
+        showModal({
+            title: "موفقیت",
+            message: "مضمون موفقانه ثبت شد.",
+            type: "success"
+        });
+        showSubjectData();
+
+        form.reset();
+
+    } catch (error) {
+        console.error("Error creating subject:", error);
+
+        showModal({
+            title: "خطا!",
+            message: "در ثبت مضمون مشکلی به‌وجود آمد.",
+            type: "ok"
+        });
+    }
+}
+
+
+
+            async function loadSubjects() {
+                let class_filter = document.getElementById("class_filter");
+                const res = await fetch("http://localhost:3000/subject");
+                const data = await res.json();
+
+                // Use a Set to store unique subject names
+                let uniqueSubjects = new Set();
+
+                data.data.forEach((subject) => {
+                    uniqueSubjects.add(subject.classselection);
+                });
+                console.log(uniqueSubjects);
+              
+                // Append unique options
+                uniqueSubjects.forEach((classes) => {
+                    class_filter.innerHTML += `<option value="${classes}">${classes}</option>`;
+                });
+            }
+
+            loadSubjects();
+           
+
+            function showSubjectData() {
+                const rowsPerPage = 10;
+                let currentPage = 1;
+                let totalPages = 1;
+
+                const filterBySelect = document.getElementById("class_filter");
+                const tbody = document.getElementById("tbody");
+                const paginationButtons = document.getElementById("pagination-buttons");
+
+                async function fetchAndRender() {
+                    const filterBy = filterBySelect.value;
+                
+                    let url = `http://localhost:3000/subject?page=${currentPage}&limit=${rowsPerPage}`;
+                    if (filterBy) url += `&classlevel=${encodeURIComponent(filterBy)}`;
+                
+                    const response = await fetch(url);
+                    const result = await response.json();
+                
+                    if (!Array.isArray(result.data)) {
+                        console.error("❌ result.data is not an array:", result);
+                        return;
+                    }
+                
+                    tbody.innerHTML = "";
+                    result.data.forEach((subject, index) => {
+                        tbody.innerHTML += `
+                            <tr data-subject-id='${subject.id}' ondblclick="editPart(this.dataset.subjectId)">
+                                <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
+                                <td>${subject.name}</td>
+                                <td>${subject.catagory}</td>
+                                <td>${subject.classselection}</td>
+                                <td>${subject.createdAt ? toPersianDate(subject.createdAt) : ""}</td>
+                                <td>
+                                    <div id="cover">
+                                        <div id="action">
+                                            <div id="action3" class='action3' onclick='deleteSubject(${subject.id})' title="del"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>`;
+                    });
+                
+                    // ✅ Set the SVG icons
+                    setTimeout(() => {
+                        document.querySelectorAll(".action3").forEach((el) => (el.innerHTML = del));
+                    }, 0);
+                
+                    totalPages = Math.ceil(result.total / rowsPerPage);
+                    renderPagination();
+                }
+            
+                function renderPagination() {
+                    paginationButtons.innerHTML = "";
+                
+                    function addButton(label, page, disabled = false, active = false) {
+                        const btn = document.createElement("button");
+                        btn.textContent = label;
+                        btn.disabled = disabled;
+                        if (active) btn.style.backgroundColor = "#357edd";
+                        btn.addEventListener("click", () => {
+                            currentPage = page;
+                            fetchAndRender();
+                        });
+                        paginationButtons.appendChild(btn);
+                    }
+                
+                    addButton("<<", 1, currentPage === 1);
+                    addButton("<", currentPage - 1, currentPage === 1);
+                
+                    for (let i = 1; i <= totalPages; i++) {
+                        if (i === currentPage || i <= 4 || i === totalPages || Math.abs(currentPage - i) <= 1) {
+                            addButton(i, i, false, i === currentPage);
+                        }
+                    }
+                
+                    addButton(">", currentPage + 1, currentPage === totalPages);
+                    addButton(">>", totalPages, currentPage === totalPages);
+                }
+            
+                const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+            
+                filterBySelect.addEventListener("change", () => {
+                    currentPage = 1;
+                    fetchAndRender();
+                });
+            
+                // First Load
+                fetchAndRender();
+            }
+
+            showSubjectData();
+
+            // Fee Delete function
+            function deleteSubject(id) {
+                async function apply(){
+            const confirmed = await showModal({
+            title: "حذف",
+            message: "آیا می‌خواهید مضمون حذف شود؟",
+            type: "ok-cancel"
+          });
+        
+          if (confirmed) {
+            console.log("User confirmed ✅");
+            fetch(`http://localhost:3000/subject/${id}`, {
+                        method: "DELETE",
+                    }).then(async (response) => {
+                        if (!response.ok) {
+                            throw new Error("خطا در حذف مضمون");
+                        }
+
+                        const data = await response.json(); // ✅ Works because backend sends JSON now
+                        showSubjectData(); // ✅ Reload table
+                    }).catch((error) => {
+                        console.error("❌ خطا در اتصال یا سرور:", error);
+                        alert("خطا در اتصال یا سرور");
+                    });
+          } else {
+            this.close();
+            console.log("User cancelled ❌");
+          }
+        }
+        apply();
+            }
+
+            function editPart(subjectId){
+                document.getElementById('save').style.display = 'none';
+                document.getElementById('save1').style.display = 'flex';
+                fetch(`http://localhost:3000/subject/${subjectId}`).then(res => res.json()).then(subject => {
+                    if(!subject) return;
+                    console.log(subject.id)
+                    document.getElementById('id').value = subject.id;
+                    document.getElementById('name').value = subject.name;
+                    document.getElementById('catagory').value = subject.catagory;
+                    document.getElementById('classselection').value = subject.classselection;
+                })
+            }
+            document.getElementById('save1').addEventListener('click', function () {
+                const form = document.getElementById('subject_registration');
+
+                // Collect form data as JSON object
+                const data = {
+                    name: form.name.value,
+                    catagory: form.catagory.value,
+                    classselection: form.classselection.value,
+                };
+
+                const id = document.getElementById('id').value.trim();
+
+                fetch(`/subject/${id}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json',},
+                    body: JSON.stringify(data)
+                }).then(res => {
+                if (!res.ok) throw new Error("Server error");
+                    return res.json();
+                }).then(data => {
+                    showModal({
+                     	title: "موفقیت",
+                     	message: "مغییرات موفقانه ثبت شد.",
+                     	icon: "success",
+                    });
+                    showSubjectData();
+                }).catch(err => {
+                    console.error("خطا در تغییر داده:", err);
+                    alert("خطا در ذخیره تغییرات ❌");
+                });
+            });
+
+
+
+            document.getElementById('exit').addEventListener('click', ()=>{
+            document.getElementById('save1').style.display= 'none';
+            document.getElementById('save').style.display= 'flex';
+    })
+
+        </script>
+    </body>
+</html>

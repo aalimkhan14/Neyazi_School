@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="idcard">
+    <div id="cardheader">
+      <div id="cardheaderup">
+        <div id="logo"><img src="../../images/logo.png" alt=""></div>
+        <div id="schoolname">لیسه خصوصی نیازی افغان</div>
+      </div>
+      <div id="profile">
+        <img src="" alt="photo" id="contentProfile">
+      </div>
+    </div>
+    <div id="cardcontent">
+      <div class="info"><span class="label">اسم:</span><div class="value" id="student_name"></div></div>
+      <div class="info"><span class="label">نمبر اساس:</span><div class="value" id="student_id"></div></div>
+      <div class="info"><span class="label">صنف:</span><div class="value" id="student_class"></div></div>
+      <div class="info"><span class="label">تاریخ تولد:</span><div class="value" id="student_birth"></div></div>
+      <div class="info"><span class="label">آدرس:</span><div class="value" id="student_address"></div></div>
+      <div class="info"><span class="label">شماره تماس ولی:</span><div class="value" id="student_phone"></div></div>
+      <div class="info"><span class="label">شماره تماس دفتر:</span><div class="value" id="office_phone">0745491745</div></div>
+    </div>
+    <div id="cardfooter">
+      <!-- <div id="signature">
+        <div class="info"><div></div><div id="middle">مدیر مکتب</div></div>
+      </div> -->
+      <div id="barcode"></div>
+    </div>
+  </div>
+  <style>
+    /* Reset some default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    #idcard{
+      width: 320px;
+      height: 500px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 12px 24px rgba(98, 89, 190, 0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: center;
+      position: relative;
+      user-select: none;
+    }
+    #cardheader{
+      background: #8b97f5;
+      color: white;
+      position: relative;
+      top: -90px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 450px;
+      height: 300px;
+      border-radius: 50%;
+    }
+    #cardheaderup{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 55%;
+      height: 80px;
+      margin-top: 140px;
+    }
+    #logo{
+      width: 70px;
+      height: 70px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    #logo img{
+      display: flex;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    #schoolname{
+      position: relative;
+      font-weight: 600;
+      font-size: 18px;
+      z-index: 2;
+      user-select: none;
+      color: #f5f7ff;
+    }
+    #profile{
+      width: 112px;
+      height: 132px;         /* or any height you want */
+      flex-shrink: 0;  
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 0 4px white;
+      border: 2px solid #8b97f5;
+      background: #e4e6f7;
+      position: relative;
+      z-index: 3;
+      top: 20px;
+      
+    }
+    #contentProfile{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: flex;
+    }
+    #cardcontent{
+      width: 100%;
+      padding: 0 35px;
+      margin-top: -40px;
+      font-size: 14px;
+      color: #1c1c29;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      user-select: none;
+    }
+    .info{
+      display: flex;
+      width: 100%;
+      height: 20px;
+      flex-direction: row;
+    }
+    .info div{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      height: 100%;
+      border-bottom: 1px solid #dedede;
+      padding-bottom: 4px;
+    }
+    #cardfooter{
+      display: flex;
+      width: 100%;
+      height: 100px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 35px;
+    }
+    #signature{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 40%;
+      height: 100%;
+    }
+    #signature div{
+      display: flex;
+      width: 100%;
+      height: fit-content;
+      flex-direction: column;
+    }
+    #middle{
+      display: flex;
+      justify-content: center;
+      border: none;
+
+    }
+    #barcode{
+      display: flex;
+      width: 60%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    
+    }
+
+    @media print {
+  body * {
+    visibility: hidden !important; /* Hide everything else */
+  }
+
+  #idcard, #idcard * {
+    visibility: visible !important; /* Only show the ID card */
+  }
+
+  #idcard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+  }
+
+  /* Force background colors to be printable (some browsers require this) */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+  </style>
+
+<script>
+  // Parse 'id' from query string like ?id=33
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id');
+
+if (!id) {
+  alert("No student ID provided!");
+  throw new Error("No student ID provided!");
+}
+
+fetch(`/students/${id}`)
+  .then(res => {
+    if (!res.ok) throw new Error("Student not found");
+    return res.json();
+  })
+  .then(student => {
+    document.getElementById("student_name").innerText = student.name || '';
+    document.getElementById("student_id").innerText = student.baseno || '';
+    document.getElementById("student_class").innerText = student.current_class || '';
+    document.getElementById("student_birth").innerText = student.birth?.substring(0, 10) || '';
+    document.getElementById("student_address").innerText = student.current_location || '';
+    document.getElementById("student_phone").innerText = student.phone1 || '';
+
+    const img = document.getElementById("contentProfile");
+    img.src = `/uploads/${student.picture || 'default.png'}`;
+
+    img.onload = () => {
+      window.print();
+    };
+  })
+  .catch(err => {
+    alert("خطا در دریافت معلومات متعلم");
+    console.error(err);
+  });
+
+</script>
+
+
+
+</body>
+</html>

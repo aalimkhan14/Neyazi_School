@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      label {
+        width: 32.5%;
+      }
+      #teacherPayment #rcontent{
+        padding: 20px;
+        height: 700px;
+      }
+
+      .th:nth-child(1),
+      .th:nth-child(8) {
+        width: 5%;
+      }
+      tr td:nth-child(8) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 0;
+      }
+      .modal-content{
+        height: 65%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rparent">
+      <form id="teacher_payment" class="rcover">
+        <div id="rheader">پرداخت معاش استاد</div>
+        <div id="rcontent">
+          <div id="one">
+            <input type="hidden" id="id">
+            <label for="month">ماه:<select name="month" id="month" required>
+                <option value="1">حمل</option>
+                <option value="2">ثور</option>
+                <option value="3">جوزا</option>
+                <option value="4">سرطان</option>
+                <option value="5">اسد</option>
+                <option value="6">سنبله</option>
+                <option value="7">میزان</option>
+                <option value="8">عقرب</option>
+                <option value="9">قوس</option>
+                <option value="10">جدی</option>
+                <option value="11">دلو</option>
+                <option value="12">حوت</option>
+              </select>
+            </label>
+            <label for="teacherselection">انتخات استاد:<select name="teacherselection" id="teacherselection" required></select></label>
+            <input type="hidden" id="teacher_fullname" name="teacher_fullname" />
+            <label for="payableamount">مبلغ قابل پرداخت:<input id="payableamount" name="payableamount" type="number" readonly/></label>
+          </div>
+          <div id="two">
+            <label for="payedamount">مبلغ پرداخت شده:<input id="payedamount" name="payedamount" type="number" required/></label>
+            <label for="rest">باقی:<input id="rest" name="rest" type="number" readonly/></label>
+            <label for="pdate"><input id="" type="hidden"/></label>
+          </div>
+        </div>
+        <div id="rfooter">
+            <input type="submit" id="save" value="ثبت کردن" />
+            <input type="button" value="ثبت کردن" id="save1" style="display: none;">
+            <input type="reset" id="exit" value="پاک کردن" />
+        </div>
+      </form>
+
+      <div id="teacherPayment" class="rcover">
+        <div id="rheader">معاشات پرداخت شده</div>
+        <div id="rcontent">
+            <div id="searchbar" class="search_bar">
+            <div id="right" class="sright">
+              <input
+                type="text"
+                class="search_table"
+                id="searchtable"
+                placeholder="جستجو . . ."
+              />
+              <select id="sffilter" class="s_f_filter">
+                <option value="tpid">فلتر آی دی معلم</option>
+                <option value="name" selected>فلتر اسم</option>
+              </select>
+            </div>
+            <div id="left" class="sleft"></div>
+          </div>
+          <table>
+            <thead>
+              <th class="th">آی دی</th>
+              <th class="th">ماه</th>
+              <th class="th">نام استاد</th>
+              <th class="th">مبلغ قابل پرداخت</th>
+              <th class="th">مبلغ پرداخت شده</th>
+              <th class="th">باقی</th>
+              <th class="th">تاریخ ثبت</th>
+              <th class="th">عملکرد</th>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div id="rfooter">
+          <div id="pagination" style="text-align: center; margin-top: 20px">
+            <div id="pagination-buttons"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="./../../js/Date_Elemet.js"></script>
+    <script>
+      function loadTeachers() {
+        fetch("/teachers").then((res) => res.json()).then((result) => {
+            const teachers = result.data;
+            let select = document.getElementById("teacherselection");
+
+            // Reset options
+            select.innerHTML = `<option disabled selected>انتخاب معلم</option>`;
+
+            teachers.forEach((teacher) => {
+              const option = document.createElement("option");
+              option.value = teacher.id;
+              option.textContent = `${teacher.name} ${teacher.lname}`;
+              select.appendChild(option);
+            });
+          })
+        .catch((err) => {
+            console.error("خطا در دریافت لیست استادان:", err);
+        });
+      }
+
+      function loadTeacher(id) {
+        fetch(`/teachers/${id}`)
+          .then((res) => {
+            if (!res.ok) {
+              if (res.status === 404)
+                throw new Error("استاد با چنین آی‌دی پیدا نشد");
+            }
+            return res.json();
+          })
+          .then((teacher) => {           
+            document.getElementById('teacher_fullname').value = `${teacher.name} ${teacher.lname}`;
+            document.getElementById("payableamount").value = `${teacher.salary}`;
+            document.getElementById('payedamount').value = '';
+            document.getElementById('rest').value = '';
+          })
+          .catch((err) => {
+            alert(err.message);
+            console.error("خطا:", err);
+          });
+      }
+
+      // ✅ Attach change listener safely
+      function attachTeacherChangeListener() {
+        const select = document.getElementById("teacherselection");
+        if (!select) return;
+
+        select.onchange = function (e) {
+          const teacherId = e.target.value;
+          loadTeacher(teacherId);
+        };
+      }
+
+      // ✅ Call these AFTER page is loaded
+      loadTeachers();
+      attachTeacherChangeListener();
+
+      document.getElementById("payedamount").addEventListener("input", function () {
+          const rest = document.getElementById("payableamount").value - document.getElementById("payedamount").value;
+          document.getElementById("rest").value = rest;          
+      });
+
+
+        // send teacher payment
+        document.getElementById("teacher_payment").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        
+        const form = e.target; 
+        // Build a JSON object from form fields
+        const data = {
+            tpid: form.teacherselection.value,
+            month: form.month.value,
+            name: form.teacher_fullname.value.trim(),
+            payablea: form.payableamount.value,
+            payeda: form.payedamount.value,
+            r_p: form.rest.value,
+        }; 
+        try {
+          const response = await fetch("http://localhost:3000/teachers_payment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          if (response.ok) {
+            showModal({
+              	title: "موفقیت",
+              	message: "معاش  موفقانه ثبت شد.",
+              	icon: "success",
+            });
+            form.reset();
+            showTeacherPaymentData();
+          } else {
+            alert("خطا در ثبت معاش معلم.");
+            console.log(response);
+          }
+        } catch (error) {
+          console.error("Error: ", error);
+          alert("خطا در اتصال به سرور");
+        }
+      });
+
+
+      
+    // get Data
+
+    function showTeacherPaymentData() {
+      const rowsPerPage = 10;
+      let currentPage = 1;
+      let totalPages = 1;
+
+      const searchInput = document.getElementById("searchtable");
+      const filterBySelect = document.getElementById("sffilter");
+      const tbody = document.getElementById("tbody");
+      const paginationButtons = document.getElementById("pagination-buttons");
+
+      async function fetchAndRender() {
+        const search = searchInput.value;
+        const filterBy = filterBySelect.value;
+
+        const response = await fetch(`http://localhost:3000/teachers_payment?search=${encodeURIComponent(search)}&filterBy=${filterBy}&page=${currentPage}&limit=${rowsPerPage}`);
+
+        const result = await response.json();
+
+        if (!Array.isArray(result.data)) {
+          console.error("❌ result.data is not an array:", result);
+          return;
+        }
+
+        tbody.innerHTML = "";
+        result.data.forEach((teacherpay) => {
+          tbody.innerHTML += `
+          <tr data-teacherpay-id='${teacherpay.id}' ondblclick="editPart(this.dataset.teacherpayId)">
+            <td>${teacherpay.tpid}</td>
+            <td>${teacherpay.month}</td>
+            <td>${teacherpay.name}</td>
+            <td>${teacherpay.payablea}</td>
+            <td>${teacherpay.payeda}</td>
+            <td>${teacherpay.r_p}</td>
+            <td>${teacherpay.createdAt ? toPersianDate(teacherpay.createdAt) : ""}</td>
+            <td>
+              <div id="cover">
+                <div id="action">
+                  <div id="action3" class='action3' onclick='deleteTeacherPayment(${teacherpay.id})' title="del"></div>
+                </div>
+              </div>
+            </td>
+          </tr>`;
+        });
+
+        // ✅ Set the SVG icons
+        setTimeout(() => {
+          document.querySelectorAll(".action3").forEach((el) => (el.innerHTML = del));
+        }, 0);
+
+        totalPages = Math.ceil(result.total / rowsPerPage);
+        renderPagination();
+      }
+
+      function renderPagination() {
+        paginationButtons.innerHTML = "";
+
+        function addButton(label, page, disabled = false, active = false) {
+          const btn = document.createElement("button");
+          btn.textContent = label;
+          btn.disabled = disabled;
+          if (active) btn.style.backgroundColor = "#357edd";
+          btn.addEventListener("click", () => {
+            currentPage = page;
+            fetchAndRender();
+          });
+          paginationButtons.appendChild(btn);
+        }
+
+        addButton("<<", 1, currentPage === 1);
+        addButton("<", currentPage - 1, currentPage === 1);
+
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            i === currentPage ||
+            i <= 4 ||
+            i === totalPages ||
+            Math.abs(currentPage - i) <= 1
+          ) {
+            addButton(i, i, false, i === currentPage);
+          }
+        }
+
+        addButton(">", currentPage + 1, currentPage === totalPages);
+        addButton(">>", totalPages, currentPage === totalPages);
+      }
+
+      // Listeners
+      searchInput.addEventListener("input", () => {
+        currentPage = 1;
+        fetchAndRender();
+      });
+
+      filterBySelect.addEventListener("change", () => {
+        currentPage = 1;
+        fetchAndRender();
+      });
+
+      const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+      // First Load
+      fetchAndRender();
+    }
+    showTeacherPaymentData();
+
+    // Fee Delete function
+    function deleteTeacherPayment(id) {
+      async function apply(){
+            const confirmed = await showModal({
+            title: "حذف",
+            message: "آیا می‌خواهید معاش حذف شود؟",
+            type: "ok-cancel"
+          });
+        
+          if (confirmed) {
+            console.log("User confirmed ✅");
+            fetch(`http://localhost:3000/teachers_payment/${id}`, {
+          method: "DELETE",
+        })
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error("خطا در حذف فیس");
+            }
+
+            const data = await response.json(); // ✅ Works because backend sends JSON now
+            showModal({
+              	title: "موفقیت",
+              	message: "معاش  موفقانه حذف شد.",
+              	icon: "success",
+            });
+            showTeacherPaymentData(); // ✅ Reload table
+          })
+          .catch((error) => {
+            console.error("❌ خطا در اتصال یا سرور:", error);
+            alert("خطا در اتصال یا سرور");
+          });
+          } else {
+            this.close();
+            console.log("User cancelled ❌");
+          }
+        }
+        apply();
+
+    }
+
+     function editPart(teacherpayId){
+      document.getElementById('save').style.display = 'none';
+      document.getElementById('save1').style.display = 'flex';
+      fetch(`http://localhost:3000/teachers_payment/${teacherpayId}`).then(res => res.json()).then(teacherpay => {
+        if(!teacherpay) return;
+        console.log(teacherpay.id)
+        document.getElementById('id').value = teacherpay.id;
+        document.getElementById('month').value = teacherpay.month;
+        document.getElementById('teacherselection').value = teacherpay.tpid;
+        document.getElementById('teacher_fullname').value = teacherpay.name;
+        document.getElementById('payableamount').value = teacherpay.payablea;
+        document.getElementById('payedamount').value = teacherpay.payeda;
+        document.getElementById('rest').value = teacherpay.r_p;        
+      })
+
+    }
+    document.getElementById('save1').addEventListener('click', function () {
+      const form = document.getElementById('teacher_payment');
+
+      // Collect form data as JSON object
+      const data = {
+        month: form.month.value,
+        name: form.teacher_fullname.value,
+        payablea: form.payableamount.value,
+        payeda: form.payedamount.value,
+        r_p: form.rest.value,
+      };    
+
+      const id = document.getElementById('id').value.trim();
+
+      fetch(`/teachers_payment/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      }).then(res => {
+        if (!res.ok) throw new Error("Server error");
+        return res.json();
+      }).then(data => {
+        showModal({
+              	title: "موفقیت",
+              	message: "تغییرات موفقانه ثبت شد.",
+              	icon: "success",
+            });
+        showTeacherPaymentData();
+      }).catch(err => {
+        console.error("خطا در تغییر داده:", err);
+        alert("خطا در ذخیره تغییرات ❌");
+      });
+    });
+    document.getElementById('exit').addEventListener('click', ()=>{
+      document.getElementById('save1').style.display= 'none';
+      document.getElementById('save').style.display= 'flex';
+    })
+
+    </script>
+  </body>
+</html>

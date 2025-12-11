@@ -1,0 +1,164 @@
+<form id="employeePayment_form" lang="fa" dir="rtl">
+  <div id="header_modal">جزئیات معاش کارمند</div>
+  <div id="content_modal">
+    <div id="right_content_modal">
+      <!-- First Section -->
+      <div class="section">
+        <input type="hidden" id="pid" name="id">
+        <label for="mepid">آی دی کارمند:<input id="mepid" type="text" name="epid" readonly /></label>
+        <label for="mname">اسم:<input id="mname" type="text" name="name" readonly /></label>
+        <label for="mmonth">ماه:<select id="mmonth" type="text" name="month">
+          <option value="حمل">حمل</option>
+          <option value="ثور">ثور</option>
+          <option value="جوزا">جوزا</option>
+          <option value="سرطان">سرطان</option>
+          <option value="اسد">اسد</option>
+          <option value="سنبله">سنبله</option>
+          <option value="میزان">میزان</option>
+          <option value="عقرب">عقرب</option>
+          <option value="قوص">قوس</option>
+          <option value="جدی">جدی</option>
+          <option value="دلو">دلو</option>
+          <option value="حوت">حوت</option>
+        </select></label>
+        <label for="mpdate">تاریخ ثبت:<input id="mpdate" type="text" name="pdate" readonly/></label>
+      </div>
+      <!-- Second section -->
+      <div class="section">
+        <label for="mpayablea">معاش قابل پرداخت:<input id="mpayablea" type="number" name="payablea" readonly /></label>
+        <label for="mpayeda">معاش پرداخت شده:<input id="mpayeda" type="number" name="payeda" /></label>
+        <label for="mrest">معاش باقیمانده:<input id="mrest" type="number" name="rest" readonly /></label>
+      </div>
+    </div>
+  </div>
+  <div id="footer_modal">
+    <input type="submit" id="save_modal" value="ذخیره نمودن">
+    <div id="close" onclick="closeModal();">بستن</div>
+  </div>
+</form>
+<!-- CSS Style -->
+<link href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css" rel="stylesheet">
+
+<style>
+  @font-face {
+    font-family: "BYekan";
+    src: url("./Fonts/BYekan+.ttf") format("truetype");
+    font-family: "BYekanBold";
+    src: url("./Fonts/BYekan+\ Bold.ttf") format("truetype");
+    font-family: "FarYekan";
+    src: url("./Fonts/Far_Yekan.ttf") format("truetype");
+  }
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "BYekanBold", sans-serif;
+  }
+  #employeePayment_form {
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    height: 65vh;
+    background-color: #f4f4f4;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+  }
+  #header_modal {
+    display: flex;
+    width: 100%;
+    height: 105px;
+    justify-content: start;
+    align-items: center;
+    padding: 0 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  #content_modal {
+    display: flex;
+    width: 100%;
+    height: 78%;
+    background-color: #fff;
+  }
+  #right_content_modal {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    width: 100%;
+    height: 100%;
+    border-left: 1px solid #e4e4e4;
+  }
+  #right_content_modal .section {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+    border-left: 1px solid #e4e4e4;
+    padding: 0 30px;
+  }
+  #right_content_modal div:nth-child(2) {
+    border: none;
+  }
+  #right_content_modal .section label {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 20px 0 20px;
+  }
+  #right_content_modal .section label input,
+  select {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #e4e4e4;
+    border-radius: 5px;
+    padding: 0 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    margin-top: 10px;
+  }
+  #footer_modal {
+    display: flex;
+    padding: 20px 30px;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 90px;
+  }
+  #footer_modal
+  #close,
+  #save_modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px 20px;
+    width: fit-content;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+  #save_modal {
+    margin: 0 0 0 15px;
+  }
+  #close {
+    background-color: #ff4d4d;
+  }
+  #save_modal {
+    background-color: #1e90ff;
+  }
+  #save_modal:hover {
+    background-color: #0d74d1;
+  }
+  #close:hover{
+    background-color: #cc0000;
+  }
+
+
+</style>

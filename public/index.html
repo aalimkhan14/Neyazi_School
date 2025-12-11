@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  	<meta charset="UTF-8" />
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  	<title>ورود / بازیابی رمز</title>
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  	<link rel="stylesheet" href="./css/modal.css">
+  	<script src="https://kit.fontawesome.com/a2d9d5a3ef.js" crossorigin="anonymous"></script>
+  	<script src="./js//modal.js"></script>
+
+  
+  	<style>
+    	:root {
+    	  	--primary-text-color: #1a1a2e;
+    	  	--secondary-text-color: #6c757d;
+    	  	--input-border-color: #e0e0e0;
+    	  	--button-bg-color: #2c3e50;
+    	  	--button-hover-color: #34495e;
+    	  	--link-color: #2c3e50;
+    	  	--background-color: #f7f7f7;
+    	  	--error-color: #dc3545;
+    	}
+
+    	body {
+    	  	font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+    	  	background-color: var(--background-color);
+    	  	display: flex;
+    	  	justify-content: center;
+    	  	align-items: center;
+    	  	min-height: 100vh;
+    	  	margin: 0;
+    	}
+
+    	.auth-container {
+    	  	background-color: #ffffff;
+    	  	padding: 40px;
+    	  	border-radius: 12px;
+    	  	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    	  	width: 100%;
+    	  	max-width: 400px;
+    	  	text-align: center;
+    	  	box-sizing: border-box;
+    	}
+
+    	.hand-icon-wrapper, .icon-wrapper, .icon-wrapperr {
+    	  	margin-bottom: 20px;
+    	  	display: flex;
+    	  	justify-content: center;
+    	  	align-items: center;
+    	  	width: 60px;
+    	  	height: 60px;
+    	  	background-color: #f0f0f0;
+    	  	border-radius: 50%;
+    	  	margin-inline: auto;
+			box-sizing: border-box;
+    	}
+		.hand-icon-wrapper img{
+			display: flex;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+		}
+
+    	.fas {
+    	  	font-size: 24px;
+    	  	color: var(--primary-text-color);
+    	}
+
+    	h1 {
+    	  	color: var(--primary-text-color);
+    	  	font-size: 26px;
+    	  	font-weight: 600;
+    	  	margin-bottom: 10px;
+    	}
+
+    	p {
+    	  	color: var(--secondary-text-color);
+    	  	font-size: 15px;
+    	  	margin-bottom: 30px;
+    	}
+
+    	.input-group {
+    	  	margin-bottom: 20px;
+    	  	text-align: right;
+    	}
+
+    	.input-group label {
+    	  	display: block;
+    	  	font-size: 14px;
+    	  	font-weight: 500;
+    	  	color: var(--primary-text-color);
+    	  	margin-bottom: 8px;
+    	}
+
+    	.input-field-wrapper {
+    	  	position: relative;
+    	  	border: 1px solid var(--input-border-color);
+    	  	border-radius: 8px;
+    	  	padding: 0 12px;
+    	  	height: 50px;
+    	  	display: flex;
+    	  	align-items: center;
+    	}
+
+    	.input-field-wrapper input {
+    	  	width: 100%;
+    	  	border: none;
+    	  	outline: none;
+    	  	font-size: 16px;
+    	  	color: var(--primary-text-color);
+    	  	background: transparent;
+    	}
+
+    	.submit-button {
+    	  	width: 100%;
+    	  	padding: 15px;
+    	  	background-color: var(--button-bg-color);
+    	  	color: #fff;
+    	  	border: none;
+    	  	border-radius: 8px;
+    	  	font-size: 18px;
+    	  	font-weight: 600;
+    	  	cursor: pointer;
+    	  	transition: background-color 0.2s;
+    	}
+
+    	.submit-button:hover {
+    	  	background-color: var(--button-hover-color);
+    	}
+
+    	.link {
+    	  	color: var(--link-color);
+    	  	font-weight: 500;
+    	  	text-decoration: none;
+    	  	font-size: 14px;
+    	  	display: inline-block;
+    	  	margin-top: 15px;
+    	}
+
+    	.link:hover {
+    	  	text-decoration: underline;
+    	}
+
+    	/* Hide all sections initially except login */
+    	#forgot, #setPassword {
+    	  	display: none;
+    	}
+
+    	.validation-error {
+    	  	font-size: 12px;
+    	  	color: var(--error-color);
+    	  	display: none;
+    	}
+
+    	.error .validation-error {
+    	  	display: block;
+    	}
+  </style>
+</head>
+<body>
+  	<div class="auth-container">
+
+    	<!-- LOGIN SECTION -->
+    	<div id="login">
+    	  	<div class="hand-icon-wrapper"><img src="./images/logo.png" alt=""></div>
+    	  	<h1>ورود به سیستم</h1>
+    	  	<form id="loginForm">
+    	  	  	<div class="input-group">
+    	  	  	  	<label for="username">نام کاربر</label>
+    	  	  	  	<div class="input-field-wrapper">
+    	  	  	  	  	<input type="text" id="username" placeholder="نام کاربر خود را وارد کنید" required>
+    	  	  	  	</div>
+    	  	  	</div>
+    	  	  	<div class="input-group">
+    	  	  	  	<label for="password">رمز عبور</label>
+    	  	  	  	<div class="input-field-wrapper">
+    	  	  	  	  	<input type="password" id="password" placeholder="رمز عبور خود را وارد کنید" required>
+    	  	  	  	</div>
+    	  	  	</div>
+    	  	  	<button type="submit" class="submit-button">ورود</button>
+    	  	  	<a href="#" class="link" id="goForgot">رمز عبور خود را فراموش کرده‌ام</a>
+    	  	</form>
+    	</div>
+
+    	<!-- FORGOT PASSWORD SECTION -->
+    	<div id="forgot">
+    	  	<div class="icon-wrapper"><i class="fas fa-envelope"></i></div>
+    	  	<h1>بازیابی رمز عبور</h1>
+    	  	<p>ایمیل خود را وارد کنید تا لینک بازیابی برای شما ارسال شود.</p>
+    	  	<form id="forgotForm">
+    	  	  	<div class="input-group">
+    	  	  	  	<label for="email">ایمیل</label>
+    	  	  	  	<div class="input-field-wrapper">
+    	  	  	  	  	<input type="email" id="email" placeholder="ایمیل خود را وارد کنید" required>
+    	  	  	  	</div>
+    	  	  	</div>
+    	  	  	<button type="submit" class="submit-button">ارسال لینک</button>
+    	  	  	<a href="#" class="link" id="goLogin">بازگشت به ورود</a>
+    	  	</form>
+    	</div>
+
+    	<!-- SET PASSWORD SECTION -->
+    	<div id="setPassword" style="flex-direction: column;">
+    	  	<div class="icon-wrapper"><i class="fas fa-lock"></i></div>
+    	  	<h1>تنظیم رمز جدید</h1>
+    	  	<p>کد ۶ رقمی را وارد کنید و رمز جدید تعیین کنید.</p>
+    	  	<form id="resetForm">
+    	  	  	<div class="input-group">
+    	  	  	  	<label for="code">کد ۶ رقمی</label>
+    	  	  	  	<div class="input-field-wrapper">
+    	  	  	  	  	<input type="text" id="code" maxlength="6" required>
+    	  	  	  	</div>
+    	  	  	</div>
+    	  	  	<div class="input-group">
+    	  	  	  	<label for="newPassword">رمز عبور جدید</label>
+    	  	  	  	<div class="input-field-wrapper">
+    	  	  	  	  	<input type="password" id="newPassword" placeholder="رمز جدید را وارد کنید" required>
+    	  	  	  	</div>
+    	  	  	</div>
+    	  	  	<div class="input-group" id="confirmGroup">
+    	  	  	  	<label for="confirmPassword">تأیید رمز عبور</label>
+    	  	  	  	<div class="input-field-wrapper">
+    	  	  	  	  	<input type="password" id="confirmPassword" placeholder="رمز را دوباره وارد کنید" required>
+    	  	  	  	</div>
+    	  	  	  	<p class="validation-error">رمزها باید یکسان باشند</p>
+    	  	  	</div>
+    	  	  	<button type="submit" class="submit-button">ثبت رمز جدید</button>
+    	  	  	<a href="#" class="link" id="goLogin2">بازگشت به ورود</a>
+    	  	</form>
+    	</div>
+  	</div>
+	<!-- ✅ Shared Modal -->
+	<div id="shared-modal-backdrop" class="modal-backdrop">
+	  	<div id="shared-modal" class="nmodal-content">
+	  	  	<div class="icon-wrapperr">
+	  	  	  	<i class="fas fa-circle-check" style="color:#28a745; font-size:32px;"></i>
+	  	  	</div>
+	  	  	<h3 id="modal-title">عنوان پیام</h3>
+	  	  	<p id="modal-message">متن پیام در اینجا نمایش داده می‌شود.</p>
+	  	  	<div id="modal-actions" class="modal-actions"></div>
+	  	</div>
+	</div>
+
+
+  	<script>
+    	const login = document.getElementById("login");
+    	const forgot = document.getElementById("forgot");
+    	const setPassword = document.getElementById("setPassword");
+
+    	document.getElementById("goForgot").addEventListener("click", (e) => {
+    	  	e.preventDefault();
+    	  	login.style.display = "none";
+    	  	forgot.style.display = "block";
+    	});
+
+    	document.getElementById("goLogin").addEventListener("click", (e) => {
+    	  	e.preventDefault();
+    	  	forgot.style.display = "none";
+    	  	login.style.display = "block";
+    	});
+
+    	document.getElementById("goLogin2").addEventListener("click", (e) => {
+    	  	e.preventDefault();
+    	  	setPassword.style.display = "none";
+    	  	login.style.display = "block";
+    	});
+
+    	// document.getElementById("setForm").addEventListener("submit", (e) => {
+    	//   	e.preventDefault();
+    	//   	const newPass = document.getElementById("newPassword").value;
+    	//   	const confirmPass = document.getElementById("confirmPassword").value;
+    	//   	const confirmGroup = document.getElementById("confirmGroup");
+
+    	//   	if (newPass !== confirmPass) {
+    	//   	  	confirmGroup.classList.add("error");
+    	//   	  	return;
+    	//   	}
+
+    	//   	alert("رمز عبور جدید با موفقیت تنظیم شد!");
+    	//   	setPassword.style.display = "none";
+    	//   	login.style.display = "block";
+    	// });
+		// login function 
+
+  		login.addEventListener("submit", async (e) => {
+  		  	e.preventDefault();
+		
+  		  	const username = document.getElementById("username").value.trim();
+  		  	const password = document.getElementById("password").value.trim();
+		
+  		  	try {
+  		  	  	const response = await fetch("http://localhost:3000/userLogin/login", {
+  		  	  	  	method: "POST",
+  		  	  	  	headers: { "Content-Type": "application/json" },
+  		  	  	  	body: JSON.stringify({ username, password }),
+  		  	  	});
+			
+  		  	  	const data = await response.json();
+			
+  		  	  	if (!response.ok) {
+  		  	  	  	document.getElementById("message").innerText = data.message || "Login failed";
+  		  	  	  	return;
+  		  	  	}
+			
+  			  	// ✅ Successful login
+  		  	  	// console.log("User info:",data.user.role);
+				
+  		  	  	// Example: Save user info in localStorage
+  		  	  	localStorage.setItem("userRole", JSON.stringify(data.user.role));
+				username.value = '';
+				password.value = '';
+  		  	  	// Example: Redirect to dashboard
+  		  	  	window.location.href = "/home.html";
+  		  	} catch (err) {
+				// ❌ Error message
+				showModal({
+				  	title: "خطا",
+				  	message: "نام کاربری یا رمز عبور اشتباه است.",
+				  	icon: "error",
+				});
+
+				// Example 2: OK-Cancel confirmation
+
+  		  	  	console.error("Error:", err);
+  		  	  	document.getElementById("message").innerText = "Server error. Please try again.";
+  		  	}
+  		});
+
+		let resetEmail = '';
+		const emailForm = document.getElementById('forgotForm');
+		// checking Email function 
+		emailForm.addEventListener("submit", async (e) => {
+  			e.preventDefault(); // prevent page reload
+
+  			const emailInput = document.getElementById("email");
+  			const email = emailInput.value.trim();
+
+  			if (!email) {
+  			  	showModal({
+  			  	  	title: "خطا",
+  			  	  	message: "لطفاً ایمیل خود را وارد کنید.",
+  			  	  	icon: "error",
+  			  	});
+  			  	return;
+  			}
+		
+  			try {
+  			  	const res = await fetch("/userLogin/check-email", {
+  			  	  	method: "POST",
+  			  	  	headers: { "Content-Type": "application/json" },
+  			  	  	body: JSON.stringify({ email }),
+  			  	});
+		  
+  			  	// handle non-200 status
+  			  	if (!res.ok) {
+  			    	throw new Error("Email not found or server error");
+  			  	}
+		  
+  			  	const data = await res.json();
+			  
+  			  	// Store values safely
+  			  	resetEmail = data.email;
+  			  	const token = data.resetToken;
+			  
+  			  	// Show next section
+  			  	forgot.style.display = 'none';
+  			  	setPassword.style.display = 'flex';
+				
+				emailInput.value = '';
+  			  	console.log("✅ Email found:", resetEmail, "Token:", token);
+		  
+  			} catch (err) {
+  			  	console.error("❌ Error checking email:", err);
+			
+  			  	showModal({
+  			    	title: "خطا",
+  			    	message: "ایمیل در سیستم موجود نیست یا مشکلی پیش آمده است.",
+  			    	icon: "error",
+  			  	});
+  			}
+		});
+
+		
+
+		// reset password
+		const resetForm = document.getElementById("resetForm");
+
+		resetForm.addEventListener("submit", async (e) => {
+		  	e.preventDefault(); // Prevent page reload
+			
+		  	const email = resetEmail; // from previous step
+		  	const resetToken = document.getElementById("code").value.trim();
+		  	const newPassword = document.getElementById("newPassword").value.trim();
+		  	const confirmPassword = document.getElementById("confirmPassword").value.trim();
+			
+		  	// ✅ Validate empty fields
+		  	if (!resetToken || !newPassword || !confirmPassword) {
+		  	  	showModal({
+		  	  	  	title: "خطا",
+		  	  	  	message: "لطفاً تمام فیلدها را پر کنید.",
+		  	  	  	icon: "error",
+		  	  	});
+		  	  	return;
+		  	}
+	  
+		  	// ✅ Validate password match
+		  	if (newPassword !== confirmPassword) {
+		  	  	showModal({
+		  	  	  	title: "خطا",
+		  	  	  	message: "رمز جدید و تایید رمز آن مطابقت ندارند.",
+		  	  	  	icon: "error",
+		  	  	});
+		  	  	return; // stop form submission
+		  	}
+	  
+		  	try {
+		    	const res = await fetch("/userLogin/reset-password", {
+		    	  	method: "POST",
+		    	  	headers: { "Content-Type": "application/json" },
+		    	  	body: JSON.stringify({ email, resetToken, newPassword }),
+		    	});
+			
+		    	if (!res.ok) throw new Error("Failed to reset password");
+			
+		    	const data = await res.json();
+			
+		    	showModal({
+		    	  	title: "موفقیت",
+		    	  	message: "رمز شما با موفقیت تغییر کرد.",
+		    	  	icon: "success",
+		    	});
+			
+				setPassword.style.display = "none";
+		    	login.style.display = "block";
+			
+		    	// Optional: redirect after success
+		    	// setTimeout(() => (window.location.href = "/login"), 2000);
+		
+		  	} catch (err) {
+		  	  	console.error("❌ Error resetting password:", err);
+		  	  	showModal({
+		  	  	  	title: "خطا",
+		  	  	  	message: "بازنشانی رمز عبور ناموفق بود.",
+		  	  	  	icon: "error",
+		  	  	});
+		  	}
+		});
+  	</script>
+</body>
+</html>

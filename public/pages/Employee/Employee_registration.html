@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .required-star {
+        color: red;
+        font-weight: bold;
+        margin: 0 4px;
+        user-select: none;
+      }
+      #rheader {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rparent">
+      <form id="employee_registration" class="rcover">
+        <div id="rheader">ثبت مشخصات کارمند</div>
+
+        <div id="rcontent">
+          <div id="one">
+            <label for="name">
+              <span>اسم: <span class="required-star">*</span></span>
+              <input id="name" name="name" type="text" required />
+            </label>
+
+            <label for="lname">
+              <span>تخلص:</span>
+              <input id="lname" name="lname" type="text" />
+            </label>
+
+            <label for="fname">
+              <span>ولد: <span class="required-star">*</span></span>
+              <input id="fname" name="fname" type="text" required />
+            </label>
+
+            <label for="gfname">
+              <span>ولدیت: <span class="required-star">*</span></span>
+              <input id="gfname" name="gfname" type="text" required />
+            </label>
+          </div>
+
+          <div id="two">
+            <label for="birth">
+              <span>تاریخ تولد: <span class="required-star">*</span></span>
+              <input
+                id="birth"
+                name="birth"
+                type="text"
+                readonly
+                required
+              />
+            </label>
+
+            <label for="idcard">
+              <span>نمبر تذکره: <span class="required-star">*</span></span>
+              <input id="idcard" name="idcard" type="text" required />
+            </label>
+
+            <label for="phone">
+              <span>شماره تماس: <span class="required-star">*</span></span>
+              <input id="phone" name="phone" type="text" pattern="07\d{8}" maxlength="10" title="Must start with 07 and be 10 digits" required />
+            </label>
+
+            <label for="address">
+              <span>آدرس: <span class="required-star">*</span></span>
+              <input id="address" name="address" type="text" required />
+            </label>
+          </div>
+
+          <div id="four">
+            <label for="job">
+              <span>وظیفه: <span class="required-star">*</span></span>
+              <input id="job" name="job" type="text" required />
+            </label>
+            <label for="salary">
+              <span>معاش: <span class="required-star">*</span></span>
+              <input id="salary" name="salary" type="text" required />
+            </label>
+            <label for="">
+              <span><span class="required-star"></span></span>
+              <input id="" name="" type="hidden" required />
+            </label>
+            <label for="">
+              <span><span class=""></span></span>
+              <input id="" name="" type="hidden" required />
+            </label>
+          </div>
+        </div>
+
+        <div id="rfooter">
+          <input type="submit" id="save" value="ثبت کردن" />
+          <input type="reset" id="exit" value="پاک کردن" />
+        </div>
+      </form>
+    </div>
+    <script src="./../../js/Date_Elemet.js"></script>
+    <script>
+      datePicker('#birth');
+      datePicker('#graduatedate');
+    </script>
+    <script>
+      // to send form
+      document.getElementById("employee_registration").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const form = e.target; 
+        // Build a JSON object from form fields
+        const data = {
+          name: form.name.value.trim(),
+          lname: form.lname.value.trim(),
+          fname: form.fname.value.trim(),
+          gfname: form.gfname.value.trim(),
+          birth: form.birth.value,
+          idcard: form.idcard.value.trim(),
+          phone: form.phone.value.trim(),
+          address: form.address.value.trim(),
+          job: form.job.value,
+          salary: form.salary.value.trim(),
+        }; 
+        try {
+          const response = await fetch("http://localhost:3000/employees", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          if (response.ok) {
+            showModal({
+        	      title: "موفقیت",
+        	      message: "کارمند موفقانه ثبت شد.",
+        	      icon: "success",
+            });
+            form.reset();
+          } else {
+            alert("خطا در ثبت کارمند");
+            console.log(response);
+          }
+        } catch (error) {
+          console.error("Error: ", error);
+          alert("خطا در اتصال به سرور");
+        }
+      });
+    </script>
+  </body>
+</html>

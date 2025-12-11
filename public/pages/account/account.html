@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            .th:nth-child(6) {
+                width: 5%;
+            }
+            tr td:nth-child(6) {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  padding: 5px;
+            }
+        </style>
+  </head>
+  <body>
+        <div id="rparent">
+            <form id="formUser" class="rcover">
+                <div id="rheader">ایجاد حساب کاربری</div>
+                <div id="rcontent">
+                    <div id="one">
+                        <input type="hidden" id="id" name="id">
+                        <label for="username">نام کاربر:<input id="username" name="username" type="text" required/></label>
+                        <label for="password">رمز عبور:<input id="password" name="password" type="password" required/></label>
+                        <label for="role">نوعیت کاربر:
+                            <select name="role" id="role" required>
+                                <option value="" disabled selected>نوعیت کاربر را مشخص کنید</option>
+                                <option value="ادمین">ادمین</option>
+                                <option value="مدیر مالی">مدیر مالی</option>
+                                <option value="مدیر تدریسی">مدیر تدریسی</option>
+                            </select>
+                        </label>
+                        <label for="email">ایمیل بازیابی رمز عبور:<input id="email" name="email" type="email" required/></label>
+                    </div>
+                </div>
+                <div id="rfooter">
+                    <input type="submit" id="save" value="ثبت کردن" />
+                    <input type="button" value="ثبت کردن" id="save1"style="display: none"/>
+                    <input type="reset" id="exit" value="پاک کردن" />
+                </div>
+            </form>
+
+            <div class="rcover">
+                <div id="rheader">لیست حساب کاربران</div>
+                <div id="rcontent"  style="min-height: 400px; height: fit-content;" >
+                    <div id="searchbar" class="search_bar">
+                    <table>
+                        <thead>
+                            <th class="th">نمبر</th>
+                            <th class="th">نام کاربر</th>
+                            <th class="th">رمز عبور</th>
+                            <th class="th">نوعیت کاربر</th>
+                            <th class="th">ایمیل</th>
+                            <th class="th">عملکرد</th>
+                        </thead>
+                        <tbody id="tbody"></tbody>
+                    </table>
+                </div>
+                <div id="rfooter"></div>
+            </div>
+        </div>  
+        <script>
+            document.getElementById("formUser").addEventListener("submit", async function (e) {
+                e.preventDefault();
+
+                const id = document.getElementById("id").value;
+                const username = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
+                const role = document.getElementById("role").value;
+                const email = document.getElementById("email").value;
+
+                let url = "/auser";
+                let method = "POST";
+
+                // if ID exists → update
+                if (id !== "") {
+                    url = `/auser/${id}`;
+                    method = "PUT";
+                }
+
+                const bodyData = { username, password, role, email };
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(bodyData)
+                });
+
+                if (res.ok) {
+                    showModal({
+                      	title: "موفقیت",
+                      	message: "حساب کاربر موفقانه ثبت شد.",
+                      	icon: "success",
+                    });
+                    loaduser();
+                    this.reset();
+                    document.getElementById("id").value = "";
+                } else {
+                    alert("مشکل وجود دارد!");
+                }
+            }); 
+
+            //load users
+            function loaduser(){
+            async function loadUsers() {
+                const response = await fetch("/auser");
+                const result = await response.json();
+
+                const tbody = document.getElementById("tbody");
+
+                if (!Array.isArray(result.data)) {
+                    console.error("❌ result.data is not an array:", result);
+                    return;
+                }
+            
+                tbody.innerHTML = "";
+            
+                result.data.forEach((user, index) => {
+                    tbody.innerHTML += `
+                        <tr data-user-id="${user.id}" ondblclick="editPart(this.dataset.userId)">
+                            <td>${index + 1}</td>
+                            <td>${user.username}</td>
+                            <td>${user.password}</td>
+                            <td>${user.role}</td>
+                            <td>${user.email}</td>
+                            <td>
+                                <div id="cover">
+                                    <div id="action">
+                                        <div id="action3" class="action3" onclick="deleteUser(${user.id})" title="del"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            
+                // Apply SVG trash icon after DOM render
+                setTimeout(() => {
+                    document.querySelectorAll(".action3")
+                            .forEach(el => el.innerHTML = del);
+                }, 0);
+            }
+
+
+            // -----------------------------------------
+            // 🔹 SVG Delete Icon (same as your example)
+            // -----------------------------------------
+            const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+
+            // First load
+            loadUsers();
+            }
+            loaduser();
+
+            // delte user
+            async function deleteUser(id) {
+                async function apply(){
+                    const confirmed = await showModal({
+                        title: "حذف",
+                        message: "آیا میخواهید حساب کاربری حذف شود؟",
+                        type: "ok-cancel"
+                    });
+                  
+                    if (confirmed) {
+                        console.log("User confirmed ✅");
+                        const res = await fetch(`/auser/${id}`, {
+                            method: "DELETE"
+                        });
+                    
+                        if (res.ok) {
+                            loaduser(); // reload list
+                        } else {
+                            alert("مشکل در حذف!");
+                        }
+                  } else {
+                    this.close();
+                    console.log("User cancelled ❌");
+                  }
+                }
+                apply();
+                
+            }
+
+            //update usre
+            function editPart(userId){
+                document.getElementById('save').style.display = 'none';
+                document.getElementById('save1').style.display = 'flex';
+                fetch(`http://localhost:3000/auser/${userId}`).then(res => res.json()).then(user => {
+                    if(!user) return;
+                    console.log(user.id)
+                    document.getElementById('id').value = user.id;
+                    document.getElementById('username').value = user.username;
+                    document.getElementById('password').value = user.password;
+                    document.getElementById('role').value = user.role;
+                    document.getElementById('email').value = user.email;
+                })
+            }
+            document.getElementById('save1').addEventListener('click', function () {
+                const form = document.getElementById('formUser');
+            
+                // Collect form data as JSON object
+                const data = {
+                    username: form.username.value,
+                    password: form.password.value,
+                    role: form.role.value,
+                    email: form.email.value,
+                };
+            
+                const id = document.getElementById('id').value.trim();
+              
+                fetch(`/auser/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                }).then(res => {
+                    if (!res.ok) throw new Error("Server error");
+                    return res.json();
+                }).then(data => {
+                    showModal({
+                      	title: "موفقیت",
+                      	message: "تغییرات موفقانه ثبت شد.",
+                      	icon: "success",
+                    });
+                    loaduser();
+                }).catch(err => {
+                    console.error("خطا در تغییر داده:", err);
+                    alert("خطا در ذخیره تغییرات ❌");
+                });
+            });
+
+            document.getElementById('exit').addEventListener('click', ()=>{
+                document.getElementById('save1').style.display= 'none';
+                document.getElementById('save').style.display= 'flex';
+            })
+        </script>
+  </body>
+</html>

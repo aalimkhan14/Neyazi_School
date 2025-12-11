@@ -1,0 +1,154 @@
+<form id="employee_form" lang="fa" dir="rtl">
+  <div id="header_modal">جزئیات کارمند</div>
+  <div id="content_modal">
+    <div id="right_content_modal">
+      <!-- First Section -->
+      <div class="section">
+        <input type="hidden" id="tid" name="id">
+        <label for="name">اسم<input id="name" type="text" name="name" /></label>
+        <label for="lname">تخلص:<input id="lname" type="text" name="lname" /></label>
+        <label for="fname">ولد:<input id="fname" type="text" name="fname" /></label>
+        <label for="gfname">ولدیت<input id="gfname" type="text" name="gfname" /></label>
+        <label for="birth">تاریخ تولد:<input id="birth" type="text" name="birth" readonly /></label>
+        <label for="idcard">نمبر تذکره:<input id="idcard" type="text" name="idcard" /></label>
+      </div>
+      <!-- Second section -->
+      <div class="section">
+        <label for="phone">شماره تماس:<input id="phone" type="text" name="phone" /></label>
+        <label for="address">آدرس<input id="address" type="text" name="address" /></label></label>
+        <label for="job">وظیفه:<input id="job" type="text" name="job" /></label>
+        <label for="salary">معاش:<input id="salary" type="text" name="salary" /></label>
+      </div>
+    </div>
+  </div>
+  <div id="footer_modal">
+    <input type="submit" id="save_modal" value="ذخیره نمودن">
+    <div id="close" onclick="closeModal();">بستن</div>
+  </div>
+</form>
+<!-- CSS Style -->
+<link href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css" rel="stylesheet">
+
+<style>
+  @font-face {
+    font-family: "BYekan";
+    src: url("./Fonts/BYekan+.ttf") format("truetype");
+    font-family: "BYekanBold";
+    src: url("./Fonts/BYekan+\ Bold.ttf") format("truetype");
+    font-family: "FarYekan";
+    src: url("./Fonts/Far_Yekan.ttf") format("truetype");
+  }
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "BYekanBold", sans-serif;
+  }
+  #employee_form {
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    height: 95vh;
+    background-color: #f4f4f4;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+  }
+  #header_modal {
+    display: flex;
+    width: 100%;
+    height: 12%;
+    justify-content: start;
+    align-items: center;
+    padding: 0 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  #content_modal {
+    display: flex;
+    width: 100%;
+    height: 78%;
+    background-color: #fff;
+  }
+  #right_content_modal {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    width: 100%;
+    height: 100%;
+    border-left: 1px solid #e4e4e4;
+  }
+  #right_content_modal .section {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+    border-left: 1px solid #e4e4e4;
+    padding: 0 30px;
+  }
+  #right_content_modal div:nth-child(3) {
+    border: none;
+  }
+  #right_content_modal .section label {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 20px 0 20px;
+  }
+  #right_content_modal .section label input,
+  select {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #e4e4e4;
+    border-radius: 5px;
+    padding: 0 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    margin-top: 10px;
+  }
+  #footer_modal {
+    display: flex;
+    padding: 20px 30px;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 10%;
+  }
+  #footer_modal
+  #close,
+  #save_modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px 20px;
+    width: fit-content;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+  #save_modal {
+    margin: 0 0 0 15px;
+  }
+  #close {
+    background-color: #ff4d4d;
+  }
+  #save_modal {
+    background-color: #1e90ff;
+  }
+  #save_modal:hover {
+    background-color: #0d74d1;
+  }
+  #close:hover{
+    background-color: #cc0000;
+  }
+
+
+</style>

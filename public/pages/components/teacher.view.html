@@ -1,0 +1,229 @@
+<form id="teacher_form" lang="fa" dir="rtl">
+  <div id="header_modal">جزئیات استاد</div>
+  <div id="content_modal">
+    <div id="right_content_modal">
+      <!-- First Section -->
+      <div class="section">
+        <input type="hidden" id="tid" name="id">
+        <label for="name">اسم<input id="name" type="text" name="name" /></label>
+        <label for="lname">تخلص:<input id="lname" type="text" name="lname" /></label>
+        <label for="fname">ولد:<input id="fname" type="text" name="fname" /></label>
+        <label for="gfname">ولدیت<input id="gfname" type="text" name="gfname" /></label>
+        <label for="birth">تاریخ تولد:<input id="birth" type="text" name="birth" readonly /></label>
+        <label for="idcard">نمبر تذکره:<input id="idcard" type="text" name="idcard" /></label>
+      </div>
+      <!-- Second section -->
+      <div class="section">
+        <label for="phone">شماره تماس:<input id="phone" type="text" name="phone" /></label>
+        <label for="address">آدرس<input id="address" type="text" name="address" /></label></label>
+        <label for="educatelevel">درجه تحصیل:<input id="educatelevel" type="text" name="educatelevel" /></label>
+        <label for="educateunit">رشته تحصیلی:<input id="educateunit" type="text" name="educateunit" /></label>
+        <label for="graduatedate">تاریخ فراغت:<input id="graduatedate" type="text" name="graduatedate" readonly /></label>
+        <label for="graduateplace">محل فراغت:<input id="graduateplace" type="text" name="graduateplace" /></label>
+      </div>
+      <!-- Third Section -->
+      <div class="section">
+        <label for="job">وظیفه:<input id="job" type="text" name="job" /></label>
+        <label for="salary">معاش:<input id="salary" type="text" name="salary" /></label>
+        <label for="formcode">فورم کود:<input id="formcode" type="text" name="formcode" /></label>
+        <div class="button-container">
+          <label for="agreementFile" id="change_agreement">تغییر اسناد قرار داد</label>
+          <input type="file" id="agreementFile" name="agreementFile" accept=".pdf, image/*" />
+
+          <button type="button" class="btn-download" id="download_agreement" title="Download file">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 50 50">
+              <path d="M24.78125 2.9375C23.75 3.050781 22.976563 3.933594 23 4.96875L23 28.6875L19.40625 25.09375C18.984375 24.660156 18.386719 24.441406 17.78125 24.5C17.003906 24.574219 16.339844 25.097656 16.085938 25.835938C15.828125 26.578125 16.027344 27.398438 16.59375 27.9375L25 36.34375L33.40625 27.9375C33.929688 27.4375 34.144531 26.695313 33.964844 25.992188C33.785156 25.292969 33.242188 24.742188 32.542969 24.554688C31.84375 24.367188 31.097656 24.574219 30.59375 25.09375L27 28.6875L27 4.96875C27.007813 4.425781 26.796875 3.90625 26.414063 3.523438C26.03125 3.140625 25.511719 2.929688 24.96875 2.9375C24.90625 2.933594 24.84375 2.933594 24.78125 2.9375 Z M 2 36L2 41.6875C2 43.164063 2.449219 44.59375 3.5 45.59375C4.550781 46.59375 5.996094 47 7.4375 47L42.59375 47C44.054688 47 45.5 46.585938 46.53125 45.5625C47.5625 44.539063 48 43.058594 48 41.59375L48 36L44 36L44 41.59375C44 42.328125 43.84375 42.597656 43.71875 42.71875C43.59375 42.839844 43.332031 43 42.59375 43L7.4375 43C6.679688 43 6.402344 42.832031 6.28125 42.71875C6.160156 42.605469 6 42.414063 6 41.6875L6 36Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="footer_modal">
+    <input type="submit" id="save_modal" value="ذخیره نمودن">
+    <div id="close" onclick="closeModal();">بستن</div>
+  </div>
+</form>
+<!-- CSS Style -->
+<link href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css" rel="stylesheet">
+
+<style>
+  @font-face {
+    font-family: "BYekan";
+    src: url("./Fonts/BYekan+.ttf") format("truetype");
+    font-family: "BYekanBold";
+    src: url("./Fonts/BYekan+\ Bold.ttf") format("truetype");
+    font-family: "FarYekan";
+    src: url("./Fonts/Far_Yekan.ttf") format("truetype");
+  }
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "BYekanBold", sans-serif;
+  }
+  #teacher_form {
+    display: flex;
+    flex-direction: column;
+    width: 65vw;
+    height: 95vh;
+    background-color: #f4f4f4;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+  }
+  #header_modal {
+    display: flex;
+    width: 100%;
+    height: 12%;
+    justify-content: start;
+    align-items: center;
+    padding: 0 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  #content_modal {
+    display: flex;
+    width: 100%;
+    height: 78%;
+    background-color: #fff;
+  }
+  #right_content_modal {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    width: 100%;
+    height: 100%;
+    border-left: 1px solid #e4e4e4;
+  }
+  #right_content_modal .section {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+    border-left: 1px solid #e4e4e4;
+    padding: 0 30px;
+  }
+  #right_content_modal div:nth-child(3) {
+    border: none;
+  }
+  #right_content_modal .section label {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 20px 0 20px;
+  }
+  #right_content_modal .section label input,
+  select {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #e4e4e4;
+    border-radius: 5px;
+    padding: 0 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    margin-top: 10px;
+  }
+  #footer_modal {
+    display: flex;
+    padding: 20px 30px;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 10%;
+  }
+  #footer_modal
+  #close,
+  #save_modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px 20px;
+    width: fit-content;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+  #save_modal {
+    margin: 0 0 0 15px;
+  }
+  #close {
+    background-color: #ff4d4d;
+  }
+  #save_modal {
+    background-color: #1e90ff;
+  }
+  #save_modal:hover {
+    background-color: #0d74d1;
+  }
+  #close:hover{
+    background-color: #cc0000;
+  }
+
+  .button-container {
+    display: inline-flex;
+    width: 100%;
+    height: 50px;
+    padding: 10px 20px 0;
+    border-radius: 7px;
+    gap: 1px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  /* Change button becomes a label for file input */
+  #change_agreement {
+    background-color: #1e90ff;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    color: #fff;
+    outline: none;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+
+  #change_agreement:hover {
+    background-color: #0d74d1;
+  }
+
+  /* hidden file input */
+  #agreementFile {
+    display: none;
+  }
+
+  /* Download button style */
+  .btn-download {
+    background-color: #1e90ff;
+    border: none;
+    border-left: 2px solid #eee;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-download:hover {
+    background-color: #0d74d1;
+  }
+
+  /* SVG inside download button */
+  .btn-download svg {
+    fill: #fff;
+  }
+
+</style>

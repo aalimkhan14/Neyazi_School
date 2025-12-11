@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>چاپ گزارش</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: white;
+        margin: 0;
+      }
+      .a4 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        width: 297mm;
+        min-height: 210mm;
+        box-sizing: border-box;
+        margin: auto;
+      }
+      table {
+        width: 98%;
+        border-collapse: collapse;
+        box-sizing: border-box;
+      }
+      th,
+      td {
+        box-sizing: border-box;
+        border: 1px solid #999;
+        padding: 6px 8px;
+        text-align: center;
+      }
+      th{
+        background-color: #ccc;
+      }
+      @media print {
+        body {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="a4">
+      <h2 id="title"></h2>
+      <table id="printTable"></table>
+    </div>
+
+    <script>
+      const head = localStorage.getItem("tableHead");
+      const body = localStorage.getItem("tableBody");
+      const period = localStorage.getItem("period");
+      const dedicate = localStorage.getItem("dedicate");
+
+      let titlePeriod = ' سالانه ';
+      if(period == 'monthly'){
+        titlePeriod = ' ماهانه ';
+      }else if(period == 'quarter'){
+        titlePeriod = ' ربعوار ';
+      }else if(period == 'halfyear'){
+        titlePeriod = 'نیمه سال';
+      }else{
+        titlePeriod = ' سالانه ';
+      }
+
+      document.getElementById('title').innerHTML = 'گزارش'+titlePeriod+dedicate;
+
+      if (head && body) {
+        document.getElementById("printTable").innerHTML = head + body;
+        setTimeout(() => window.print(), 500);
+      }
+    </script>
+  </body>
+</html>

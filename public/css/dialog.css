@@ -1,0 +1,24 @@
+#forgot, #setPassword {
+    	  	display: none;
+    	}
+      .hand-icon-wrapper, .icon-wrapper, .icon-wrapperr {
+    	  	margin-bottom: 20px;
+    	  	display: flex;
+    	  	justify-content: center;
+    	  	align-items: center;
+    	  	width: 60px;
+    	  	height: 60px;
+    	  	background-color: #f0f0f0;
+    	  	border-radius: 50%;
+    	  	margin-inline: auto;
+    	}
+
+    	.validation-error {
+    	  	font-size: 12px;
+    	  	color: var(--error-color);
+    	  	display: none;
+    	}
+
+    	.error .validation-error {
+    	  	display: block;
+    	}

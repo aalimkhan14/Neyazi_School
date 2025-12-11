@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #rcontent{
+            height: 700px;
+        }
+        .th:nth-child(1), .th:nth-child(9){
+            width: 5%;
+        }
+        tr td:nth-child(9){
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+        }
+        /* Action */
+        #cover{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 80%;
+            height: 50px;
+            border-radius: 20px;
+        }
+        #modalcontent{
+          
+        }
+    </style>
+</head>
+<body>
+    <div id="rparent">
+    <div class="rcover">
+        <div id="rheader">اجناس ثبت شده</div>
+        <div id="rcontent">
+          <div id="searchbar" class="search_bar">
+            <div id="right" class="sright">
+              <input type="text" class="search_table" id="searchtable" placeholder="جستجو . . ."/>
+              <select id="sffilter" class="s_f_filter">
+                <option value="" selected>همه کتگوری</option>
+              </select>
+            </div>
+            <div id="left" class="sleft"></div>
+          </div>
+            <table>
+                <thead>
+                    <th class="th">نمبر</th>
+                    <th class="th">کنگوری</th>
+                    <th class="th">نام</th>
+                    <th class="th">تعداد</th>
+                    <th class="th">خرید</th>
+                    <th class="th">فروش</th>
+                    <th class="th">قیمت مجموع</th>
+                    <th class="th">تاریخ</th>
+                    <th class="th">عملکرد</th>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+        <div id="rfooter">
+          <div id="pagination" style="text-align: center; margin-top: 20px">
+            <div id="pagination-buttons"></div>
+          </div>
+        </div>
+        <div id="modal" class="modal">
+          <div id="modalContent" class="modal-content"></div>
+        </div>
+    </div>
+    </div>
+    <script>
+
+      async function loadCatagory(){
+          let catagory = document.getElementById('sffilter');
+          catagory.innerHTML = '<option value="">همه کتگوری</option>';
+          const res = await fetch('http://localhost:3000/catagory')
+          const data = await res.json();
+          data.data.forEach((name) => {
+              catagory.innerHTML += `<option value="${name.name}">${name.name}</option>`;
+          });
+      }
+      loadCatagory();
+         // show storage data
+    function showStorageData() {
+      const rowsPerPage = 10;
+      let currentPage = 1;
+      let totalPages = 1;
+
+      const searchInput = document.getElementById("searchtable");
+      const filterBySelect = document.getElementById("sffilter");
+      const tbody = document.getElementById("tbody");
+      const paginationButtons = document.getElementById("pagination-buttons");
+
+      async function fetchAndRender() {
+        const search = searchInput.value;
+        const filterBy = filterBySelect.value;
+
+        const response = await fetch(`http://localhost:3000/storage?search=${encodeURIComponent(search)}&filterBy=${filterBy}&page=${currentPage}&limit=${rowsPerPage}`);
+        
+        const result = await response.json();
+
+        if (!Array.isArray(result.data)) {
+          console.error("❌ result.data is not an array:", result);
+          return;
+        }
+
+        tbody.innerHTML = "";
+        result.data.forEach((storage) => {
+          tbody.innerHTML += `
+          <tr data-storage-id='${storage.id}'>
+            <td>${storage.id}</td>
+            <td>${storage.catagory}</td>
+            <td>${storage.name}</td>
+            <td>${storage.quantity}</td>
+            <td>${storage.buyamount}</td>
+            <td>${storage.sellamount}</td>
+            <td>${storage.sellamount*storage.quantity}</td>
+            <td>${storage.createdAt ? toPersianDate(storage.createdAt) : ""}</td>
+            <td>
+              <div id="cover">
+                <div id="action">
+                  <div id='action2' class='action2' data-id='${storage.id}' onclick='openStorageModal(this.dataset.id)'></div>
+                  <div id="action3" class='action3' onclick='deleteStorage(${storage.id})' title="del"></div>
+                </div>
+              </div>
+            </td>
+          </tr>`;
+        });
+
+        // ✅ Set the SVG icons
+        setTimeout(() => {
+          document.querySelectorAll(".action2").forEach((el) => (el.innerHTML = edit));
+          document.querySelectorAll(".action3").forEach((el) => (el.innerHTML = del));
+        }, 0);
+
+        totalPages = Math.ceil(result.total / rowsPerPage);
+        renderPagination();
+      }
+
+      function renderPagination() {
+        paginationButtons.innerHTML = "";
+
+        function addButton(label, page, disabled = false, active = false) {
+          const btn = document.createElement("button");
+          btn.textContent = label;
+          btn.disabled = disabled;
+          if (active) btn.style.backgroundColor = "#357edd";
+          btn.addEventListener("click", () => {
+            currentPage = page;
+            fetchAndRender();
+          });
+          paginationButtons.appendChild(btn);
+        }
+
+        addButton("<<", 1, currentPage === 1);
+        addButton("<", currentPage - 1, currentPage === 1);
+
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            i === currentPage ||
+            i <= 4 ||
+            i === totalPages ||
+            Math.abs(currentPage - i) <= 1
+          ) {
+            addButton(i, i, false, i === currentPage);
+          }
+        }
+
+        addButton(">", currentPage + 1, currentPage === totalPages);
+        addButton(">>", totalPages, currentPage === totalPages);
+      }
+
+      // Listeners
+      searchInput.addEventListener("input", () => {
+        currentPage = 1;
+        fetchAndRender();
+      });
+
+      filterBySelect.addEventListener("change", () => {
+        currentPage = 1;
+        fetchAndRender();
+      });
+
+      const edit = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" width="18px"><path d="M18.414062 2C18.158188 2 17.902031 2.0974687 17.707031 2.2929688L16 4L20 8L21.707031 6.2929688C22.098031 5.9019687 22.098031 5.2689063 21.707031 4.8789062L19.121094 2.2929688C18.925594 2.0974687 18.669937 2 18.414062 2 z M 14.5 5.5L3 17L3 21L7 21L18.5 9.5L14.5 5.5 z" fill="#FFFFFF" /></svg>`;
+      const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+      // First Load
+      fetchAndRender();
+    }
+    showStorageData();
+
+    // storage Delete function
+    function deleteStorage(id) {
+      async function apply(){
+            const confirmed = await showModal({
+            title: "حذف",
+            message: "آیا می‌خواهید جنس حذف شود؟",
+            type: "ok-cancel"
+          });
+        
+          if (confirmed) {
+            console.log("User confirmed ✅");
+            fetch(`http://localhost:3000/storage/${id}`, {
+          method: "DELETE",
+        })
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error("خطا در حذف جنس");
+            }
+
+            const data = await response.json(); // ✅ Works because backend sends JSON now
+            showStorageData(); // ✅ Reload table
+          })
+          .catch((error) => {
+            console.error("❌ خطا در اتصال یا سرور:", error);
+            alert("خطا در اتصال یا سرور");
+          });
+          } else {
+            this.close();
+            console.log("User cancelled ❌");
+          }
+        }
+        apply();
+    }
+
+    // open modal
+    function openStorageModal(storageId) {
+      const modal = document.getElementById("modal");
+      const modalContent = document.getElementById("modalContent");
+
+      modal.style.display = "flex";
+
+      fetch("/pages/components/storage.view.html")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("خطا در بارگذاری محتوا: " + response.status);
+          }
+          return response.text();
+        })
+        .then((html) => {
+          modalContent.innerHTML = html;
+
+          // Load student script
+          const script = document.createElement("script");
+          script.src = "/js/storage_view/script.js";
+          script.id = "studentViewScript"; 
+          script.onload = () => {
+            console.log("Script loaded");
+            loadStorage(storageId);
+          };
+          document.body.appendChild(script);
+        })
+        .catch((error) => {
+          modalContent.innerHTML =
+            '<p style="color:red;">خطا در بارگذاری محتوا. لطفاً دوباره تلاش کنید.</p>';
+          console.error(error);
+        });
+    }
+  </script>
+  <script src="./../../js/Date_Elemet.js"></script>
+</body>
+</html>

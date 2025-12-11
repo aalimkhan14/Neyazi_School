@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+	<head>
+  	<meta charset="UTF-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<title></title>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+  		.a4-paper {
+    		width: 210mm;
+    		height: 297mm;
+    		margin: auto;
+    		padding: 20mm;
+    		background: white;
+    		box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    		box-sizing: border-box;
+    		font-family: 'Arial', sans-serif;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+  		}
+		.title{
+			display: flex;
+			justify-content: center;
+			font-size: 24px;
+			border-bottom: 4px solid;
+		}
+		.firstContent , .secondContent{
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			gap: 10px;
+			height: fit-content;
+            max-height: 28%;
+			margin-bottom: 10px;
+		}
+		.secondContent{
+			font-size: 18px;
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
+		.details1{
+			width: 65%;
+			height: 100%;
+			padding: 10px 0;
+			font-size: 18px;
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
+		.info{
+			width: 100%;
+			display: flex;
+			align-items: center;
+			height: 30px;
+			justify-content: space-between;
+		}
+		.info span{
+			flex: 1;
+            padding: 0 20px;
+			text-align: start;
+			width: 80%;
+			height: 100%;
+			border-bottom: 1px solid;
+			border-color: #aaa;
+		}
+		.pic {
+            width: 36%;
+            max-height: 300px;
+            border: 1px solid #aaa;
+            border-radius: 12px;
+            overflow: hidden;      
+            /* Center content */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .pic img {
+            max-width: 100%;
+            width: 100%;
+            max-height: 100%;
+            object-fit: cover; /* keeps aspect ratio */
+        }
+  		@media print {
+  		  	body {
+  		  	  	background: none;
+  		  	  	margin: 0;
+  		  	}
+  		  	.a4-paper {
+  		  	  	box-shadow: none;
+  		  	  	margin: 0;
+  		  	  	page-break-after: always;
+  		  	}
+  		}
+</style>
+</head>
+<body>
+	<div class="a4-paper">
+		<div class="title">معلومات شاگرد</div>
+		<div class="firstContent">
+			<div class="details1">
+				<div class="info">نمبر تذکره:<span id="id"></span></div>
+				<div class="info">نام کامل:<span id="fullname"></span></div>
+				<div class="info">ولد:<span id="fname"></span></div>
+				<div class="info">ولدیت:<span id="gfname"></span></div>
+				<div class="info">تاریخ تولد:<span id="birth"></span></div>
+			</div>
+			<div class="pic">
+				<img id="picture" src="" alt="">
+			</div>
+		</div>
+		<div class="secondContent">
+			<div class="info">جنسیت:<span id="gender"></span></div>
+			<div class="info">زبان:<span id="nativelanguage"></span></div>
+			<div class="info">آدرس:<span id="address"></span></div>
+			<div class="info">چگونگی شمولیت:<span id="entrykind"></span></div>
+			<div class="info">صنف:<span id="class"></span></div>
+			<div class="info">تاریخ شمولیت:<span id="entrydate"></span></div>
+			<div class="info">شماره تماس والدین:<span id="phone1"></span></div>
+		</div>
+	</div>
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
+    <script src="./../../js/Date_Elemet.js"></script>
+    <script>
+  // Parse 'id' from query string like ?id=33
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+
+  if (!id) {
+    alert("شناسه شاگرد یافت نشد!");
+    throw new Error("No student ID provided!");
+  }
+
+  fetch(`http://localhost:3000/students/${id}`)
+    .then(res => {
+      if (!res.ok) throw new Error("Student not found");
+      return res.json();
+    })
+    .then(student => {
+      // First section
+      document.getElementById("id").innerText = student.idcard_no || '';
+      document.getElementById("fullname").innerText = student.name+' '+student.last_name|| '';
+      document.getElementById("fname").innerText = student.fname || '';
+      document.getElementById("gfname").innerText = student.gfname || '';
+      document.getElementById("birth").innerText = student.birth ? student.birth.substring(0,10) : '';
+
+      // Second section
+      document.getElementById("gender").innerText = student.gender || '';
+      document.getElementById("nativelanguage").innerText = student.native_language || '';
+      document.getElementById("address").innerText = student.current_location || '';
+      document.getElementById("entrykind").innerText = student.entry_way || '';
+      document.getElementById("class").innerText = student.current_class || '';
+      document.getElementById("entrydate").innerText = student.createdAt ? toPersianDate(student.createdAt) : "";
+      document.getElementById("phone1").innerText = student.phone1+'   '+student.phone2 || '';
+
+      // Student picture
+      const img = document.getElementById("picture");
+      img.src = `http://localhost:3000/uploads/${student.picture || 'default.png'}`;
+
+      // Auto print after image loads
+      img.onload = () => window.print();
+    })
+    .catch(err => {
+      alert("خطا در دریافت معلومات شاگرد");
+      console.error(err);
+    });
+</script>
+
+</body>
+</html>
+
+
+
+

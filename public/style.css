@@ -1,0 +1,297 @@
+/* Mean Structure header , sidebar, content */
+@font-face {
+    font-family: 'BYekan';
+    src: url('./Fonts/BYekan+.ttf')format('truetype');
+    font-family: 'BYekanBold';
+    src: url('./Fonts/BYekan+\ Bold.ttf')format('truetype');
+    font-family: 'FarYekan';
+    src: url('./Fonts/Far_Yekan.ttf')format('truetype');
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'BYekanBold', sans-serif;
+}
+#parent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    
+}
+#header
+{
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    width: 100%;
+    height: 10%;
+    background-color: #111b26;
+    padding: 0 30px;
+}
+#body{
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    height: 90%;
+}
+#sidebar{
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+    height: 100%;
+    background-color: #16202b;
+}
+#menuicon{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    padding: 5px;
+}
+#content{
+    display: flex;
+    width: 85%;
+    height: 100%;
+    overflow: hidden;
+}
+/* Entire Header */
+#header #left, #header #right{
+    display: flex;
+    flex-direction: row-reverse;
+    width: 50%;
+    height: 100%;
+    color: #fff;
+    justify-content: end;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 500;
+}
+#logout{
+    margin: 0 10px;
+}
+#logout{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    
+}
+#clock{
+    display: flex;
+    letter-spacing: 1px;
+    font-size: 1rem;
+}
+
+#header #right{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+
+}
+#header #right *{
+    margin-left: 15px;
+}
+#header #right #search{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    left: -400px;
+    width: 100%;
+    height: 38px;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+/* Entire Sidebar */
+#menu{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    
+}
+#menu ul{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+
+}
+#menu ul a{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1rem;
+    width: 100%;
+    height: 60px;
+    padding: 0 30px 0 0;
+
+}
+#menu ul a:hover{
+    background-color: #111b26;
+}
+#menu ul a li{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+#menu ul li a p{
+    margin: 0 20px;
+    width: 160px;
+}
+.dropdown {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.dropdown.open {
+  max-height: 500px; /* enough to fit all items */
+}
+
+.arrow {
+  transform: rotate(90deg);  
+  transition: transform 0.3s ease;
+  margin-left: 20px;
+}
+
+.arrow.rotate {
+  transform: rotate(-90deg);
+}
+
+#menuicon{
+    cursor: pointer;
+}
+.searchPart{
+    position: relative;
+    width: 350px;
+}
+#search{
+    width: 400px;
+}
+.meanSearch{
+    display: none;
+    flex-direction: column;
+    padding: 5px;
+    position: absolute;
+    width: 100%;
+    height: fit-content;
+    max-height: 550px;
+    top: 60px;
+    right: 400px ;
+    gap: 10px;
+    z-index: 13;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1);
+}
+.searchStudent{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    border-top: 20px;
+    border-style: solid;
+    border-color: #ececec;
+    background-color: #fff;
+    position: relative;
+    display: none;
+}
+.searchStudent::after{
+    content: 'شاگردان'; 
+    color: #000;
+    font-size: 12px;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: start;
+    position: absolute;
+    top: -20px;
+    right: 5px;
+    cursor: pointer;
+}
+.searchTeacher{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    border-top: 20px;
+    border-style: solid;
+    border-color: #ececec;
+    position: relative;
+    display: none;
+}
+.searchTeacher::after{
+    content: 'اساتید';
+    color: #000;
+    font-size: 12px;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: start;
+    position: absolute;
+    top: -20px;
+    right: 5px;
+    cursor: pointer;
+}
+.searchEmployee{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    border-top: 20px;
+    border-style: solid;
+    border-color: #ececec;
+    position: relative;
+    display: none;
+}
+.searchEmployee::after{
+    content: 'کارمندان';
+    color: #000;
+    font-size: 12px;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: start;
+    position: absolute;
+    top: -20px;
+    right: 5px;
+    cursor: pointer;
+}
+.searchStudent .item, .searchTeacher .item, .searchEmployee .item{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #000;
+    padding: 8px 12px;
+    border-bottom: 1px solid #000;
+    cursor: pointer;
+}
+.searchStudent .item:last-child, .searchTeacher .item:last-child, .searchEmployee .item:last-child{
+    border: none;
+}
+
+
+
+
+
+

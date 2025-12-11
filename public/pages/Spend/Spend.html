@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #rparent{
+            display: flex;
+            flex-direction: row !important;
+            justify-content: space-between;
+            align-items: start;
+            width: 100%;
+            height: 100%;
+        }
+        #spend_registration{
+            width: 30%;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+        }
+        #spend_show{
+            width: 69%;
+            display: flex;
+            flex-direction: column;
+        }
+        #spend_show #rcontent{
+            width: 100%;
+            height: 650px;
+        }
+        #one{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 270px;
+        }
+        #one *{
+            width: 100%;
+        }
+        
+        .th:nth-child(1),.th:nth-child(7){
+            width: 5%;
+        }
+        tr td:nth-child(7){
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
+        #right{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="rparent">
+    <form id="spend_registration" class="rcover">
+        <div id="rheader">ثبت مصرف</div>
+        <div id="rcontent">
+            <input type="hidden" id="id"    >
+            <div id="one">
+                <label for="sdetail">جزئیات مصرف:<input id="sdetail" name="details" type="text"></label>
+                <label for="squantity">تعداد:<input id="squantity" name="quantity" type="number"></label>
+                <label for="sprice">مقدار پول:<input id="sprice" name="price" type="text"></label>
+            </div>
+        </div>
+        <div id="rfooter">
+            <input type="submit" id="save" value="ثبت کردن" />
+            <input type="button" value="ثبت کردن" id="save1" style="display: none;">
+            <input type="reset" id="exit" value="پاک کردن" />
+        </div>
+    </form>
+
+    <div id="spend_show" class="rcover">
+        <div id="rheader">مصارف ثبت شده</div>
+        <div id="rcontent">
+            <div id="searchbar" class="search_bar">
+                <div id="right" class="sright">
+                    <input type="text" class="search_table" id="searchtable" placeholder="جستجو . . ."/>
+                </div>
+                <div id="left" class="sleft"></div>
+            </div>
+            <table>
+                <thead>
+                    <th class="th">نمبر</th>
+                    <th class="th">جزئیات مصرف</th>
+                    <th class="th">تعداد</th>
+                    <th class="th">فی واحد</th>
+                    <th class="th">مجموع پول</th>
+                    <th class="th">تاریخ ثبت</th>
+                    <th class="th">عملکرد</th>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+        <div id="rfooter">
+            <div id="pagination" style="text-align: center; margin-top: 20px">
+                <div id="pagination-buttons"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="../../js/Date_Elemet.js"></script>
+    <script>
+
+            document.getElementById("spend_registration").addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const form = e.target; 
+                // Build a JSON object from form fields
+                const data = {
+                    details: form.details.value,
+                    quantity: form.quantity.value,
+                    price: form.price.value,
+                }; 
+                try {
+                    const response = await fetch("http://localhost:3000/spend", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json",},
+                        body: JSON.stringify(data),
+                    });
+                    if (response.ok) {
+                        showModal({
+                          	title: "موفقیت",
+                          	message: "مصرف موفقانه ثبت شد.",
+                          	icon: "success",
+                        });
+                        form.reset();
+                        showSpendData();
+                    } else {
+                        alert("خطا در ثبت .");
+                        console.log(response);
+                    }
+                } catch (error) {
+                    console.error("Error: ", error);
+                    alert("خطا در اتصال به سرور");
+                }
+            });
+
+            function showSpendData() {
+    const rowsPerPage = 10;
+    let currentPage = 1;
+    let totalPages = 1;
+
+    const searchInput = document.getElementById("searchtable");
+    const tbody = document.getElementById("tbody");
+    const paginationButtons = document.getElementById("pagination-buttons");
+
+    async function fetchAndRender() {
+        const searchValue = searchInput.value.trim();
+
+        // ✅ Send search to backend
+        const response = await fetch(
+            `http://localhost:3000/spend?page=${currentPage}&limit=${rowsPerPage}&search=${encodeURIComponent(searchValue)}`
+        );
+
+        const result = await response.json();
+
+        if (!Array.isArray(result.data)) {
+            console.error("❌ result.data is not an array:", result);
+            return;
+        }
+
+        tbody.innerHTML = "";
+        result.data.forEach((spend, index) => {
+            tbody.innerHTML += `
+                <tr data-spend-id='${spend.id}' ondblclick="editPart(this.dataset.spendId)">
+                    <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
+                    <td>${spend.details}</td>
+                    <td>${spend.quantity}</td>
+                    <td>${spend.price}</td>
+                    <td>${spend.price * spend.quantity}</td>
+                    <td>${spend.createdAt ? toPersianDate(spend.createdAt) : ""}</td>
+                    <td>
+                        <div id="cover">
+                            <div id="action">
+                                <div id="action3" class='action3' onclick='deletespend(${spend.id})' title="del"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>`;
+        });
+
+        // ✅ SVG icons
+        setTimeout(() => {
+            document.querySelectorAll(".action3").forEach((el) => (el.innerHTML = del));
+        }, 0);
+
+        totalPages = Math.ceil(result.total / rowsPerPage);
+        renderPagination();
+    }
+
+    function renderPagination() {
+        paginationButtons.innerHTML = "";
+
+        function addButton(label, page, disabled = false, active = false) {
+            const btn = document.createElement("button");
+            btn.textContent = label;
+            btn.disabled = disabled;
+            if (active) btn.style.backgroundColor = "#357edd";
+            btn.addEventListener("click", () => {
+                currentPage = page;
+                fetchAndRender();
+            });
+            paginationButtons.appendChild(btn);
+        }
+
+        addButton("<<", 1, currentPage === 1);
+        addButton("<", currentPage - 1, currentPage === 1);
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === currentPage || i <= 4 || i === totalPages || Math.abs(currentPage - i) <= 1) {
+                addButton(i, i, false, i === currentPage);
+            }
+        }
+
+        addButton(">", currentPage + 1, currentPage === totalPages);
+        addButton(">>", totalPages, currentPage === totalPages);
+    }
+
+    const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+      
+    // ✅ Fetch again whenever user types in search
+    searchInput.addEventListener("input", () => {
+        currentPage = 1;
+        fetchAndRender();
+    });
+
+    // First Load
+    fetchAndRender();
+}
+
+            showSpendData();
+
+            // Fee Delete function
+            function deletespend(id) {
+
+                async function apply(){
+            const confirmed = await showModal({
+            title: "حذف",
+            message: "آیا می‌خواهید مصرف ثبت شده حذف شود؟",
+            type: "ok-cancel"
+          });
+        
+          if (confirmed) {
+            console.log("User confirmed ✅");
+             fetch(`http://localhost:3000/spend/${id}`, {
+                        method: "DELETE",
+                    }).then(async (response) => {
+                        if (!response.ok) {
+                            throw new Error("خطا در حذف مصرف");
+                        }
+
+                        const data = await response.json(); // ✅ Works because backend sends JSON no
+                        showSpendData(); // ✅ Reload table
+                    }).catch((error) => {
+                        console.error("❌ خطا در اتصال یا سرور:", error);
+                        alert("خطا در اتصال یا سرور");
+                    });
+          } else {
+            this.close();
+            console.log("User cancelled ❌");
+          }
+        }
+        apply();
+            }
+
+            function editPart(spendId){
+                document.getElementById('save').style.display = 'none';
+                document.getElementById('save1').style.display = 'flex';
+                fetch(`http://localhost:3000/spend/${spendId}`).then(res => res.json()).then(spend => {
+                    if(!spend) return;
+                    console.log(spend.id)
+                    document.getElementById('id').value = spend.id;
+                    document.getElementById('sdetail').value = spend.details;
+                    document.getElementById('squantity').value = spend.quantity;
+                    document.getElementById('sprice').value = spend.price;
+                })
+            }
+            document.getElementById('save1').addEventListener('click', function () {
+                const form = document.getElementById('spend_registration');
+
+                // Collect form data as JSON object
+                const data = {
+                    details: form.details.value,
+                    quantity: form.quantity.value,
+                    price: form.price.value,
+                };
+
+                const id = document.getElementById('id').value.trim();
+
+                fetch(`/spend/${id}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json',},
+                    body: JSON.stringify(data)
+                }).then(res => {
+                if (!res.ok) throw new Error("Server error");
+                    return res.json();
+                }).then(data => {
+                    showModal({
+                      	title: "موفقیت",
+                      	message: "تغییرات موفقانه ثبت شد.",
+                      	icon: "success",
+                    });
+                    showSpendData();
+                }).catch(err => {
+                    console.error("خطا در تغییر داده:", err);
+                    alert("خطا در ذخیره تغییرات ❌");
+                });
+            });
+
+
+
+            document.getElementById('exit').addEventListener('click', ()=>{
+            document.getElementById('save1').style.display= 'none';
+            document.getElementById('save').style.display= 'flex';
+    })
+
+        </script>
+</body>
+</html>

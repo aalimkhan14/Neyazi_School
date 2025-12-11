@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #rparent{
+            display: flex;
+            justify-content: start;
+            align-items: start;
+            padding: 0;
+
+        }
+        #rcover{
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: start;
+            width: 100%;
+            height: 100vh;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            padding: 20px;
+        }
+        #dashchart{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 70%;
+            height: 100%;
+        }
+        #cardparent{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: fit-content;
+        }
+        .dashcard
+        {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 33%;
+            height: 180px;
+            border-radius: 15px;
+            background-color: #fff;
+            overflow: hidden;
+            padding: 10px;
+            margin: 10px 0 10px 10px;
+            box-shadow: 0 0 10px 0 #dfdfdf;
+        }
+        .dashcard:nth-child(2), .dashcard:nth-child(3){
+            margin-right:10px ;
+        }
+        .dright{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40%;
+            height: 100%;
+        }
+        .dleft{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60%;
+            height: 100%;
+            font-size: 2.5rem;
+            font-weight: 700;
+            border-right: 1px solid #efefef;
+        }
+        .dup
+        {
+            width: 100%;
+            height: 65%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .dup svg {
+            width: 60%;
+            height: 60%;
+        }
+        .ddown{
+            width: 100%;
+            height: 35%;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }        
+    </style>
+</head>
+<body>
+    <div id="rparent">
+        <div id="rcover">
+            <div id="dashchart">
+                <div id="cardparent">
+                    <div class="dashcard">
+                        <div class="dright">
+                            <div id="dashstudent" class="dup"></div>
+                            <div class="ddown">شاگردان</div>
+                        </div>
+                        <div id="quantityStudents" class="dleft"></div>
+                    </div>
+                    <div class="dashcard">
+                        <div class="dright">
+                            <div id="dashteacher" class="dup"></div>
+                            <div class="ddown">اساتید</div>
+                        </div>
+                        <div id="quantityTeachers" class="dleft"></div>
+                    </div>
+                    <div class="dashcard">
+                        <div class="dright">
+                            <div id="dashemployee" class="dup"></div>
+                            <div class="ddown">کارمندان</div>
+                        </div>
+                        <div id="quantityEmployees" class="dleft"></div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

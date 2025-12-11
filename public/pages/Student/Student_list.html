@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      #rcontent {
+        padding: 20px;
+        height: 700px;
+      }
+      .th:nth-child(1),
+      .th:nth-child(7) {
+        width: 5%;
+      }
+
+      tr td:nth-child(10) {
+        width: 5%;
+        height: 100%;
+      }
+
+      td {
+        vertical-align: middle;
+        padding: 5px 10px;
+      }
+      #picture {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #picture img {
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border-radius: 5px;
+        border: 1px solid #4a90e2;
+        background-color: white;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .search_bar .sright, .search_bar .sleft{
+        width: 60%;
+      }
+      .search_bar .sleft{
+        width: 40%;
+      }
+      .search_bar .sright input , .search_bar .sright select{
+        width: 30%;
+      }
+
+      /* filter */
+      fieldset{
+        display: flex;
+        flex-direction: column;
+        width: 250px;
+        height: 60px;
+        border: none;
+        position: relative;
+        left: 0px;
+      }
+      fieldset div{
+        display: flex;
+        justify-content: start !important;
+        justify-content: center !important;
+        width: 100%;
+        height: 50%;
+      }
+      fieldset label{
+        display: flex !important;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
+        width: 50%;
+        height: 100%;
+      }
+      fieldset input{
+        width: 18px !important;
+        margin-left: 10px !important;
+      }
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        top: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.6);
+        overflow: auto;
+      }
+      .modal-content {
+        background: #fff;
+        width: 90%;
+        height: 95%;
+        border-radius: 10px;
+        position: relative;
+      }
+      #windowclose{
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.6);
+        position: relative;
+        z-index: 10;
+        top: -380px;
+        left: 20px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      #windowclose:hover{
+        background-color: #333;
+      }
+    </style>
+    <script src="../../jalaali.min.js"></script>
+
+  </head>
+  <body>
+    <div id="rparent">
+      <div class="rcover">
+        <div id="rheader">لیست شاگردان</div>
+        <div id="rcontent" class="table_layout">
+          <div id="searchbar" class="search_bar">
+            <div id="right" class="sright">
+              <input type="text" id="searchtable" class="search_table" placeholder="جستجو . . ." />
+              <fieldset class="s_s_filter" id="ssfilter">
+                <div>
+                  <label for="baseno"><input type="radio" name="filter" id="baseno" value="baseno">نمبر اساس</label>
+                  <label for="name"><input type="radio" name="filter" id="name" value="name" checked>اسم</label>
+                </div>
+                <div>
+                  <label for="phone1"><input type="radio" name="filter" id="phone1" value="phone1">شماره تماس</label>
+                  <label for="current_class"><input type="hidden" name="" id="current_class" value=""></label>
+                 
+                </div>
+              </fieldset>
+              <select name="" id="search_class_filter">
+                <option value="" selected>همه صنوف</option>
+              </select>
+              <!-- <select class="s_s_filter" id="ssfilter">
+                <option value="baseno">فلتر نمبر اساس</option>
+                <option value="name" selected>فلتر اسم</option>
+                <option value="current_class">فلتر صنف</option>
+                <option value="phone1">فلتر شماره تماس</option>
+              </select> -->
+            </div>
+            <div id="left" class="sleft"></div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th class="th">آیدی</th>
+                <th class="th">نمبر اساس</th>
+                <th class="th">اسم</th>
+                <th class="th">ولد</th>
+                <th class="th">ولدیت</th>
+                <th class="th">صنف</th>
+                <th class="th">عکس</th>
+                <th class="th">شماره تماس والدین</th>
+                <th class="th">تاریخ شمولیت</th>
+                <th class="th">عملکرد</th>
+              </tr>
+            </thead>
+            <tbody id="table_list"></tbody>
+          </table>
+        </div>
+        <div id="rfooter">
+          <div id="pagination" style="text-align: center; margin-top: 20px">
+            <div id="pagination-buttons"></div>
+          </div>
+        </div>
+      </div>
+      <div id="modal" class="modal">
+        <div id="windowclose">
+
+        </div>
+        <div id="modalContent" class="modal-content"></div>
+      </div>
+    </div>
+    <!-- only include the relevant script part -->
+    <script>
+
+      async function loadClassOptions() {
+        // getting class data for selection
+        const class_response = await fetch(`http://localhost:3000/classes`);
+        const class_result = await class_response.json();
+        class_result.data.forEach((classe) => {
+          document.getElementById('search_class_filter').innerHTML += `<option value='${classe.classlevel} ${classe.classmodify}'>
+          ${classe.classlevel} ${classe.classmodify}</option>`;
+        });
+      }
+
+      // Call the function after defining it
+      loadClassOptions();
+      
+      function showData() {
+
+        const rowsPerPage = 10;
+        let currentPage = 1;
+        let totalPages = 1;
+
+        const searchInput = document.getElementById("searchtable");
+        const filterBySelect = document.querySelector('input[name="filter"]:checked');
+        const filter = document.getElementsByName('filter');
+        let filterBy = '';
+        for(const filtered of filter){
+          if(filtered.checked){
+            filterBy = filtered.value
+          }
+        }
+        const tbody = document.getElementById("table_list");
+        const paginationButtons = document.getElementById("pagination-buttons");
+        async function fetchAndRender() {
+
+          const search = searchInput.value;
+          const response = await fetch(`http://localhost:3000/students?search=${encodeURIComponent(search)}&filterBy=${filterBy}&classFilter=${encodeURIComponent(search_class_filter.value)}&page=${currentPage}&limit=${rowsPerPage}`);
+          const result = await response.json();
+          tbody.innerHTML = "";
+          result.data.forEach((student) => {
+            tbody.innerHTML += `
+          <tr>
+            <td>${student.id}</td>  
+            <td>${student.baseno}</td>  
+            <td>${student.name}</td>  
+            <td>${student.fname}</td>  
+            <td>${student.gfname}</td>  
+            <td>${student.current_class}</td>  
+            <td id="picture"><img src="/uploads/${student.picture ? student.picture : "default.jpg"}" alt="عکس" /></td>  
+            <td>${student.phone1}</td>  
+            <td>${student.createdAt ? toPersianDate(student.createdAt) : ""}</td>  
+            <td>
+              <div id="cover">
+                <div id="action">
+                  <div id="action1" class='action1' onclick='openModal(${student.id});' title="Info"></div>
+                  <div id="action3" class='action3' onclick='deleteStudent(${student.id})' title="del"></div>
+                </div>
+              </div>  
+            </td>  
+          </tr>
+        `;
+          });
+
+          totalPages = Math.ceil(result.total / rowsPerPage);
+          renderPagination();
+        }
+
+        function renderPagination() {
+          paginationButtons.innerHTML = "";
+
+          function addButton(label, page, disabled = false, active = false) {
+            const btn = document.createElement("button");
+            btn.textContent = label;
+            btn.disabled = disabled;
+            if (active) btn.style.backgroundColor = "#357edd";
+            btn.addEventListener("click", () => {
+              currentPage = page;
+              fetchAndRender();
+            });
+            paginationButtons.appendChild(btn);
+          }
+
+          addButton("<<", 1, currentPage === 1);
+          addButton("<", currentPage - 1, currentPage === 1);
+
+          for (let i = 1; i <= totalPages; i++) {
+            if (
+              i === currentPage ||
+              i <= 4 ||
+              i === totalPages ||
+              Math.abs(currentPage - i) <= 1
+            ) {
+              addButton(i, i, false, i === currentPage);
+            }
+          }
+
+          // action icons
+          const info = `<svg xmlns="http://www.w3.org/2000/svg" width='24px' viewBox="0 0 30 30"><path d="M15,3C8.373,3,3,8.373,3,15c0,6.627,5.373,12,12,12s12-5.373,12-12C27,8.373,21.627,3,15,3z M16,21h-2v-7h2V21z M15,11.5 c-0.828,0-1.5-0.672-1.5-1.5s0.672-1.5,1.5-1.5s1.5,0.672,1.5,1.5S15.828,11.5,15,11.5z" fill="#FFFFFF" /></svg>`;
+          const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+
+          document
+            .querySelectorAll(".action1")
+            .forEach((el) => (el.innerHTML = info));
+          document
+            .querySelectorAll(".action3")
+            .forEach((el) => (el.innerHTML = del));
+
+          addButton(">", currentPage + 1, currentPage === totalPages);
+          addButton(">>", totalPages, currentPage === totalPages);
+        }
+
+        // Listeners
+        searchInput.addEventListener("input", () => {
+          currentPage = 1;
+          fetchAndRender();
+        });
+
+        filterBySelect.addEventListener("change", () => {
+          currentPage = 1;
+          fetchAndRender();
+        });
+
+        document.getElementById("search_class_filter").addEventListener("change", () => {
+          currentPage = 1;
+          fetchAndRender();
+        });
+
+
+        // First Load
+        fetchAndRender();
+      }
+
+      showData();
+
+      document.querySelectorAll("input[name='filter']").forEach((radio) => {
+        radio.addEventListener("change", () => {
+        showData(); // re-fetch based on new filter
+      });
+});
+
+      // delete function
+      function deleteStudent(id) {
+        async function apply(){
+          const confirmed = await showModal({
+          title: "حذف",
+          message: "آیا می‌خواهید شاگرد حذف شود؟",
+          type: "ok-cancel"
+        });
+        
+        if (confirmed) {
+          console.log("User confirmed ✅");
+          fetch(`http://localhost:3000/students/${id}`, {
+            method: "DELETE",
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              showData();
+            }).catch((error) => {
+              console.error("خطا در اتصال");
+              alert("خطا در اتصال");
+            });
+        } else {
+          this.close();
+          console.log("User cancelled ❌");
+        }
+        }
+        apply();
+        
+      }
+      // show the modal
+      function openModal(studentId) {
+        const modal = document.getElementById("modal");
+        const modalContent = document.getElementById("modalContent");
+        const windowclose = document.getElementById('windowclose');
+
+        const iconClose = `<svg xmlns="http://www.w3.org/2000/svg" width='20px' height='20px' viewBox="0 0 26 26"><path d="M21.125 0L4.875 0C2.183594 0 0 2.183594 0 4.875L0 21.125C0 23.816406 2.183594 26 4.875 26L21.125 26C23.816406 26 26 23.816406 26 21.125L26 4.875C26 2.183594 23.816406 0 21.125 0 Z M 18.78125 17.394531L17.390625 18.78125C17.136719 19.035156 16.722656 19.035156 16.46875 18.78125L13 15.3125L9.53125 18.78125C9.277344 19.035156 8.863281 19.035156 8.609375 18.777344L7.21875 17.394531C6.96875 17.136719 6.96875 16.726563 7.21875 16.46875L10.6875 13L7.222656 9.535156C6.96875 9.277344 6.96875 8.863281 7.222656 8.609375L8.609375 7.222656C8.863281 6.964844 9.28125 6.964844 9.535156 7.222656L13 10.6875L16.46875 7.222656C16.722656 6.964844 17.140625 6.964844 17.390625 7.222656L18.78125 8.605469C19.035156 8.863281 19.035156 9.277344 18.78125 9.535156L15.3125 13L18.78125 16.46875C19.03125 16.726563 19.03125 17.136719 18.78125 17.394531Z" fill="#FFFFFF" /></svg>`;
+        windowclose.innerHTML = iconClose;
+        modal.style.display = "flex";
+
+        fetch("/pages/components/student.view.html").then((response) => {
+          if (!response.ok) {
+            throw new Error("خطا در بارگذاری محتوا: " + response.status);
+          }
+          return response.text();
+        }).then((html) => {
+          modalContent.innerHTML = html;
+
+          // Load student script
+          const script = document.createElement("script");
+          script.src = "/js/student_view/script.js";
+          script.id = "studentViewScript";
+          script.onload = () => {
+            console.log("Script loaded");
+            loadStudent(studentId);
+            showData();
+          };
+          document.body.appendChild(script);
+        }).catch((error) => {
+          modalContent.innerHTML =
+            '<p style="color:red;">خطا در بارگذاری محتوا. لطفاً دوباره تلاش کنید.</p>';
+          console.error(error);
+        });
+
+        document.getElementById('windowclose').addEventListener('click', ()=>{
+          modal.style.display = 'none'
+        });
+      }
+      
+      
+    </script>
+    <script type="module">
+      import {searchedId} from './pages/store.js';
+      let idStudentOwner = searchedId.get();
+      if(idStudentOwner){
+        openModal(idStudentOwner);
+        searchedId.set(0);
+      }
+      
+    </script>
+    <script src="./../../js/Date_Elemet.js"></script>
+  </body>
+</html>

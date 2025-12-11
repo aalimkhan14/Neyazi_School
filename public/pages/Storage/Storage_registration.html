@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        label{
+            width: 32.5%;    
+        }
+        #modalContent{
+            display: flex;
+            width: 20%;
+            height: 16%;
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+    <div id="rparent">
+    <form id="storage" class="rcover">
+        <div id="rheader">ثبت جنس جدید</div>
+        <div id="rcontent">
+            <div id="one">
+                <label for="catagory">کتگوری:
+                    <select name="catagory" id="catagory">
+                        <option value="" selected disabled>انتخاب کتگوری</option>
+                    </select>
+                </label>
+                <label for="name">اسم:<input id="name" name="name" type="text" required></label>
+                <label for="quantity">تعداد:<input id="quantity" name="quantity" type="number"></label>                
+            </div>
+            <div id="two">
+                <label for="buyamount">قیمت خرید:<input id="buyamount" name="buyamount" type="number"></label>
+                <label for="sellamount">قیمت فروش:<input id="sellamount" name="sellamount" type="number"></label>
+                <label for=""><input id="" type="hidden"></label>
+            </div>
+        </div>
+        <div id="rfooter">
+            <input type="submit" id="save" value="ثبت کردن" />
+            <input type="reset" id="exit" value="پاک کردن" />
+            <input type="button" id="save1" onclick='openModal()' value="ایجاد کتگوری">
+        </div>
+    </form>
+    <div id="modal" class="modal">
+        <div id="modalContent" class="modal-content"></div>
+    </div>
+    </div>
+    <script>
+         // Loading list of classes
+            async function loadCatagory(){
+                let catagory = document.getElementById('catagory');
+                catagory.innerHTML = '';
+                const res = await fetch('http://localhost:3000/catagory')
+                const data = await res.json();
+                data.data.forEach((name) => {
+                    catagory.innerHTML += `<option value="${name.name}">${name.name}</option>`;
+                });
+            }
+
+            loadCatagory();
+
+            document.getElementById("storage").addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const form = e.target; 
+                // Build a JSON object from form fields
+                const data = {
+                    catagory: form.catagory.value,
+                    name: form.name.value,
+                    quantity: form.quantity.value,
+                    buyamount: form.buyamount.value,
+                    sellamount: form.sellamount.value
+                }; 
+                try {
+                    const response = await fetch("http://localhost:3000/storage", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json",},
+                        body: JSON.stringify(data),
+                    });
+                    if (response.ok) {
+                        showModal({
+                      	title: "موفقیت",
+                      	message: "جنس موفقانه ثبت شد.",
+                      	icon: "success",
+                    });
+                        form.reset();
+                    } else {
+                        alert("خطا در ثبت جنس.");
+                        console.log(response);
+                    }
+                } catch (error) {
+                    console.error("Error: ", error);
+                    alert("خطا در اتصال به سرور");
+                }
+            });
+
+        function openModal() {
+      const modal = document.getElementById("modal");
+      const modalContent = document.getElementById("modalContent");
+
+      modal.style.display = "flex";
+
+      fetch("/pages/components/catagory.html")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("خطا در بارگذاری محتوا: " + response.status);
+          }
+          return response.text();
+        })
+        .then((html) => {
+          modalContent.innerHTML = html;
+
+          // Load student script
+          const script = document.createElement("script");
+          script.src = "/js/catagory/script.js";
+          script.id = "studentViewScript";
+          script.onload = () => {
+            console.log("Script loaded");
+          };
+          document.body.appendChild(script);
+        })
+        .catch((error) => {
+          modalContent.innerHTML =
+            '<p style="color:red;">خطا در بارگذاری محتوا. لطفاً دوباره تلاش کنید.</p>';
+          console.error(error);
+        });
+    }
+
+    </script>
+</body>
+</html>

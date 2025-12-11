@@ -1,0 +1,342 @@
+ <!DOCTYPE html>
+<html lang="ps" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #rcontent{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+        }
+        .dashcard
+        {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 24%;
+            height: 180px;
+            border-radius: 15px;
+            background-color: #fff;
+            overflow: hidden;
+            padding: 10px;
+            margin: 10px 0 10px 10px;
+            box-shadow: 0 0 10px 0 #dfdfdf;
+        }
+        .dright{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40%;
+            height: 100%;
+        }
+        .dleft{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60%;
+            height: 100%;
+            font-size: 2.5em;
+            font-weight: 700;
+            border-right: 1px solid #efefef;
+        }
+        .dup
+        {
+            width: 100%;
+            height: 65%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .dup svg {
+            width: 60%;
+            height: 60%;
+        }
+        .ddown{
+            width: 100%;
+            height: 35%;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        #fday, #fweek, #fmonth, #fyear{
+            fill: #9f9f9f;
+        }
+        #fstudent{
+            fill: #88ba4b;
+        }
+        #fteacher{
+            fill: #1d85e4;
+        }
+        #femployee
+        {
+            fill: #FFCB06;
+        }
+        #fsells{
+            fill: coral;
+        }
+
+        /* Tables */
+        .th{
+            width: fit-content;
+        }
+        .th:nth-child(1){
+            width: 5%;
+        }
+        .btnParent{
+            display: flex;
+            width: 100%;
+            flex-direction: row;
+            height: fit-content;
+            justify-content: space-around;
+        }
+        .btnParent div{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 25%;
+            height: 200px;
+        }
+        .btnParent div a{
+            color: #000;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: 600;
+            width: 100%;
+            height: 100%;
+            background-color: red;
+            border-radius: 12px;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition:background-color .5s ease;
+        }
+        .btnParent div a:hover{
+            background-color: #ccc;
+            transition:background-color .5s ease;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="rparent">
+        <div class="rcover">
+            <div id="rheader">عایدات ثبت شده</div>
+            <div id="rcontent">
+                <div class="dashcard">
+                        <div class="dright">
+                        <div id="fday" class="dup"></div>
+                        <div class="ddown">درآمد امروز</div>
+                    </div>
+                    <div id="dailyincome" class="dleft"></div>
+                </div>
+                <div class="dashcard">
+                        <div class="dright">
+                        <div id="fweek" class="dup"></div>
+                        <div class="ddown">درآمد این هفته</div>
+                    </div>
+                    <div id="weeklyincome" class="dleft"></div>
+                </div>
+                <div class="dashcard">
+                        <div class="dright">
+                        <div id="fmonth" class="dup">48"></div>
+                        <div class="ddown">درآمد این ماه</div>
+                    </div>
+                    <div id="monthlyincome"  class="dleft"></div>
+                </div>
+                <div class="dashcard">
+                        <div class="dright">
+                        <div id="fyear" class="dup"></div>
+                        <div class="ddown">درآمد امسال</div>
+                    </div>
+                    <div id="yearlyincome" class="dleft"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rcover">
+             
+            <div id="rheader">گزارش عمومی بخش مالی</div>
+            <div id="rcontent">
+                <div class="dashcard">
+                        <div class="dright">
+                        <div id="fstudent" class="dup"></div>
+                        <div class="ddown">فیس شاگردان</div>
+                    </div>
+                    <div id="feestudent" class="dleft"></div>
+                </div>
+                <div class="dashcard">
+                        <div class="dright">
+                        <div id="fteacher" class="dup"></div>
+                        <div class="ddown">معاش اساتید</div>
+                    </div>
+                    <div id="payteacher" class="dleft"></div>
+                </div>
+                <div class="dashcard">
+                        <div class="dright">
+                        <div id="femployee" class="dup"></div>
+                        <div class="ddown">معاش کارمندان</div>
+                    </div>
+                    <div id="payemployee"  class="dleft"></div>
+                </div>
+                <div class="dashcard">
+                        <div class="dright">
+                        <div id="fsells" class="dup"></div>
+                        <div class="ddown">پول فروش اجناس</div>
+                    </div>
+                    <div id="sell" class="dleft"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables -->
+        <div class="rcover">
+            <div id="rheader">گزارش عایدات و پرداخت ها</div>
+            <div id="rcontent">
+                <div class="btnParent">
+                    <div class="btnStudent"><a onclick="loadPage(event, this.href); " href="./pages/inCome_OutGo_report/student.html">فیس شاگردان</a></div>
+                    <div class="btnStudent"><a onclick="loadPage(event, this.href); " href="./pages/inCome_OutGo_report/teacher.html" href="/">معاشات اساتید</a></div>
+                    <div class="btnStudent"><a onclick="loadPage(event, this.href); " href="./pages/inCome_OutGo_report/employee.html" href="/">معاشات کارمندان</a></div>
+                </div>
+              </div>
+        </div>  
+
+        <!-- Total -->
+
+        
+        </div> 
+        </div>
+        <script>
+            {
+                let dailyIncome = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26"><path d="M7 0C6.398438 0 6 0.398438 6 1L6 4C6 4.601563 6.398438 5 7 5C7.601563 5 8 4.601563 8 4L8 1C8 0.398438 7.601563 0 7 0 Z M 19 0C18.398438 0 18 0.398438 18 1L18 4C18 4.601563 18.398438 5 19 5C19.601563 5 20 4.601563 20 4L20 1C20 0.398438 19.601563 0 19 0 Z M 3 2C1.300781 2 0 3.300781 0 5L0 23C0 24.699219 1.300781 26 3 26L23 26C24.699219 26 26 24.699219 26 23L26 5C26 3.300781 24.699219 2 23 2L21 2L21 4C21 5.101563 20.101563 6 19 6C17.898438 6 17 5.101563 17 4L17 2L9 2L9 4C9 5.101563 8.101563 6 7 6C5.898438 6 5 5.101563 5 4L5 2 Z M 2 9L24 9L24 23C24 23.601563 23.601563 24 23 24L3 24C2.398438 24 2 23.601563 2 23 Z M 19.5 12.40625L19.5 15.09375C19.398438 14.695313 19.09375 14.5 18.59375 14.5C17.695313 14.5 16.90625 15.414063 16.90625 17.3125C16.90625 18.8125 17.492188 20.09375 18.59375 20.09375C19.09375 20.09375 19.488281 19.804688 19.6875 19.40625L19.8125 20L21 20L21 12.40625 Z M 13.6875 13.09375L12.09375 13.90625L12.3125 15L13.59375 14.40625L13.59375 20.09375L15 20.09375L15 13.09375 Z M 6 14L6 16L4 16L4 18L6 18L6 20L8 20L8 18L10 18L10 16L8 16L8 14 Z M 19.09375 15.8125C19.394531 15.8125 19.59375 16.105469 19.59375 16.40625L19.59375 18.5C19.492188 18.898438 19.292969 19 19.09375 19C18.695313 19 18.40625 18.40625 18.40625 17.40625C18.40625 16.507813 18.59375 15.8125 19.09375 15.8125Z" fill="#000";/></svg>`;
+                let weeklyIncome = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 1H8V5H6zM16 1H18V5H16z"/><path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M19,19H5V9h14V19z M19,7H5V5h14V7z" fill="#000" /><path d="M9 14L6 14 6 15 9 15z"/><path d="M7 13L7 16 8 16 8 13zM11 11L10 11 10 12 11 12 11 17 12 17 12 11zM18 17L18 11 17 11 17 15.146 15.5 13 14 15.146 14 11 13 11 13 17 14 17 15.5 14.687 17 17z" fill="#000" /><path d="M4 4H20V8H4z" fill="#000"/></svg>`;
+                let monthlyIncome = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26"><path d="M7 0C6.398438 0 6 0.398438 6 1L6 4C6 4.601563 6.398438 5 7 5C7.601563 5 8 4.601563 8 4L8 1C8 0.398438 7.601563 0 7 0 Z M 19 0C18.398438 0 18 0.398438 18 1L18 4C18 4.601563 18.398438 5 19 5C19.601563 5 20 4.601563 20 4L20 1C20 0.398438 19.601563 0 19 0 Z M 3 2C1.300781 2 0 3.300781 0 5L0 23C0 24.699219 1.300781 26 3 26L23 26C24.699219 26 26 24.699219 26 23L26 5C26 3.300781 24.699219 2 23 2L21 2L21 4C21 5.101563 20.101563 6 19 6C17.898438 6 17 5.101563 17 4L17 2L9 2L9 4C9 5.101563 8.101563 6 7 6C5.898438 6 5 5.101563 5 4L5 2 Z M 2 9L24 9L24 23C24 23.601563 23.601563 24 23 24L3 24C2.398438 24 2 23.601563 2 23 Z M 11.6875 13.09375L10.09375 13.90625L10.3125 15L11.59375 14.40625L11.59375 20.09375L13 20.09375L13 13.09375 Z M 6 14L6 16L4 16L4 18L6 18L6 20L8 20L8 18L10 18L10 16L8 16L8 14 Z M 17.8125 14C17.210938 14 16.707031 14.414063 16.40625 14.8125L16.3125 14.09375L15 14.09375L15 20L16.5 20L16.5 16.1875C16.5 16.085938 16.59375 15.914063 16.59375 15.8125C16.695313 15.511719 16.988281 15.3125 17.1875 15.3125C17.6875 15.3125 17.6875 15.914063 17.6875 16.3125L17.6875 20L19.3125 20L19.3125 15.8125C19.414063 15.511719 19.605469 15.3125 19.90625 15.3125C20.304688 15.3125 20.40625 15.800781 20.40625 16.5L20.40625 20L22 20L22 16.3125C22 14.8125 21.601563 14 20.5 14C20.199219 14 19.886719 14.085938 19.6875 14.1875C19.488281 14.386719 19.195313 14.613281 19.09375 14.8125C18.894531 14.3125 18.511719 14 17.8125 14Z" fill="#000"/></svg>`;
+                let yearlyIncome = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26"><path d="M7 0C6.398438 0 6 0.398438 6 1L6 4C6 4.601563 6.398438 5 7 5C7.601563 5 8 4.601563 8 4L8 1C8 0.398438 7.601563 0 7 0 Z M 19 0C18.398438 0 18 0.398438 18 1L18 4C18 4.601563 18.398438 5 19 5C19.601563 5 20 4.601563 20 4L20 1C20 0.398438 19.601563 0 19 0 Z M 3 2C1.300781 2 0 3.300781 0 5L0 23C0 24.699219 1.300781 26 3 26L23 26C24.699219 26 26 24.699219 26 23L26 5C26 3.300781 24.699219 2 23 2L21 2L21 4C21 5.101563 20.101563 6 19 6C17.898438 6 17 5.101563 17 4L17 2L9 2L9 4C9 5.101563 8.101563 6 7 6C5.898438 6 5 5.101563 5 4L5 2 Z M 2 9L24 9L24 23C24 23.601563 23.601563 24 23 24L3 24C2.398438 24 2 23.601563 2 23 Z M 13.6875 13.09375L12.09375 13.90625L12.3125 15L13.59375 14.40625L13.59375 20.09375L15 20.09375L15 13.09375 Z M 6 14L6 16L4 16L4 18L6 18L6 20L8 20L8 18L10 18L10 16L8 16L8 14 Z M 19.59375 14L19.09375 16.8125C19.09375 17.113281 19 17.386719 19 17.6875C18.898438 17.386719 18.914063 17.113281 18.8125 16.8125L18.3125 14.09375L16.8125 14.09375L18.3125 19.09375L18.3125 19.3125C18.3125 19.3125 18.1875 19.398438 18.1875 19.5C18.085938 19.699219 17.886719 19.894531 17.6875 20.09375C17.488281 20.292969 17.199219 20.398438 17 20.5L17.5 21.6875C17.699219 21.6875 18.1875 21.40625 18.6875 20.90625C19.289063 20.304688 19.605469 19.1875 19.90625 18.1875L21 14Z" fill="#000"/></svg>`;
+                let student = `<svg xmlns="http://www.w3.org/2000/svg" width='20px' viewBox="0 0 26 26"><path d="M8.5 0C7.121094 0 6 1.121094 6 2.5C6 3.878906 7.121094 5 8.5 5C9.878906 5 11 3.878906 11 2.5C11 1.121094 9.878906 0 8.5 0 Z M 2.59375 5.46875C2.304688 5.507813 2.054688 5.71875 1.90625 6.09375L0.09375 12C-0.105469 12.601563 0.1875 13.210938 0.6875 13.3125L1.90625 13.59375C2.40625 13.695313 2.898438 13.414063 3 12.8125L4.40625 6.8125C4.507813 6.3125 4.1875 5.789063 3.6875 5.6875L2.90625 5.5C2.804688 5.476563 2.691406 5.457031 2.59375 5.46875 Z M 6.1875 6C5.6875 6 5.5 6.59375 5.5 6.59375C5.101563 8.292969 4.101563 12.804688 4 13.40625C3.800781 14.40625 4.289063 15.207031 4.6875 15.90625C5.085938 16.507813 9.894531 24.101563 10.59375 25C11.195313 25.800781 11.789063 26.1875 12.6875 25.6875C13.386719 25.289063 13.304688 24.292969 12.90625 23.59375C12.507813 22.894531 7.59375 14.90625 7.59375 14.90625L8.59375 11.40625C8.59375 11.40625 9.199219 12.1875 9.5 12.6875C9.601563 12.886719 9.789063 12.988281 10.1875 13.1875C10.6875 13.386719 11.804688 14.105469 12.40625 14.40625C13.007813 14.707031 13.699219 14.789063 14 14.1875C14.300781 13.6875 13.90625 13.105469 13.40625 12.90625C12.90625 12.707031 10.8125 11.40625 10.8125 11.40625C10.8125 11.40625 9.695313 8.992188 9.09375 7.59375C8.492188 6.394531 8.113281 6 7.3125 6 Z M 21 7C19.894531 7 19 7.894531 19 9C19 10.105469 19.894531 11 21 11C22.105469 11 23 10.105469 23 9C23 7.894531 22.105469 7 21 7 Z M 17.09375 11.09375C16.792969 11.09375 16.507813 11.292969 16.40625 11.59375L15.09375 15.90625C14.894531 16.304688 15.101563 16.710938 15.5 16.8125L16.5 17C16.800781 17.101563 17.210938 16.800781 17.3125 16.5L18.3125 12.09375C18.414063 11.695313 18.113281 11.414063 17.8125 11.3125 Z M 19.3125 12C18.914063 12 18.8125 12.40625 18.8125 12.40625C18.511719 13.605469 17.914063 16.3125 17.8125 16.8125C17.710938 17.613281 18.011719 18.09375 18.3125 18.59375C18.613281 18.992188 22.09375 24.585938 22.59375 25.1875C23.09375 25.789063 23.492188 26.085938 24.09375 25.6875C24.59375 25.386719 24.613281 24.6875 24.3125 24.1875C24.011719 23.6875 20.40625 17.90625 20.40625 17.90625L21 15.90625L21.59375 16.8125C21.695313 17.011719 21.792969 16.988281 22.09375 17.1875C22.394531 17.386719 23.6875 17.988281 24.1875 18.1875C24.585938 18.386719 25.207031 18.492188 25.40625 18.09375C25.707031 17.695313 25.492188 17.292969 25.09375 17.09375L22.6875 15.90625C22.6875 15.90625 21.90625 14.085938 21.40625 13.1875C21.007813 12.289063 20.695313 12 20.09375 12 Z M 3.90625 17.1875L3.09375 20C3.09375 20 1.007813 23.011719 0.40625 23.8125C0.0078125 24.414063 -0.394531 25.210938 0.40625 25.8125C1.207031 26.414063 1.914063 25.59375 2.3125 25.09375C2.710938 24.695313 4.3125 22.414063 4.8125 21.8125C5.113281 21.414063 5.304688 21.113281 5.40625 20.8125C5.507813 20.613281 5.613281 20.40625 5.8125 19.90625 Z M 17.90625 19.40625L17.3125 21.5C17.3125 21.5 15.804688 23.710938 15.40625 24.3125C15.105469 24.8125 14.804688 25.289063 15.40625 25.6875C16.007813 26.1875 16.511719 25.585938 16.8125 25.1875C17.113281 24.886719 18.292969 23.210938 18.59375 22.8125C18.792969 22.511719 18.898438 22.292969 19 22.09375C19.101563 21.894531 19.210938 21.710938 19.3125 21.3125Z" fill="#000" /></svg>`;
+                let teacher = `<svg xmlns="http://www.w3.org/2000/svg" width='20px' viewBox="0 0 26 26"><path d="M13 0.15625C9.824219 0.15625 7.09375 2.296875 7.09375 6.40625C7.09375 9.089844 8.351563 11.816406 10 13.5C10.265625 14.199219 10.21875 14.722656 10.0625 15.09375C10.300781 15.417969 11.304688 16.4375 13 16.4375C14.628906 16.4375 15.617188 15.496094 15.90625 15.125C15.796875 14.761719 15.78125 14.257813 16.03125 13.5C17.667969 11.8125 18.90625 9.078125 18.90625 6.40625C18.90625 2.300781 16.175781 0.15625 13 0.15625 Z M 9 16C5.730469 17.21875 2.03125 19.359375 2.03125 21.46875L2.03125 22.28125C2.03125 25.226563 7.742188 25.875 13.03125 25.875C18.328125 25.875 23.96875 25.226563 23.96875 22.28125L23.96875 21.46875C23.96875 19.328125 20.34375 17.214844 16.96875 16.03125C16.96875 16.03125 15.96875 20.699219 14.65625 23.34375C14.191406 21.324219 13.34375 19.46875 13.34375 19.46875C13.34375 19.46875 14.4375 19.003906 14.4375 18.25C14.4375 17.320313 13 16.875 13 16.875C13 16.875 11.5625 17.1875 11.5625 18.25C11.5625 18.972656 12.65625 19.46875 12.65625 19.46875C12.65625 19.46875 11.808594 21.316406 11.34375 23.3125C10.023438 20.65625 9 16 9 16Z" fill="#000" /></svg>`;
+                let employee =`<svg xmlns="http://www.w3.org/2000/svg" width='20px' viewBox="0 0 26 26"><path d="M13 0C11.34375 0 10 1.34375 10 3C10 4.65625 11.34375 6 13 6C14.65625 6 16 4.65625 16 3C16 1.34375 14.65625 0 13 0 Z M 10.5 7C9.101563 7 8 8.101563 8 9.5L8 12L18 12L18 9.5C18 8.101563 16.898438 7 15.5 7 Z M 23 9L23 9.5L24 9.5L24 9 Z M 23.5 10C22.300781 10 21.292969 10.898438 21.09375 12L25.90625 12C25.707031 10.898438 24.699219 10 23.5 10 Z M 0 13L0 15L1 15L1 26L25 26L25 15L26 15L26 13Z" fill="#000" /></svg>`;
+                let sell = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26"><path d="M5 0C4.445313 0 4 0.449219 4 1L4 12C4 12.550781 4.445313 13 5 13L21 13C21.554688 13 22 12.550781 22 12L22 1C22 0.449219 21.554688 0 21 0 Z M 10 2L16 2C16.554688 2 17 2.449219 17 3C17 3.550781 16.554688 4 16 4L10 4C9.445313 4 9 3.550781 9 3C9 2.449219 9.445313 2 10 2 Z M 6.03125 15.3125C5.601563 15.351563 5.121094 15.46875 4.5625 15.6875C3.152344 16.246094 0.0625 17.6875 0.0625 17.6875L2.90625 23.96875L4.375 23.03125C5.175781 22.519531 5.621094 22.433594 6.65625 22.96875C7.660156 23.484375 10.730469 25.09375 11.5 25.46875C13.867188 26.617188 14.886719 25.597656 16.03125 24.9375C17.007813 24.375 23.929688 19.792969 24.65625 19.28125C25.792969 18.480469 26.140625 17.765625 25.625 17.09375C25.234375 16.585938 24.34375 16.164063 22.5625 17.21875C22.726563 16.480469 22.164063 16.03125 21.46875 16.03125C20.855469 16.03125 20.132813 16.171875 19.5625 16.75C18.742188 15.671875 17.894531 15.824219 16.25 16.84375C15.625 17.234375 15.066406 17.550781 14.65625 17.78125C14.546875 17.84375 14.464844 17.890625 14.375 17.9375C14.535156 17.972656 14.695313 18 14.875 18C17.179688 18 19 18 19 20C19 21.535156 17.226563 21.980469 16.28125 22L12 22C10.238281 22 8.53125 20.15625 8.53125 20.15625C8.53125 20.15625 10.550781 21 12 21L16.25 21C16.257813 21 18 20.929688 18 20C18 19.148438 17.53125 19 14.875 19C13.140625 19 11.375 17.96875 11.375 17.96875C11.375 17.96875 9.632813 16.679688 9.09375 16.34375C8.136719 15.746094 7.316406 15.191406 6.03125 15.3125Z" fill="#000" /></svg>`;
+
+                document.getElementById('fday').innerHTML = dailyIncome;
+                document.getElementById('fweek').innerHTML = weeklyIncome;
+                document.getElementById('fmonth').innerHTML = monthlyIncome;
+                document.getElementById('fyear').innerHTML = yearlyIncome;
+
+                document.getElementById('fstudent').innerHTML = student;
+                document.getElementById('fteacher').innerHTML = teacher;
+                document.getElementById('femployee').innerHTML = employee;
+                document.getElementById('fsells').innerHTML = sell;
+            }
+
+            async function showData(url, column, column2) {
+                let total = 0;
+                try {
+                    const response = await fetch(`http://localhost:3000/${url}`);
+                    const result = await response.json();
+                
+                    if (!Array.isArray(result.data)) {
+                        console.error("❌ result.data is not an array:", result);
+                        return 0;
+                    }
+                
+                    result.data.forEach((item) => {
+                        total += (parseInt(item[column]) || 0) * (parseInt(item[column2])|| 1) ; // use dynamic key
+                    });
+                
+                    return total;
+                } catch (error) {
+                    console.error("❌ Error fetching:", error);
+                    return 0;
+                }
+            }
+
+            // Student Fee
+            (async () => {
+                let a = await showData('fees', 'f_payed');
+                document.getElementById('feestudent').innerText = a;
+            })();
+            // Teacher Salary
+            (async () => {
+                let a = await showData('teachers_payment', 'payeda');
+                document.getElementById('payteacher').innerText = a;
+            })();
+            // Employee Salary
+            (async () => {
+                let a = await showData('employees_payment', 'payeda');
+                document.getElementById('payemployee').innerText = a;
+            })();
+            // Total of Sells
+            (async () => {
+                let a = await showData('sell', 'price','quantity');
+                document.getElementById('sell').innerText = a;
+            })();
+            
+
+            //periodic total report
+
+            async function getPeriodData(url,filter,column,column2) {
+                let total = 0;
+                try {
+                    const res = await fetch(`http://localhost:3000/${url}/date?date=${filter}`);
+                    const result = await res.json();
+                    
+                    if (!Array.isArray(result.data)) {
+                        console.error("❌ result.data is not an array:", result);
+                        return 2;
+                    }
+                    
+                    result.data.forEach((item) => {
+                        total += (parseInt(item[column]) || 0) * (parseInt(item[column2])|| 1) ; // use dynamic key
+                    });
+
+                    return total;
+              
+                } catch (err) {
+                    console.error("❌ Error fetching sales:", err);
+                }
+            }
+
+
+            // total income for today
+            (async () => {
+                let sell = await getPeriodData('sell','today','price','quantity');
+                let fee = await getPeriodData('fees','today','f_payed');
+                document.getElementById('dailyincome').innerHTML = sell+fee; 
+            })();
+            // total income for this week
+            (async () => {
+                let sell = await getPeriodData('sell','week','price','quantity');
+                let fee = await getPeriodData('fees','week','f_payed');
+                document.getElementById('weeklyincome').innerHTML = sell+fee; 
+            })();
+            // total income for this month
+            (async () => {
+                let sell = await getPeriodData('sell','month','price','quantity');
+                let fee = await getPeriodData('fees','month','f_payed');
+                document.getElementById('monthlyincome').innerHTML = sell+fee; 
+            })();
+            // total income for this year
+            (async () => {
+                let sell = await getPeriodData('sell','year','price','quantity');
+                let fee = await getPeriodData('fees','year','f_payed');
+                document.getElementById('yearlyincome').innerHTML = sell+fee; 
+            })();
+
+
+
+            function loadPage(event, href) {
+                event.preventDefault();
+                $("#content").load(href);
+            }
+
+        </script>
+    </body>
+</html>
