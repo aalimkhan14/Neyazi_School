@@ -14,45 +14,84 @@ function loadEmployee(id) {
       document.getElementById("job").value = employee.job || '';
       document.getElementById("salary").value = employee.salary || '';
 
-        const form = document.getElementById("employee_form"); // make sure your update form has this id
+      // Show current attachment (agreement)
+      document.getElementById("download_agreement").dataset.file = employee.agreement || "";
+      document.getElementById("download_diploma").dataset.file = employee.diplomaLetter || "";
+      document.getElementById("download_idCard").dataset.file = employee.idCardLetter || "";
 
-        form.onsubmit = function (e) {
-            e.preventDefault();
+      const form = document.getElementById("employee_form"); // make sure your update form has this id
 
-            const updatedData = {
-                name: document.getElementById("name").value.trim(),
-                lname: document.getElementById("lname").value.trim(),
-                fname: document.getElementById("fname").value.trim(),
-                gfname: document.getElementById("gfname").value.trim(),
-                birth: document.getElementById("birth").value.trim(),
-                idcard: document.getElementById("idcard").value,
-                phone: document.getElementById("phone").value,
-                address: document.getElementById("address").value,
-                job: document.getElementById("job").value.trim(),
-                salary: document.getElementById("salary").value.trim(),
-              };
+      // === Form submission (PUT) ===
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
 
-            fetch(`/employees/${employee.id}`, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify(updatedData)
-            }).then(res => res.json()).then(response => {
-                alert("تغییرات اعمال شد");
-                loadEmployee(employee.id);  // optionally reload
-                showEmployeeData();    // refresh employee list
-            }).catch(err => {
-                console.error("❌ Update failed", err);
-                alert("خطا در ذخیره اطلاعات کارمند");
-            });
-        };
+        fetch(`/employees/${formData.get("id")}`, {
+          method: "PUT",
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then(() => {
+            alert("تغییرات موفقانه ذخیره شد ✅");
+            loadEmployee(formData.get("id"));
+          })
+          .catch((err) => console.error("Update failed:", err));
+      });
 
     })
     .catch(err => {
       console.error("خطا در ریافت اطلاعات کارمند:", err);
     });
 }
+
+// === File input preview ===
+document.getElementById("agreementFile").addEventListener("change", () => {
+  const file = document.getElementById("agreementFile").files[0];
+  if (file) document.getElementById("change_agreement").innerText = "فایل قرارداد انتخاب شد";
+});
+document.getElementById("diplomaFile").addEventListener("change", () => {
+  const file = document.getElementById("diplomaFile").files[0];
+  if (file) document.getElementById("change_diploma").innerText = "فایل اسناد تحصیلی انتخاب شد";
+});
+document.getElementById("idCardFile").addEventListener("change", () => {
+  const file = document.getElementById("idCardFile").files[0];
+  if (file) document.getElementById("change_idCard").innerText = "فایل تذکره انتخاب شد";
+});
+
+
+// === Download button ===
+document.getElementById("download_agreement").addEventListener("click", () => {
+  const file = document.getElementById("download_agreement").dataset.file;
+  console.log(file);
+  
+  if (!file) return alert("فایلی برای دانلود موجود نیست ❌");
+  const a = document.createElement("a");
+  a.href = `/uploads/${file}`;
+  a.download = file;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+document.getElementById("download_diploma").addEventListener("click", () => {
+  const file = document.getElementById("download_diploma").dataset.file;
+  if (!file) return alert("فایلی برای دانلود موجود نیست ❌");
+  const a = document.createElement("a");
+  a.href = `/uploads/${file}`;
+  a.download = file;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+document.getElementById("download_idCard").addEventListener("click", () => {
+  const file = document.getElementById("download_idCard").dataset.file;
+  if (!file) return alert("فایلی برای دانلود موجود نیست ❌");
+  const a = document.createElement("a");
+  a.href = `/uploads/${file}`;
+  a.download = file;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
 
 // close modal
 function closeModal() {

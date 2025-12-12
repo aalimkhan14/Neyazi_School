@@ -1,6 +1,8 @@
 const employee_model = require('../models/employees.model');
 const employee_routes = require('../routes/employee.routes');
-const { Op } = require("sequelize");
+const { Op, fn, col, where } = require('sequelize');
+const fs = require('fs');
+const path = require('path');
 
 
 exports.findAll = async (req, res) => {
@@ -52,7 +54,14 @@ exports.create = async (req, res) => {
       address,
       job,
       salary,
+      agreement,
+      diplomaLetter,
+      idCardLetter
     } = req.body;
+
+    const agreementFile = req.files?.agreementFile?.[0]?.filename || agreementFile || null;
+    const diplomaFile = req.files?.diplomaFile?.[0]?.filename || diplomaFile || null;
+    const idCardFile = req.files?.idCardFile?.[0]?.filename || idCardFile || null;
 
     const newEmployee = await employee_model.create({
       name,
@@ -65,6 +74,9 @@ exports.create = async (req, res) => {
       address,
       job,
       salary,
+      agreement: agreementFile,
+      diplomaLetter : diplomaFile,
+      idCardLetter: idCardFile
     });
 
     res.status(201).json(newEmployee);
@@ -75,34 +87,84 @@ exports.create = async (req, res) => {
 };
 
 
-exports.delete = async (req, res)=>{
-    try {
-        const deleted = await employee_model.destroy({
-            where: {id: req.params.id}
-        });
-        if (deleted) {
-            return res.status(200).json({ message: "کارمند موفقانه حذف شد" });
-        }
-        res.status(404).json({message: 'Employee not found'})
-    } catch (error) {
-        res.status(500).json({message: 'Error deleting Employee', error})
-    }
-}
+exports.delete = async (req, res) => {
+  try {
+    const employee = await employee_model.findByPk(req.params.id);
+    if (!employee) return res.status(404).json({ message: 'Employee not found' });
 
-exports.update = async (req, res)=>{
-    try {
-        const[updated] = await employee_model.update(req.body,{
-            where: {id:req.params.id}
-        });
-        if(updated){
-            const updatedEmployee = await employee_model.findByPk(req.params.id);
-            return res.status(200).json(updatedEmployee);
-        }
-        res.status(404).json({message: 'Employee not found'});
-    } catch (error) {
-        res.status(500).json({message: 'Error updating Employee', error})
+    if (employee.agreement) {
+      const agreementPath = path.join(__dirname, '..', '..', 'uploads', employee.agreement);
+      if (fs.existsSync(agreementPath)) fs.unlinkSync(agreementPath);
     }
-}
+    if (employee.diplomaLetter) {
+      const diplomaPath = path.join(__dirname, '..', '..', 'uploads', employee.diplomaLetter);
+      if (fs.existsSync(diplomaPath)) fs.unlinkSync(diplomaPath);
+    }
+    if (employee.idCardLetter) {
+      const idCardPath = path.join(__dirname, '..', '..', 'uploads', employee.idCardLetter);
+      if (fs.existsSync(idCardPath)) fs.unlinkSync(idCardPath);
+    }
+
+    await employee.destroy();
+    res.status(200).json({ message: "کارمند موفقانه حذف شد" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting employee', error });
+  }
+};
+
+exports.update = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const employee = await employee_model.findByPk(id);
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    // 🟢 Helper function to delete old file
+    const deleteOldFile = (fileName) => {
+      if (!fileName) return;
+      const filePath = path.join(__dirname, '..', '..', 'uploads', fileName);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    };
+
+    // 🟢 Handle agreement file update
+    if (req.files?.agreementFile?.[0]) {
+      deleteOldFile(employee.agreement);
+      employee.agreement = req.files.agreementFile[0].filename;
+    }
+
+    // 🟢 Handle diploma letter update
+    if (req.files?.diplomaFile?.[0]) {
+      deleteOldFile(employee.diplomaLetter);
+      employee.diplomaLetter = req.files.diplomaFile[0].filename;
+    }
+
+    // 🟢 Handle ID card letter update
+    if (req.files?.idCardFile?.[0]) {
+      deleteOldFile(employee.idCardLetter);
+      employee.idCardLetter = req.files.idCardFile[0].filename;
+    }
+
+    // 🟡 Update all text fields
+    Object.assign(employee, req.body);
+
+    await employee.save();
+
+    res.status(200).json({
+      message: "Employee updated successfully",
+      employee,
+    });
+
+  } catch (error) {
+    console.error("Error updating Employee:", error);
+    res.status(500).json({
+      message: "Error updating Employee",
+      error: error.message,
+    });
+  }
+};
 
 exports.findByPk = async (req, res) => {
   try {

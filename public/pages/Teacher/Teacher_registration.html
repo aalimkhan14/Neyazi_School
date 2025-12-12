@@ -117,25 +117,24 @@
             <label for="agreement" class="file-input-label" style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
               <span class="file-button" id="txt_attachment">اضافه نمودن اسناد قرار داد</span>
               <input type="file" id="agreement" name="agreement" accept=".pdf, image/*"  style="display: none"/>
-          </label>
-        </div>
-        <div id="five">
-            <label for="diplomaLetter" class="file-input-label" style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
-              <span class="file-button" id="txt_diploma">اضافه نمودن اسناد تحصیلی</span>
-              <input type="file" id="diplomaLetter" name="diplomaLetter" accept=".pdf, image/*"  style="display: none"/>
             </label>
-            <label for="idCardLetter" class="file-input-label" style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
-              <span class="file-button" id="txt_idcard">اضافه نمودن اسناد تذکره</span>
-              <input type="file" id="idCardLetter" name="idCardLetter" accept=".pdf, image/*"  style="display: none"/>
-            </label>
-            <label for="">
-              <input type="hidden">
-            </label>
-            <label for="">
-              <input type="hidden">
-            </label>
-
           </div>
+          <div id="five">
+              <label for="diplomaLetter" class="file-input-label" style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
+                <span class="file-button" id="txt_diploma">اضافه نمودن اسناد تحصیلی</span>
+                <input type="file" id="diplomaLetter" name="diplomaLetter" accept=".pdf, image/*"  style="display: none"/>
+              </label>
+              <label for="idCardLetter" class="file-input-label" style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
+                <span class="file-button" id="txt_idcard">اضافه نمودن اسناد تذکره</span>
+                <input type="file" id="idCardLetter" name="idCardLetter" accept=".pdf, image/*"  style="display: none"/>
+              </label>
+              <label for="">
+                <input type="hidden">
+              </label>
+              <label for="">
+                <input type="hidden">
+              </label>
+            </div>
           </div>
 
         <div id="rfooter">
@@ -231,7 +230,7 @@ document.getElementById("diplomaLetter").addEventListener("change", function () 
     label.innerText = "اضافه نمودن اسناد تحصیلی";
   }
 });
-document.getElementById("agreement").addEventListener("change", function () {
+document.getElementById("idCardLetter").addEventListener("change", function () {
   const label = document.getElementById("txt_idcard");
   if (this.files.length > 0) {
     label.innerText = "اسناد تذکره اضافه شد";

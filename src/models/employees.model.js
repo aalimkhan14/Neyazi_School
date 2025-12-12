@@ -12,6 +12,9 @@ const Employee = sequelize.define('employee',{
     address:{type: DataTypes.STRING, allowNull: false},
     job:{type: DataTypes.STRING, allowNull: false},
     salary:{type: DataTypes.STRING, allowNull: false},
+    agreement:{type: DataTypes.STRING, allowNull: true},
+    diplomaLetter:{type: DataTypes.STRING, allowNull: true},
+    idCardLetter:{type: DataTypes.STRING, allowNull: true}
 },{
   tableName: 'employees',
   freezeTableName: true,

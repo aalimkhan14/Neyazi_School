@@ -66,6 +66,8 @@ document.getElementById("idCardFile").addEventListener("change", () => {
 // === Download button ===
 document.getElementById("download_agreement").addEventListener("click", () => {
   const file = document.getElementById("download_agreement").dataset.file;
+  console.log(file);
+  
   if (!file) return alert("فایلی برای دانلود موجود نیست ❌");
   const a = document.createElement("a");
   a.href = `/uploads/${file}`;
