@@ -25,6 +25,8 @@ function loadTeacher(id) {
 
       // Show current attachment (agreement)
       document.getElementById("download_agreement").dataset.file = teacher.agreement || "";
+      document.getElementById("download_diploma").dataset.file = teacher.diplomaLetter || "";
+      document.getElementById("download_idCard").dataset.file = teacher.idCardLetter || "";
 
       // === Form submission (PUT) ===
       const form = document.getElementById("teacher_form");
@@ -52,10 +54,38 @@ document.getElementById("agreementFile").addEventListener("change", () => {
   const file = document.getElementById("agreementFile").files[0];
   if (file) document.getElementById("change_agreement").innerText = "فایل قرارداد انتخاب شد";
 });
+document.getElementById("diplomaFile").addEventListener("change", () => {
+  const file = document.getElementById("diplomaFile").files[0];
+  if (file) document.getElementById("change_diploma").innerText = "فایل اسناد تحصیلی انتخاب شد";
+});
+document.getElementById("idCardFile").addEventListener("change", () => {
+  const file = document.getElementById("idCardFile").files[0];
+  if (file) document.getElementById("change_idCard").innerText = "فایل تذکره انتخاب شد";
+});
 
 // === Download button ===
 document.getElementById("download_agreement").addEventListener("click", () => {
   const file = document.getElementById("download_agreement").dataset.file;
+  if (!file) return alert("فایلی برای دانلود موجود نیست ❌");
+  const a = document.createElement("a");
+  a.href = `/uploads/${file}`;
+  a.download = file;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+document.getElementById("download_diploma").addEventListener("click", () => {
+  const file = document.getElementById("download_diploma").dataset.file;
+  if (!file) return alert("فایلی برای دانلود موجود نیست ❌");
+  const a = document.createElement("a");
+  a.href = `/uploads/${file}`;
+  a.download = file;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+document.getElementById("download_idCard").addEventListener("click", () => {
+  const file = document.getElementById("download_idCard").dataset.file;
   if (!file) return alert("فایلی برای دانلود موجود نیست ❌");
   const a = document.createElement("a");
   a.href = `/uploads/${file}`;

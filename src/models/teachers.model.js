@@ -17,7 +17,9 @@ const Teacher = sequelize.define('teacher',{
     job:{type: DataTypes.STRING, allowNull: false},
     salary:{type: DataTypes.STRING, allowNull: false},
     formcode:{type: DataTypes.STRING, allowNull:false},
-    agreement:{type: DataTypes.STRING, allowNull: true}
+    agreement:{type: DataTypes.STRING, allowNull: true},
+    diplomaLetter:{type: DataTypes.STRING, allowNull: true},
+    idCardLetter:{type: DataTypes.STRING, allowNull: true}
 },{
   tableName: 'teachers',
   freezeTableName: true,

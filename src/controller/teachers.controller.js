@@ -60,9 +60,13 @@ exports.create = async (req, res) => {
       salary,
       formcode,
       agreement,
+      diplomaLetter,
+      idCardLetter
     } = req.body;
 
       const agreementFile = req.files?.agreementFile?.[0]?.filename || agreementFile || null;
+      const diplomaFile = req.files?.diplomaFile?.[0]?.filename || diplomaFile || null;
+      const idCardFile = req.files?.idCardFile?.[0]?.filename || idCardFile || null;
 
     const newTeacher = await teacher_model.create({
       name,
@@ -81,6 +85,8 @@ exports.create = async (req, res) => {
       salary,
       formcode,
       agreement: agreementFile,
+      diplomaLetter : diplomaFile,
+      idCardLetter: idCardFile
     });
 
     res.status(201).json(newTeacher);
@@ -99,6 +105,14 @@ exports.delete = async (req, res) => {
     if (teacher.agreement) {
       const agreementPath = path.join(__dirname, '..', '..', 'uploads', teacher.agreement);
       if (fs.existsSync(agreementPath)) fs.unlinkSync(agreementPath);
+    }
+    if (teacher.diplomaLetter) {
+      const diplomaPath = path.join(__dirname, '..', '..', 'uploads', teacher.diplomaLetter);
+      if (fs.existsSync(diplomaPath)) fs.unlinkSync(diplomaPath);
+    }
+    if (teacher.idCardLetter) {
+      const idCardPath = path.join(__dirname, '..', '..', 'uploads', teacher.idCardLetter);
+      if (fs.existsSync(idCardPath)) fs.unlinkSync(idCardPath);
     }
 
     await teacher.destroy();
@@ -119,28 +133,50 @@ exports.update = async (req, res) => {
       return res.status(404).json({ message: "Teacher not found" });
     }
 
-    // 🟢 Handle new agreement file upload
-    if (req.files && req.files.agreementFile && req.files.agreementFile[0]) {
-      // Delete old agreement file if exists
-      if (teacher.agreement) {
-        const oldPath = path.join(__dirname, '..', '..', 'uploads', teacher.agreement);
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath);
-        }
-      }
+    // 🟢 Helper function to delete old file
+    const deleteOldFile = (fileName) => {
+      if (!fileName) return;
+      const filePath = path.join(__dirname, '..', '..', 'uploads', fileName);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    };
+
+    // 🟢 Handle agreement file update
+    if (req.files?.agreementFile?.[0]) {
+      deleteOldFile(teacher.agreement);
       teacher.agreement = req.files.agreementFile[0].filename;
     }
 
-    // 🟡 Update all other fields
+    // 🟢 Handle diploma letter update
+    if (req.files?.diplomaFile?.[0]) {
+      deleteOldFile(teacher.diplomaLetter);
+      teacher.diplomaLetter = req.files.diplomaFile[0].filename;
+    }
+
+    // 🟢 Handle ID card letter update
+    if (req.files?.idCardFile?.[0]) {
+      deleteOldFile(teacher.idCardLetter);
+      teacher.idCardLetter = req.files.idCardFile[0].filename;
+    }
+
+    // 🟡 Update all text fields
     Object.assign(teacher, req.body);
+
     await teacher.save();
 
-    res.status(200).json({ message: "Teacher updated successfully", teacher });
+    res.status(200).json({
+      message: "Teacher updated successfully",
+      teacher,
+    });
+
   } catch (error) {
     console.error("Error updating teacher:", error);
-    res.status(500).json({ message: "Error updating teacher", error: error.message });
+    res.status(500).json({
+      message: "Error updating teacher",
+      error: error.message,
+    });
   }
 };
+
 
 
 exports.findByPk = async (req, res) => {
