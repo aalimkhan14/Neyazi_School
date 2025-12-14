@@ -7,6 +7,7 @@ const Storage = sequelize.define('storage',{
     quantity:{type:DataTypes.STRING, allowNull:false},
     buyamount:{type:DataTypes.STRING, allowNull:false},
     sellamount:{type:DataTypes.STRING, allowNull:false},
+    barcode:{type:DataTypes.STRING, allowNull:false},
 },{
     tableName: 'storages',
     freezeTableName: true,

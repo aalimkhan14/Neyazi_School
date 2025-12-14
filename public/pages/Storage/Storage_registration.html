@@ -32,7 +32,7 @@
             <div id="two">
                 <label for="buyamount">قیمت خرید:<input id="buyamount" name="buyamount" type="number"></label>
                 <label for="sellamount">قیمت فروش:<input id="sellamount" name="sellamount" type="number"></label>
-                <label for=""><input id="" type="hidden"></label>
+                <label for="barcode">بار کود:<input id="barcode" name="barcode" type="text"></label>
             </div>
         </div>
         <div id="rfooter">
@@ -69,6 +69,7 @@
                     quantity: form.quantity.value,
                     buyamount: form.buyamount.value,
                     sellamount: form.sellamount.value
+                    ,barcode: form.barcode.value
                 }; 
                 try {
                     const response = await fetch("http://localhost:3000/storage", {
@@ -128,3 +129,4 @@
     </script>
 </body>
 </html>
+

@@ -51,6 +51,7 @@ exports.create = async (req, res) => {
         quantity,
         buyamount,
         sellamount,
+        barcode,
     } = req.body;
 
     const newSpend = await Storage_model.create({
@@ -59,6 +60,7 @@ exports.create = async (req, res) => {
         quantity,
         buyamount,
         sellamount,
+        barcode,
     });
 
     res.status(201).json(newSpend);
@@ -103,6 +105,18 @@ exports.findByPk = async (req, res) => {
 
     if (!getone) {
       return res.status(404).json({ message: 'storage not found' });
+    }
+    res.status(200).json(getone);
+  } catch (error) {
+    res.status(500).json({ message: 'Error finding storage', error });
+  }
+};
+exports.findByBarcode = async (req, res) => {
+  try {
+    const getone = await Storage_model.findByPk(req.params.barcode);
+
+    if (!getone) {
+      return res.status(404).json({ message: 'product not found' });
     }
     res.status(200).json(getone);
   } catch (error) {

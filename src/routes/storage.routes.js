@@ -16,6 +16,8 @@ router.put('/:id', Storage_controller.update);
 router.delete('/:id', Storage_controller.delete);
 // Get one by id
 router.get('/:id', Storage_controller.findByPk);
+// Get one by barcode
+router.get('/barcode/:barcode', Storage_controller.findByBarcode);
 
 
 module.exports = router;
