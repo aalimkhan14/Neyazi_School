@@ -4,6 +4,36 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
+            #sell_registration{
+                min-height: 700px;
+            }
+            #sell_content{
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                height: 75%;
+                background-color: #fff;
+            }
+            .info{
+                display: flex;
+                flex-direction: column;
+                width: 35%;
+                padding: 20px;
+                box-sizing: border-box;
+                border-left: 2px solid #ccc;
+            }
+            .info label{
+                margin-bottom: 15px;
+                width: 100%;
+            }
+            .productlist{
+                display: flex;
+                flex-direction: column;
+                width: 65%;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
             label{
                 width: 32.5%;
             }
@@ -52,29 +82,33 @@
         <div id="rparent">
         <form id="sell_registration" class="rcover">
             <div id="rheader">فروش جنس</div>
-            <div id="rcontent">
-                <div id="one">
-                    <input type="hidden" id="id" name="id">
-                    <label for="customer">اسم مشتری:<input id="customer" name="customer" type="text" required></label>
-                    <label for="catagory" id="lcatagory">کتگوری:
-                        <select name="catagory" id="catagory" required></select>
-                    </label>
-                    <label for="goods" id="lgoods">جنس:
-                        <select name="goods" id="goods" required></select>
-                    </label>            
+            <div id="sell_content">
+                <div class="info">
+                  <label for="customer">اسم مشتری:<input id="customer" name="customer" type="text" required></label>
+                  <label for="productlist">بار کود محصول:<input id="productScan"  type="text" required></label>
                 </div>
-                <div id="two">
-                    <label for="price">قیمت جنس:<input id="price" name="price" type="number" required></label>  
-                    <label for="quantity">تعداد:<input id="quantity" name="quantity" type="number" required></label>
-                    <label for="total_price">قیمت مجموع:<input id="total_price" type="number"></label>
+                <div class="productlist">
+                  <table>
+                    <thead>
+                      <th>شماره</th>
+                      <th>محصول</th>
+                      <th>تعداد</th>
+                      <th>قیمت</th>
+                      <th>عملکرد</th>
+                    </thead>
+                  </table>
                 </div>
             </div>
+            
             <div id="rfooter">
                 <input type="submit" id="save" value="ثبت کردن" />
                 <input type="button" value="ثبت کردن" id="save1" style="display: none;">
                 <input type="reset" id="exit" value="پاک کردن" />
             </div>
         </form>
+
+
+
         <div class="rcover">
             <div id="rheader">اجناس فروخته شده</div>
             <div id="rcontent">
@@ -97,7 +131,6 @@
                     <thead>
                         <th class="th">نمبر</th>
                         <th class="th">اسم مشتری</th>
-                        <th class="th">کتگوری</th>
                         <th class="th">جنس</th>
                         <th class="th">قیمت</th>
                         <th class="th">تعداد</th>
