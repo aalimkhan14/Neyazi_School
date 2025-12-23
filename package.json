@@ -11,6 +11,7 @@
     "nodemailer": "^7.0.10",
     "react-multi-date-picker": "^4.5.2",
     "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7",
     "svelte": "^5.39.11"
   },
   "name": "neyazi-school-mis",
