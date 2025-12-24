@@ -113,16 +113,20 @@ exports.findByPk = async (req, res) => {
 };
 exports.findByBarcode = async (req, res) => {
   try {
-    const getone = await Storage_model.findByPk(req.params.barcode);
+    const getone = await Storage_model.findOne({
+      where: { barcode: req.params.barcode } // search by barcode
+    });
 
     if (!getone) {
       return res.status(404).json({ message: 'product not found' });
     }
+
     res.status(200).json(getone);
   } catch (error) {
     res.status(500).json({ message: 'Error finding storage', error });
   }
 };
+
 
 exports.count = async (req, res) => {
   try {
