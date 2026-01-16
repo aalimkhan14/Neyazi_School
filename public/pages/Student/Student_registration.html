@@ -1,325 +1,348 @@
 <!DOCTYPE html>
 <html lang="ps" dir="rtl">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ثبت مشخصات شاگرد</title>
-    
+
 
     <style>
-      .required-star {
-        color: red;
-        font-weight: bold;
-        margin: 0 4px;
-        user-select: none;
-      }
-      #rheader {
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-bottom: 1rem;
-      }
+        .required-star {
+            color: red;
+            font-weight: bold;
+            margin: 0 4px;
+            user-select: none;
+        }
+
+        #rheader {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <div id="rparent">
-      <form id="registration" class="rcover" enctype="multipart/form-data">
-        <div id="rheader">ثبت مشخصات شاگرد</div>
-        <div id="rcontent">
-          <div id="one">
-            <label for="name">
-              <span class="label-text">اسم:<span class="required-star">*</span></span>
-              <input id="name" type="text" required name="name" />
-            </label>
-            <label for="lastname">
-              <span class="label-text">تخلص:</span>
-              <input id="lastname" type="text" name="last_name" />
-            </label>
-            <label for="fathername">
-              <span class="label-text">ولد:<span class="required-star">*</span></span>
-              <input id="fathername" type="text" required name="fname" />
-            </label>
-            <label for="grandpaname">
-              <span class="label-text">ولدیت:<span class="required-star">*</span></span>
-              <input id="grandpaname" type="text" required name="gfname" />
-            </label>
-          </div>
-          <div id="two">
-            <label for="basenomber">
-              <span class="label-text">نمبر اساس:<span class="required-star">*</span></span>
-              <input id="basenomber" type="text" required name="baseno" />
-            </label>
-            <label for="birth">
-              <span class="label-text">تاریخ تولد:<span class="required-star">*</span></span>
-              <input type="text" id="birth" readonly name="birth" />
-            </label>
-            <label for="gender">
-              <span class="label-text">جنسیت:</span>
-              <select id="gender" name="gender">
-                <option value="ذکور">ذکور</option>
-                <option value="اناث">اناث</option>
-              </select>
-            </label>
-            <label for="idcard_no">
-              <span class="label-text">نمبر تذکره:<span class="required-star">*</span></span>
-              <input id="idcard_no" type="text" required name="idcard_no" />
-            </label>
-          </div>
-          <div id="three">
-            <label for="native_language">
-              <span class="label-text">زبان مادری:</span>
-              <select id="native_language" name="native_language">
-                <option value="دری">دری</option>
-                <option value="پشتو">پشتو</option>
-                <option value="ازبک">ازبک</option>
-              </select>
-            </label>
-            <label for="mean_location">
-              <span class="label-text">موقعیت اصلی:</span>
-              <input id="mean_location" type="text" name="mean_location" />
-            </label>
-            <label for="current_location">
-              <span class="label-text">موقعیت فعلی:<span class="required-star">*</span></span>
-              <input id="current_location" type="text" required name="current_location"/>
-            </label>
-            <label for="phone1">
-              <span class="label-text">شماره والدین 1:<span class="required-star">*</span></span>
-              <input id="phone1" type="text" required name="phone1" />
-            </label>
-          </div>
-          <div id="four">
-            <label for="phone2">
-              <span class="label-text">شماره والدین 2:</span>
-              <input id="phone2" type="text" name="phone2" />
-            </label>
-            <label for="relatives">
-              <span class="label-text">اقارب نزدیک:</span>
-              <select id="relatives" name="relatives">
-                <option value="برادر">برادر</option>
-                <option value="کاکا">کاکا</option>
-                <option value="ماما">ماما</option>
-                <option value="بچه کاکا">بچه کاکا</option>
-                <option value="بچه ماما">بچه ماما</option>
-              </select>
-            </label>
-            <label for="relatives_name">
-              <span class="label-text">اسم اقارب نزدیک:</span>
-              <input id="relatives_name" type="text" name="relatives_name" />
-            </label>
-            <label for="current_class">
-              <span class="label-text">صنف:<span class="required-star">*</span></span>
-              <select id="current_class" name="current_class" required>
-                <option value=""selected></option>
-              </select>
-            </label>
-          </div>
-          <div id="six">
-          <label for="yearly_fee">
-            <span class="label-text">فیس سالیانه:<span class="required-star">*</span></span>
-            <input id="yearly_fee" type="number" required name="yearly_fee"/>
-          </label>
-          <label for="transport_fee">
-            <span class="label-text">فیس سالیانه ترانسپورت:</span>
-            <input id="transport_fee" type="number" name="transport_fee">
-          </label>
-          <label for="q_o_month">
-            <span class="label-text">تعداد ماه در سال :<span class="required-star">*</span></span>
-            <input id="q_o_month" type="number" required name="q_o_month"/>
-          </label>
-          <label for="free">
-            <span class="label-text">رایگان:</span>
-            <input type="checkbox" id="free" name="free" value="رایگان">
-          </label>
-        </div>
-          <div id="five">
-            
-            <label for="entry_way">
-              <span class="label-text">چگونگی شمولیت:</span>
-              <select id="entry_way" name="entry_way">
-                <option value="جدید الشمول">جدید الشمول</option>
-                <option value="سه پارچه">سه پارچه</option>
-                <option value="امتحان سویه">امتحان سویه</option>
-              </select>
-            </label>
-            <label for="attachment2" class="file-input-label" style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
-              <span class="file-button" id="txt_attachment">اضافه نمودن تذکره</span>
-              <input type="file" id="attachment2" name="attachment2" accept=".pdf, image/*"  style="display: none"/>
-          </label>
-          <label for="attachment3" class="file-input-label" style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
-              <span class="file-button" id="txt_attachment">اضافه نمودن سه پارچه</span>
-              <input type="file" id="attachment3" name="attachment3" accept=".pdf, image/*"  style="display: none"/>
-          </label>
-            <label for="attachment" class="file-input-label" style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
-              <span class="file-button" id="txt_attachment">اضافه نمودن اسناد ضمیمه</span>
-              <input type="file" id="attachment" name="attachment" accept=".pdf, image/*"  style="display: none"/>
-            </label>
-          </div>
-          
-        <div id="seven">
-          <label for="picture" class="file-input-label" style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
-              <span class="file-button" id="txt_pic">انتخاب عکس</span>
-              <input  type="file"  id="picture"  name="picture"  accept="image/*"  style="display: none"/>
-            </label>
-          <label>
-              <img  id="pic"  src=""  alt="Preview"  style="max-width: 150px; display: none"/>
-          </label>
-            
-          
-          <label for="attachment2">
-              <input type="hidden" />
-          </label>
-          <label for="attachment3" >
-              <input type="hidden"  style="display: none"/>
-          </label>
-        </div>
-        </div>
-        <div id="rfooter">
-          <input type="submit" id="save" value="ثبت کردن" />
-          <input type="reset" id="exit" value="پاک کردن" />
-        </div>
-      </form>
+        <form id="registration" class="rcover" enctype="multipart/form-data">
+            <div id="rheader">ثبت مشخصات شاگرد</div>
+            <div id="rcontent">
+                <div id="one">
+                    <label for="name">
+                        <span class="label-text">اسم:<span class="required-star">*</span></span>
+                        <input id="name" type="text" required name="name" />
+                    </label>
+                    <label for="lastname">
+                        <span class="label-text">تخلص:</span>
+                        <input id="lastname" type="text" name="last_name" />
+                    </label>
+                    <label for="fathername">
+                        <span class="label-text">ولد:<span class="required-star">*</span></span>
+                        <input id="fathername" type="text" required name="fname" />
+                    </label>
+                    <label for="grandpaname">
+                        <span class="label-text">ولدیت:<span class="required-star">*</span></span>
+                        <input id="grandpaname" type="text" required name="gfname" />
+                    </label>
+                </div>
+                <div id="two">
+                    <label for="basenomber">
+                        <span class="label-text">نمبر اساس:</span>
+                        <input id="basenomber" type="text" name="baseno" />
+                    </label>
+                    <label for="birth">
+                        <span class="label-text">تاریخ تولد:<span class="required-star">*</span></span>
+                        <input type="text" id="birth" readonly name="birth" />
+                    </label>
+                    <label for="gender">
+                        <span class="label-text">جنسیت:</span>
+                        <select id="gender" name="gender">
+                            <option value="ذکور">ذکور</option>
+                            <option value="اناث">اناث</option>
+                        </select>
+                    </label>
+                    <label for="idcard_no">
+                        <span class="label-text">نمبر تذکره:</span>
+                        <input id="idcard_no" type="text" name="idcard_no" />
+                    </label>
+                </div>
+                <div id="three">
+                    <label for="native_language">
+                        <span class="label-text">زبان مادری:</span>
+                        <select id="native_language" name="native_language">
+                            <option value="دری">دری</option>
+                            <option value="پشتو">پشتو</option>
+                            <option value="ازبک">ازبک</option>
+                        </select>
+                    </label>
+                    <label for="mean_location">
+                        <span class="label-text">موقعیت اصلی:</span>
+                        <input id="mean_location" type="text" name="mean_location" />
+                    </label>
+                    <label for="current_location">
+                        <span class="label-text">موقعیت فعلی:<span class="required-star">*</span></span>
+                        <input id="current_location" type="text" required name="current_location" />
+                    </label>
+                    <label for="phone1">
+                        <span class="label-text">شماره والدین 1:<span class="required-star">*</span></span>
+                        <input id="phone1" type="text" required name="phone1" />
+                    </label>
+                </div>
+                <div id="four">
+                    <label for="phone2">
+                        <span class="label-text">شماره والدین 2:</span>
+                        <input id="phone2" type="text" name="phone2" />
+                    </label>
+                    <label for="brother">
+                        <span class="label-text">برادر:</span>
+                        <input id="brother" type="text" name="brother"/>
+                    </label>
+                    <label for="uncle1">
+                        <span class="label-text">کاکا:</span>
+                        <input id="uncle1" type="text" name="uncle1" />
+                    </label>
+                    <label for="uncle2">
+                        <span class="label-text">ماما:</span>
+                        <input id="uncle2" type="text" name="uncle2" />
+                    </label>
+                </div>
+                <div id="eight">
+                    <label for="cousin1">
+                        <span class="label-text">بچه کاکا:</span>
+                        <input id="cousin1" type="text" name="cousin1" />
+                    </label>
+                    <label for="cousin2">
+                        <span class="label-text">بچه ماما:</span>
+                        <input id="cousin2" type="text" name="cousin2" />
+                    </label>
+                     <label for="entry_way">
+                        <span class="label-text">چگونگی شمولیت:</span>
+                        <select id="entry_way" name="entry_way">
+                            <option value="جدید الشمول">جدید الشمول</option>
+                            <option value="سه پارچه">سه پارچه</option>
+                            <option value="امتحان سویه">امتحان سویه</option>
+                        </select>
+                    </label>
+                    <label for="current_class">
+                        <span class="label-text">صنف:<span class="required-star">*</span></span>
+                        <select id="current_class" name="current_class" required>
+                            <option value="" selected></option>
+                        </select>
+                    </label>
+                </div>
+                <div id="six">
+                    <label for="yearly_fee">
+                        <span class="label-text">فیس سالیانه:<span class="required-star">*</span></span>
+                        <input id="yearly_fee" type="number" required name="yearly_fee" />
+                    </label>
+                    <label for="transport_fee">
+                        <span class="label-text">فیس سالیانه ترانسپورت:</span>
+                        <input id="transport_fee" type="number" name="transport_fee">
+                    </label>
+                    <label for="q_o_month">
+                        <span class="label-text">تعداد ماه در سال :<span class="required-star">*</span></span>
+                        <input id="q_o_month" type="number" required name="q_o_month" />
+                    </label>
+                    <label for="free">
+                        <span class="label-text">رایگان:</span>
+                        <input type="checkbox" id="free" name="free" value="رایگان">
+                    </label>
+                </div>
+                <div id="five">
+
+                   <label for="picture" class="file-input-label"
+                        style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
+                        <span class="file-button" id="txt_pic">انتخاب عکس</span>
+                        <input type="file" id="picture" name="picture" accept="image/*" style="display: none" />
+                    </label>
+                    <label for="attachment2" class="file-input-label"
+                        style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
+                        <span class="file-button" id="txt_attachment">اضافه نمودن تذکره</span>
+                        <input type="file" id="attachment2" name="attachment2" accept=".pdf, image/*"
+                            style="display: none" />
+                    </label>
+                    <label for="attachment3" class="file-input-label"
+                        style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
+                        <span class="file-button" id="txt_attachment">اضافه نمودن سه پارچه</span>
+                        <input type="file" id="attachment3" name="attachment3" accept=".pdf, image/*"
+                            style="display: none" />
+                    </label>
+                    <label for="attachment" class="file-input-label"
+                        style=" display: flex; align-items: center; justify-content: center; height: 48px; margin-top: 34px; cursor: pointer;">
+                        <span class="file-button" id="txt_attachment">اضافه نمودن اسناد ضمیمه</span>
+                        <input type="file" id="attachment" name="attachment" accept=".pdf, image/*"
+                            style="display: none" />
+                    </label>
+                </div>
+
+                <div id="seven">
+                    
+                    <label>
+                        <img id="pic" src="" alt="Preview" style="max-width: 150px; display: none" />
+                    </label>
+
+
+                    <label for="attachment2">
+                        <input type="hidden" />
+                    </label>
+                    <label for="attachment2">
+                        <input type="hidden" />
+                    </label>
+                    <label for="attachment3">
+                        <input type="hidden" style="display: none" />
+                    </label>
+                </div>
+            </div>
+            <div id="rfooter">
+                <input type="submit" id="save" value="ثبت کردن" />
+                <input type="reset" id="exit" value="پاک کردن" />
+            </div>
+        </form>
     </div>
 
     <script src="./../../js/Date_Elemet.js"></script>
     <script>
-      datePicker('#birth');
+        datePicker('#birth');
     </script>
-  
+
     <script>
 
-      async function loadClassOptions() {
-        // getting class data for selection
-        let current_class = document.getElementById('current_class');
-        const class_response = await fetch(`http://localhost:3000/classes`);
-        const class_result = await class_response.json();
+        async function loadClassOptions() {
+            // getting class data for selection
+            let current_class = document.getElementById('current_class');
+            const class_response = await fetch(`http://localhost:3000/classes`);
+            const class_result = await class_response.json();
 
-        class_result.data.forEach((classe) => {
-          current_class.innerHTML += `<option value='${classe.classlevel} ${classe.classmodify}'>
+            class_result.data.forEach((classe) => {
+                current_class.innerHTML += `<option value='${classe.classlevel} ${classe.classmodify}'>
           ${classe.classlevel} ${classe.classmodify}</option>`;
+            });
+        }
+
+        // Call the function after defining it
+        loadClassOptions();
+
+        document.getElementById("registration").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch("http://localhost:3000/students", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    showModal({
+                        title: "موفقیت",
+                        message: "شاگرد موفقانه ثبت شد.",
+                        icon: "success",
+                    });
+                    getLastStudent();
+                    form.reset();
+                    document.getElementById("pic").style.display = "none";
+                } else {
+                    showModal({
+                        title: "خطا",
+                        message: "خطا در ثبت معلومات شاگرد .",
+                        icon: "error",
+                    });
+                    console.log(response);
+                }
+            } catch (error) {
+                console.error("Error: ", error);
+                alert("خطا در اتصال به سرور");
+            }
         });
-      }
 
-      // Call the function after defining it
-      loadClassOptions();
-
-      document.getElementById("registration").addEventListener("submit", async function (e) {
-          e.preventDefault();
-          const form = e.target;
-          const formData = new FormData(form);
-
-          try {
-            const response = await fetch("http://localhost:3000/students", {
-              method: "POST",
-              body: formData,
+        // to load the selected picture 
+        document
+            .getElementById("picture")
+            .addEventListener("change", function () {
+                const preview = document.getElementById("pic");
+                const file = this.files[0];
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = "block";
+                } else {
+                    preview.style.display = "none";
+                }
             });
 
-            if (response.ok) {
-              showModal({
-				        	title: "موفقیت",
-				        	message: "شاگرد موفقانه ثبت شد.",
-				        	icon: "success",
-				      });
-              getLastStudent();
-              form.reset();
-              document.getElementById("pic").style.display = "none";
-            } else {
-              showModal({
-				        	title: "خطا",
-				        	message: "خطا در ثبت معلومات شاگرد .",
-				        	icon: "error",
-				      });
-              console.log(response);
+        // To change the change_picture and attachment text after selecting the file
+        document.getElementById("picture").addEventListener("change", function () {
+            document.getElementById("txt_pic").innerText = "عکس انتخاب شد";
+        });
+        document.getElementById("attachment").addEventListener("change", function () {
+            document.getElementById("txt_attachment").innerText = "اسناد ضمیمه اضافه شد";
+        });
+        document.getElementById("attachment2").addEventListener("change", function () {
+            document.getElementById("txt_attachment").innerText = "اسناد تذکره اضافه شد";
+        });
+        document.getElementById("attachment3").addEventListener("change", function () {
+            document.getElementById("txt_attachment").innerText = "اسناد سه پارچه اضافه شد";
+        });
+
+        // To disable by checking the free checkbox 
+        document.getElementById('free').addEventListener('change', function () {
+            const isChecked = this.checked;
+            document.getElementById('yearly_fee').disabled = isChecked;
+        });
+
+
+        async function save_In_UpgradeClass(student) {
+            const data = {
+                sid: student.id, // store student id
+                name: student.name + " " + (student.last_name || ""),
+                fname: student.fname,
+                fee: student.yearly_fee / student.q_o_month, // per month
+                classs: student.current_class,
+                academicYear: yearPicker(student.createdAt),
+                q_o_month: student.q_o_month  // ✅ add this
+            };
+
+            try {
+                const response = await fetch("http://localhost:3000/upgradeClass", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ data: [data] }), // wrap in array as backend expects
+                });
+
+                if (!response.ok) {
+                    alert("خطا در ثبت شاگرد در ارتقا صنف.");
+                    console.log(response);
+                }
+            } catch (error) {
+                console.error("Error: ", error);
+                alert("خطا در اتصال به سرور");
             }
-          } catch (error) {
-            console.error("Error: ", error);
-            alert("خطا در اتصال به سرور");
-          }
-        });
-      
-      // to load the selected picture 
-      document
-        .getElementById("picture")
-        .addEventListener("change", function () {
-          const preview = document.getElementById("pic");
-          const file = this.files[0];
-          if (file) {
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = "block";
-          } else {
-            preview.style.display = "none";
-          }
-        });
-      
-      	// To change the change_picture and attachment text after selecting the file
-      	document.getElementById("picture").addEventListener("change", function () {
-          	document.getElementById("txt_pic").innerText = "عکس انتخاب شد";
-      	});
-      	document.getElementById("attachment").addEventListener("change", function () {
-        	document.getElementById("txt_attachment").innerText ="اسناد ضمیمه اضافه شد";
-    	});
-      	document.getElementById("attachment2").addEventListener("change", function () {
-        	document.getElementById("txt_attachment").innerText ="اسناد تذکره اضافه شد";
-    	});
-      	document.getElementById("attachment3").addEventListener("change", function () {
-        	document.getElementById("txt_attachment").innerText ="اسناد سه پارچه اضافه شد";
-    	});
-
-      // To disable by checking the free checkbox 
-      document.getElementById('free').addEventListener('change', function() {
-         const isChecked = this.checked;
-          document.getElementById('yearly_fee').disabled = isChecked;
-      });
-
-
-      async function save_In_UpgradeClass(student){
-        const data = {
-          sid: student.id, // store student id
-          name: student.name + " " + (student.last_name || ""),
-          fname: student.fname,
-          fee: student.yearly_fee / student.q_o_month, // per month
-          classs: student.current_class,
-          academicYear: yearPicker(student.createdAt),
-          q_o_month: student.q_o_month  // ✅ add this
-        }; 
-      
-        try {
-          const response = await fetch("http://localhost:3000/upgradeClass", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ data: [data] }), // wrap in array as backend expects
-          });
-        
-          if (!response.ok) {
-            alert("خطا در ثبت شاگرد در ارتقا صنف.");
-            console.log(response);
-          }
-        } catch (error) {
-          console.error("Error: ", error);
-          alert("خطا در اتصال به سرور");
         }
-      }
 
 
-      async function getLastStudent(){
-        const url = 'http://localhost:3000/students?search=&filterBy=name&classFilter=&page=&limit=';
-        const response = await fetch(url);
-        if (!response.ok) {
-          console.error('Failed to fetch students');
-          return;
+        async function getLastStudent() {
+            const url = 'http://localhost:3000/students?search=&filterBy=name&classFilter=&page=&limit=';
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error('Failed to fetch students');
+                return;
+            }
+
+            const data = await response.json();
+
+            // If your API returns { data: [...] }
+            const students = data.data || [];
+
+            if (students.length === 0) {
+                console.log('No students found');
+                return;
+            }
+
+            const lastStudent = students[students.length - 1]; // get last item
+            save_In_UpgradeClass(lastStudent)
         }
-      
-        const data = await response.json();
-
-        // If your API returns { data: [...] }
-        const students = data.data || [];
-
-        if (students.length === 0) {
-          console.log('No students found');
-          return;
-        }
-      
-        const lastStudent = students[students.length - 1]; // get last item
-        save_In_UpgradeClass(lastStudent)
-      }
     </script>
-  </body>
+</body>
+
 </html>

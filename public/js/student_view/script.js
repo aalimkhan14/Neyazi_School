@@ -34,8 +34,11 @@ function loadStudent(id) {
       document.getElementById('mcurrent_location').value = student.current_location || '';
       document.getElementById('mphone1').value = student.phone1 || '';
       document.getElementById('mphone2').value = student.phone2 || '';
-      document.getElementById('mrelatives').value = student.relatives || '';
-      document.getElementById('mrelatives_name').value = student.relatives_name || '';
+      document.getElementById('brother').value = student.brother || '';
+      document.getElementById('uncle1').value = student.uncle1 || '';
+      document.getElementById('uncle2').value = student.uncle2 || '';
+      document.getElementById('cousin1').value = student.cousin1 || '';
+      document.getElementById('cousin2').value = student.cousin2 || '';
       document.getElementById('mcurrent_class').value = student.current_class || '';
       document.getElementById('mentry_way').value = student.entry_way || '';
       document.getElementById('mq_o_month').value = student.q_o_month || '';

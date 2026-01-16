@@ -23,10 +23,25 @@
 			flex-direction: column;
 			gap: 10px;
   		}
-		.title{
+		.img{
+			width: 100px;
+			height: 90px;
+			object-fit: cover;
 			display: flex;
 			justify-content: center;
-			font-size: 24px;
+			align-self: center ;
+		}
+		.img img{
+			width: 100%;
+			height: 100%;
+		}
+		.title, .titleLast{
+			display: flex;
+			justify-content: center;
+			font-size: 18px;
+		}
+		.titleLast{
+			padding-bottom: 10px;
 			border-bottom: 4px solid;
 		}
 		.firstContent , .secondContent{
@@ -52,6 +67,9 @@
 			display: flex;
 			flex-direction: column;
 			gap: 20px;
+		}
+		.infos{
+			display: flex;
 		}
 		.info{
 			width: 100%;
@@ -102,7 +120,10 @@
 </head>
 <body>
 	<div class="a4-paper">
-		<div class="title">معلومات شاگرد</div>
+		<div class="img"><img src="../../images/logo.png" alt=""></div>
+		<div class="title">ریاست معارف</div>
+		<div class="title">آمریت معارف شهر</div>
+		<div class="titleLast">مکتب خصوصی نیازی افغان</div>
 		<div class="firstContent">
 			<div class="details1">
 				<div class="info">نمبر تذکره:<span id="id"></span></div>
@@ -119,6 +140,13 @@
 			<div class="info">جنسیت:<span id="gender"></span></div>
 			<div class="info">زبان:<span id="nativelanguage"></span></div>
 			<div class="info">آدرس:<span id="address"></span></div>
+			<div class="info">برادر:<span id="brother"></span></div>
+			<div class="infos">
+				<div class="info">کاکا:<span id="uncle1"></span></div>
+				<div class="info">ماما:<span id="uncle2"></span></div>
+				<div class="info">بچه کاکا:<span id="cousin1"></span></div>
+				<div class="info">بچه ماما:<span id="cousin2"></span></div>
+			</div>
 			<div class="info">چگونگی شمولیت:<span id="entrykind"></span></div>
 			<div class="info">صنف:<span id="class"></span></div>
 			<div class="info">تاریخ شمولیت:<span id="entrydate"></span></div>
@@ -149,7 +177,11 @@
       document.getElementById("fname").innerText = student.fname || '';
       document.getElementById("gfname").innerText = student.gfname || '';
       document.getElementById("birth").innerText = student.birth ? student.birth.substring(0,10) : '';
-
+	  document.getElementById('brother').innerText = student.brother || '';
+	  document.getElementById('uncle1').innerText = student.uncle1 || '';
+	  document.getElementById('uncle2').innerText = student.uncle2 || '';
+	  document.getElementById('cousin1').innerText = student.cousin1 || '';
+	  document.getElementById('cousin2').innerText = student.cousin2 || '';
       // Second section
       document.getElementById("gender").innerText = student.gender || '';
       document.getElementById("nativelanguage").innerText = student.native_language || '';

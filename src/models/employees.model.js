@@ -6,15 +6,15 @@ const Employee = sequelize.define('employee',{
     lname:{type: DataTypes.STRING},
     fname:{type: DataTypes.STRING, allowNull: false},
     gfname:{type: DataTypes.STRING, allowNull: false},
-    birth:{type: DataTypes.STRING, allowNull: false},
+    birth:{type: DataTypes.STRING},
     idcard:{type: DataTypes.STRING, allowNull: false},
     phone:{type: DataTypes.STRING, allowNull: false},
-    address:{type: DataTypes.STRING, allowNull: false},
+    address:{type: DataTypes.STRING},
     job:{type: DataTypes.STRING, allowNull: false},
     salary:{type: DataTypes.STRING, allowNull: false},
-    agreement:{type: DataTypes.STRING, allowNull: true},
-    diplomaLetter:{type: DataTypes.STRING, allowNull: true},
-    idCardLetter:{type: DataTypes.STRING, allowNull: true}
+    agreement:{type: DataTypes.STRING},
+    diplomaLetter:{type: DataTypes.STRING},
+    idCardLetter:{type: DataTypes.STRING}
 },{
   tableName: 'employees',
   freezeTableName: true,

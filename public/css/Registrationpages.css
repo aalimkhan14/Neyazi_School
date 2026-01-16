@@ -46,7 +46,7 @@
     border-bottom: 1px solid #e4e4e4;
 }
 /* Entire Content */
-#one, #two, #three, #four , #five, #six,#seven{
+#one, #two, #three, #four , #five, #six,#seven, #eight{
     display: flex;
     justify-content: space-between;
     width: 100%;

@@ -49,8 +49,11 @@ exports.create = async (req, res) => {
       current_location,
       phone1,
       phone2,
-      relatives,
-      relatives_name,
+      brother,
+      uncle1,
+      uncle2,
+      cousin1,
+      cousin2,
       current_class,
       entry_way,
       yearly_fee,
@@ -82,8 +85,11 @@ exports.create = async (req, res) => {
       current_location,
       phone1,
       phone2,
-      relatives,
-      relatives_name,
+      brother,
+      uncle1,
+      uncle2,
+      cousin1,
+      cousin2,
       picture,
       current_class,
       entry_way,
@@ -164,8 +170,11 @@ exports.updateStudent = async (req, res) => {
       current_location,
       phone1,
       phone2,
-      relatives,
-      relatives_name,
+      brother,
+      uncle1,
+      uncle2,
+      cousin1,
+      cousin2,
       current_class,
       entry_way,
       yearly_fee,
@@ -237,8 +246,11 @@ exports.updateStudent = async (req, res) => {
     student.current_location = current_location;
     student.phone1 = phone1;
     student.phone2 = phone2;
-    student.relatives = relatives;
-    student.relatives_name = relatives_name;
+    student.brother = brother;
+    student.uncle1 = uncle1;
+    student.uncle2 = uncle2;
+    student.cousin1 = cousin1;
+    student.cousin2 = cousin2;
     student.current_class = current_class;
     student.entry_way = entry_way;
     student.yearly_fee = yearly_fee;

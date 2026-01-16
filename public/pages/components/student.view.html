@@ -1,331 +1,410 @@
 <form id="parent_modal" lang="fa" dir="rtl">
-  <div id="header_modal">جزئیات متعلم</div>
-  <div id="content_modal">
-    <div id="right_content_modal">
-      <!-- First Section -->
-      <div class="section">
-        <div class="title">اطلاعات شخصی</div>
-        <input type="hidden" id="mid" name="id" />
-        <label for="mname">اسم:<input id="mname" type="text" name="name" disabled/></label>
-        <label for="mlast_name">تخلص:<input id="mlast_name" type="text" name="last_name" disabled/></label>
-        <label for="mfname">ولد:<input id="mfname" type="text" name="fname" disabled/></label>
-        <label for="mgfname">ولدیت:<input id="mgfname" type="text" name="gfname" disabled/></label>
-        <label for="mbirth">تاریخ تولد:<input type="text" id="mbirth" readonly name="birth" disabled/></label>
-        <label for="mgender">جنسیت<select id="mgender" name="gender" disabled>
-            <option value="ذکور">ذکور</option>
-            <option value="اناث">اناث</option>
-          </select>
-        </label>
-      </div>
-      <!-- Second section -->
-      <div class="section">
-        <label for="midcard_no" style="margin: 0 0 10px 0" >نمبر تذکره:<input id="midcard_no" type="text" name="idcard_no" disabled/></label>
-        <div class="title">موقعیت مکانی & جزئیات تماس</div>
-        <label for="mnative_language">زبان مادری:<select id="mnative_language" type="text" name="native_language" disabled>
-            <option value="دری">دری</option>
-            <option value="پشتو">پشتو</option>
-            <option value="ازبکی">ازبکی</option>
-          </select>
-        </label>
-        <label for="mmean_location">موقعیت اصلی:<input id="mmean_location" type="text" name="mean_location" disabled/></label>
-        <label for="mcurrent_location">موقعیت فعلی:<input id="mcurrent_location" type="text" name="current_location" disabled/></label>
-        <label for="mphone1">شماره تماس والدین 1:<input id="mphone1" type="text" name="phone1" disabled/></label>
-        <label for="mphone2" >شماره تماس والدین2:<input id="mphone2" type="text" name="phone2" disabled/></label>
-      </div>
-      <!-- Third section -->
-      <div class="section">
-        <div class="title">سوابق آموزشی & جزئیات خانواده</div>
-        <label for="mrelatives">اقارب نزدیک:<input id="mrelatives" type="text" name="relatives" disabled/></label>
-        <label for="mrelatives_name">اسم اقارب نزدیک:<input id="mrelatives_name" type="text" name="relatives_name" disabled /></label>
-        <label for="mcurrent_class">صنف فعلی:<select id="mcurrent_class" name="current_class" disabled></select></label>
-        <label for="mentry_way">چگونگی شمولیت:<select id="mentry_way" type="text" name="entry_way" disabled>
-            <option value="جدید الشمول">جدید الشمول</option>
-            <option value="سه پارچه">سه پارچه</option>
-            <option value="امتحان سویه">امتحان سویه</option>
-          </select>
-        </label>
-        <label for="" id="date_part">
-          <label for="mcreatedAt">تاریخ شمولیت:<input id="mcreatedAt" type="text" name="createdAt" readonly disabled/></label>
-          <label for="q_o_month">تعداد ماه در سال:<input type="number" id="mq_o_month" name="q_o_month" disabled></label>
-        </label>
-        <label for="" id="fee_part">
-          <label for="yearly_fee">فیس سالیانه:<input type="number" id="yearly_fee" name="yearly_fee" disabled/></label>
-          <label for="mtransport_fee" >ترانسپورت:<input type="number" id="mtransport_fee" name="transport_fee" disabled/></label>
-          <label for="free">رایگان:<input type="checkbox" id="free" name="free" disabled value="رایگان"/></label>
-        </label>
-      </div>
-    </div>
-    <div id="left_content_modal">
-      <div id="picture"><img src="" alt="photo" id="content_picture" /></div>
-      <label for="pictureInput" id="change_picture" class="file-button" >تغیر عکس</label>
-      <input type="file" id="pictureInput" name="picture" accept="image/*" style="display: none">
+    <div id="header_modal">جزئیات متعلم</div>
+    <div id="content_modal">
+        <div id="right_content_modal">
+            <!-- First Section -->
+            <div class="section">
+                <div class="title">اطلاعات شخصی</div>
+                <input type="hidden" id="mid" name="id" />
+                <label for="mname">اسم:<input id="mname" type="text" name="name" disabled /></label>
+                <label for="mlast_name">تخلص:<input id="mlast_name" type="text" name="last_name" disabled /></label>
+                <label for="mfname">ولد:<input id="mfname" type="text" name="fname" disabled /></label>
+                <label for="mgfname">ولدیت:<input id="mgfname" type="text" name="gfname" disabled /></label>
+                <label for="mbirth">تاریخ تولد:<input type="text" id="mbirth" readonly name="birth" disabled /></label>
+                <label for="mgender">جنسیت<select id="mgender" name="gender" disabled>
+                        <option value="ذکور">ذکور</option>
+                        <option value="اناث">اناث</option>
+                    </select>
+                </label>
+            </div>
+            <!-- Second section -->
+            <div class="section">
+                <label for="midcard_no" style="margin: 0 0 10px 0">نمبر تذکره:<input id="midcard_no" type="text"
+                        name="idcard_no" disabled /></label>
+                <div class="title">موقعیت مکانی & جزئیات تماس</div>
+                <label for="mnative_language">زبان مادری:<select id="mnative_language" type="text"
+                        name="native_language" disabled>
+                        <option value="دری">دری</option>
+                        <option value="پشتو">پشتو</option>
+                        <option value="ازبکی">ازبکی</option>
+                    </select>
+                </label>
+                <label for="mmean_location">موقعیت اصلی:<input id="mmean_location" type="text" name="mean_location"
+                        disabled /></label>
+                <label for="mcurrent_location">موقعیت فعلی:<input id="mcurrent_location" type="text"
+                        name="current_location" disabled /></label>
+                <label for="mphone1">شماره تماس والدین 1:<input id="mphone1" type="text" name="phone1"
+                        disabled /></label>
+                <label for="mphone2">شماره تماس والدین2:<input id="mphone2" type="text" name="phone2"
+                        disabled /></label>
+            </div>
+            <!-- Third section -->
+            <div class="section">
+                <div class="title">سوابق آموزشی & جزئیات خانواده</div>
+                <label for="brother">برادر:<input id="brother" type="text" name="brother"disabled /></label>
+                <label for="" id="date_part">
+                    <label for="uncle1">کاکا:<input id="uncle1" type="text" name="uncle1"disabled /></label>
+                    <label for="uncle2">ماما:<input id="uncle2" type="text" name="uncle2"disabled /></label>
+                </label>
+                <label for="" id="date_part">
+                    <label for="cousin1">بچه کاکا:<input id="cousin1" type="text" name="cousin1"disabled /></label>
+                    <label for="cousin2">بچه ماما:<input id="cousin2" type="text" name="cousin2"disabled /></label>
+                </label>
+                <label for="" id="date_part">
+                    <label for="mcurrent_class">صنف فعلی:<select id="mcurrent_class" name="current_class"disabled></select></label>
+                    <label for="mentry_way">چگونگی شمولیت:<select id="mentry_way" type="text" name="entry_way" disabled>
+                            <option value="جدید الشمول">جدید الشمول</option>
+                            <option value="سه پارچه">سه پارچه</option>
+                            <option value="امتحان سویه">امتحان سویه</option>
+                        </select>
+                    </label>
+                </label>
+                
+                <label for="" id="date_part">
+                    <label for="mcreatedAt">تاریخ شمولیت:<input id="mcreatedAt" type="text" name="createdAt" readonly
+                            disabled /></label>
+                    <label for="q_o_month">تعداد ماه در سال:<input type="number" id="mq_o_month" name="q_o_month"
+                            disabled></label>
+                </label>
+                <label for="" id="fee_part">
+                    <label for="yearly_fee">فیس سالیانه:<input type="number" id="yearly_fee" name="yearly_fee"
+                            disabled /></label>
+                    <label for="mtransport_fee">ترانسپورت:<input type="number" id="mtransport_fee" name="transport_fee"
+                            disabled /></label>
+                    <label for="free">رایگان:<input type="checkbox" id="free" name="free" disabled
+                            value="رایگان" /></label>
+                </label>
+            </div>
+        </div>
+        <div id="left_content_modal">
+            <div id="picture"><img src="" alt="photo" id="content_picture" /></div>
+            <label for="pictureInput" id="change_picture" class="file-button">تغیر عکس</label>
+            <input type="file" id="pictureInput" name="picture" accept="image/*" style="display: none">
 
-      <div id="print_card">چاپ کارت</div>
-      <div id="download_attachment">دانلود اسناد</div>
-      <div id="download_attachment2">دانلود اسناد تذکره</div>
-      <div id="download_attachment3">دانلود اسناد سه پارچه</div>
-      <label for="attachmentInput" id="change_attachment" class="file-button">تغیر اسناد ضمیمه</label>
-      <input type="file" id="attachmentInput" name="attachment" accept=".pdf, image/*" style="display: none"/>
-      <label for="attachmentInput2" id="change_attachment2" class="file-button">تغیر اسناد تذکره</label>
-      <input type="file" id="attachmentInput2" name="attachment2" accept=".pdf, image/*" style="display: none"/>
-      <label for="attachmentInput3" id="change_attachment3" class="file-button">تغیر اسناد سه پارچه</label>
-      <input type="file" id="attachmentInput3" name="attachment3" accept=".pdf, image/*" style="display: none"/>
-      <div id="print_details">چاپ جزئیات شاگرد</div>
+            <div id="print_card">چاپ کارت</div>
+            <div id="download_attachment">دانلود اسناد</div>
+            <div id="download_attachment2">دانلود اسناد تذکره</div>
+            <div id="download_attachment3">دانلود اسناد سه پارچه</div>
+            <label for="attachmentInput" id="change_attachment" class="file-button">تغیر اسناد ضمیمه</label>
+            <input type="file" id="attachmentInput" name="attachment" accept=".pdf, image/*" style="display: none" />
+            <label for="attachmentInput2" id="change_attachment2" class="file-button">تغیر اسناد تذکره</label>
+            <input type="file" id="attachmentInput2" name="attachment2" accept=".pdf, image/*" style="display: none" />
+            <label for="attachmentInput3" id="change_attachment3" class="file-button">تغیر اسناد سه پارچه</label>
+            <input type="file" id="attachmentInput3" name="attachment3" accept=".pdf, image/*" style="display: none" />
+            <div id="print_details">چاپ جزئیات شاگرد</div>
+        </div>
     </div>
-  </div>
-  <div id="footer_modal">
-    <input type="submit" id="save_modal" value="ذخیره نمودن" />
-    <div id="edit_modal" onclick="toEdit();">ویرایش</div>
-    <div id="close" onclick="closeModal();">بستن</div>
-  </div>
+    <div id="footer_modal">
+        <input type="submit" id="save_modal" value="ذخیره نمودن" />
+        <div id="edit_modal" onclick="toEdit();">ویرایش</div>
+        <div id="close" onclick="closeModal();">بستن</div>
+    </div>
 </form>
 <iframe id="print_frame" style="display: none">fwfwwfewe</iframe>
 
 <!-- CSS Style -->
-<link
-  href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css"rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css"
+    rel="stylesheet" />
 <style>
-  @font-face {
-    font-family: "BYekan";
-    src: url("./Fonts/BYekan+.ttf") format("truetype");
-    font-family: "BYekanBold";
-    src: url("./Fonts/BYekan+\ Bold.ttf") format("truetype");
-    font-family: "FarYekan";
-    src: url("./Fonts/Far_Yekan.ttf") format("truetype");
-  }
-  * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "BYekanBold", sans-serif;
-  }
-  #parent_modal {
-    display: flex;
-    flex-direction: column;
-    width: 90vw;
-    height: 95vh;
-    background-color: #f4f4f4;
-    border: 1px solid #e4e4e4;
-    border-radius: 10px;
-  }
-  #header_modal {
-    display: flex;
-    width: 100%;
-    height: 12%;
-    justify-content: start;
-    align-items: center;
-    padding: 0 30px;
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  #content_modal {
-    display: flex;
-    width: 100%;
-    height: 78%;
-    background-color: #fff;
-  }
-  #right_content_modal {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 0;
-    width: 85%;
-    height: 100%;
-    border-left: 1px solid #e4e4e4;
-  }
-  #right_content_modal .section {
-    display: flex;
-    flex-direction: column;
-    width: 33%;
-    height: 100%;
-    border-left: 1px solid #e4e4e4;
-    padding: 0 30px;
-  }
-  #right_content_modal div:nth-child(3) {
-    border: none;
-  }
-  #right_content_modal .section .title {
-    display: flex;
-    width: 100%;
-    color: #1e90ff;
-    padding: 0 0 20px 0;
-    font-size: 1.3rem;
-    font-weight: 600;
-  }
-  #right_content_modal .section label {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 10px 20px 0 20px;
-  }
-  #right_content_modal .section label input,
-  select {
-    width: 100%;
-    height: 50px;
-    border: 1px solid #e4e4e4;
-    border-radius: 5px;
-    padding: 0 10px;
-    font-size: 1rem;
-    font-weight: 500;
-    outline: none;
-    margin-top: 10px;
-  }
-  #fee_part , #date_part {
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    padding: 10px 20px 0 20px !important;
-  }
-  #date_part label:nth-child(1), #date_part label:nth-child(2){
-    width: 48%;
-    padding: 0;
-  }
-  #fee_part label:nth-child(1),
-  #fee_part label:nth-child(2) {
-    width: 35%;
-    padding: 0;
-  }
-  #fee_part label:nth-child(3) {
-    width: 15%;
-    padding: 0;
-  }
-  #left_content_modal {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    width: 15%;
-    height: 100%;
-    padding: 10px;
-  }
-  #left_content_modal #picture {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    border: 1px solid #e4e4e4;
-    overflow: hidden;
-    width: 80%;
-    height: 40%;
-    max-height: 400px;
-    margin: 10px 0;
-  }
-  #left_content_modal #picture img {
-    width: 100%;
-    height: 100%;
-  }
-  #left_content_modal #change_picture, #print_card, #print_details, #download_attachment, #download_attachment2, #download_attachment3 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 80%;
-    padding: 10px 0;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid #e4e4e4;
-    border-radius: 10px;
-    color: #fff;
-    margin-bottom: 10px;
-  }
-  #left_content_modal #change_picture {
-    display: none;
-  }
+    @font-face {
+        font-family: "BYekan";
+        src: url("./Fonts/BYekan+.ttf") format("truetype");
+        font-family: "BYekanBold";
+        src: url("./Fonts/BYekan+\ Bold.ttf") format("truetype");
+        font-family: "FarYekan";
+        src: url("./Fonts/Far_Yekan.ttf") format("truetype");
+    }
 
-  #footer_modal {
-    display: flex;
-    padding: 20px 30px;
-    justify-content: start;
-    align-items: center;
-    width: 100%;
-    height: 10%;
-  }
-  #footer_modal #edit_modal, #close, #save_modal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: fit-content;
-    height: fit-content;
-    padding: 10px 20px;
-    width: fit-content;
-    border: 1px solid #e4e4e4;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    margin-left: 15px;
-  }
-  #save_modal {
-    margin: 0 0 0 15px;
-    display: none;
-  }
-  #close {
-    background-color: #ff4d4d;
-  }
-  #print_card, #print_details, #download_attachment, #download_attachment2, #download_attachment3, #edit_modal, #save_modal {
-    background-color: #1e90ff;
-  }
-  #print_card:hover {
-    background-color: #0d74d1;
-  }
-  #print_details:hover {
-    background-color: #0d74d1;
-  }
-  #download_attachment:hover {
-    background-color: #0d74d1;
-  }
-  #download_attachment2:hover {
-    background-color: #0d74d1;
-  }
-  #download_attachment3:hover {
-    background-color: #0d74d1;
-  }
-  #edit_modal:hover {
-    background-color: #0d74d1;
-  }
-  #save_modal:hover {
-    background-color: #0d74d1;
-  }
-  #close:hover {
-    background-color: #cc0000;
-  }
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: "BYekanBold", sans-serif;
+    }
 
-  #change_picture,#print_card {
-    margin: 0 0 10px 0;
-  }
-  /* Style the label as button */
-  #change_picture.file-button,#change_attachment.file-button ,#change_attachment2.file-button ,#change_attachment3.file-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 80%;
-    padding: 10px 0;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid #e4e4e4;
-    border-radius: 10px;
-    color: #fff;
-    background-color: #1e90ff;
-    user-select: none; /* Prevent text selection on double click */
-    transition: background-color 0.3s ease;
-    margin-bottom: 10px;
-  }
-  #change_attachment.file-button, #change_attachment2.file-button , #change_attachment3.file-button {
-    display: none;
-  }
+    #parent_modal {
+        display: flex;
+        flex-direction: column;
+        width: 90vw;
+        height: 95vh;
+        background-color: #f4f4f4;
+        border: 1px solid #e4e4e4;
+        border-radius: 10px;
+    }
 
-  #change_picture.file-button:hover {
-    background-color: #0d74d1;
-  }
-  #change_attachment.file-button:hover {
-    background-color: #0d74d1;
-  }
-  #change_attachment2.file-button:hover {
-    background-color: #0d74d1;
-  }
-  #change_attachment3.file-button:hover {
-    background-color: #0d74d1;
-  }
+    #header_modal {
+        display: flex;
+        width: 100%;
+        height: 12%;
+        justify-content: start;
+        align-items: center;
+        padding: 0 30px;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    #content_modal {
+        display: flex;
+        width: 100%;
+        height: 78%;
+        background-color: #fff;
+    }
+
+    #right_content_modal {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 0;
+        width: 85%;
+        height: 100%;
+        border-left: 1px solid #e4e4e4;
+    }
+
+    #right_content_modal .section {
+        display: flex;
+        flex-direction: column;
+        width: 33%;
+        height: 100%;
+        border-left: 1px solid #e4e4e4;
+        padding: 0 30px;
+    }
+
+    #right_content_modal div:nth-child(3) {
+        border: none;
+    }
+
+    #right_content_modal .section .title {
+        display: flex;
+        width: 100%;
+        color: #1e90ff;
+        padding: 0 0 20px 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    #right_content_modal .section label {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 10px 20px 0 20px;
+    }
+
+    #right_content_modal .section label input,
+    select {
+        width: 100%;
+        height: 50px;
+        border: 1px solid #e4e4e4;
+        border-radius: 5px;
+        padding: 0 10px;
+        font-size: 1rem;
+        font-weight: 500;
+        outline: none;
+        margin-top: 10px;
+    }
+
+    #fee_part,
+    #date_part {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        padding: 10px 20px 0 20px !important;
+    }
+
+    #date_part label:nth-child(1),
+    #date_part label:nth-child(2) {
+        width: 48%;
+        padding: 0;
+    }
+
+    #fee_part label:nth-child(1),
+    #fee_part label:nth-child(2) {
+        width: 35%;
+        padding: 0;
+    }
+
+    #fee_part label:nth-child(3) {
+        width: 15%;
+        padding: 0;
+    }
+
+    #left_content_modal {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        width: 15%;
+        height: 100%;
+        padding: 10px;
+    }
+
+    #left_content_modal #picture {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        border: 1px solid #e4e4e4;
+        overflow: hidden;
+        width: 80%;
+        height: 40%;
+        max-height: 400px;
+        margin: 10px 0;
+    }
+
+    #left_content_modal #picture img {
+        width: 100%;
+        height: 100%;
+    }
+
+    #left_content_modal #change_picture,
+    #print_card,
+    #print_details,
+    #download_attachment,
+    #download_attachment2,
+    #download_attachment3 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
+        padding: 10px 0;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #e4e4e4;
+        border-radius: 10px;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    #left_content_modal #change_picture {
+        display: none;
+    }
+
+    #footer_modal {
+        display: flex;
+        padding: 20px 30px;
+        justify-content: start;
+        align-items: center;
+        width: 100%;
+        height: 10%;
+    }
+
+    #footer_modal #edit_modal,
+    #close,
+    #save_modal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+        height: fit-content;
+        padding: 10px 20px;
+        width: fit-content;
+        border: 1px solid #e4e4e4;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        margin-left: 15px;
+    }
+
+    #save_modal {
+        margin: 0 0 0 15px;
+        display: none;
+    }
+
+    #close {
+        background-color: #ff4d4d;
+    }
+
+    #print_card,
+    #print_details,
+    #download_attachment,
+    #download_attachment2,
+    #download_attachment3,
+    #edit_modal,
+    #save_modal {
+        background-color: #1e90ff;
+    }
+
+    #print_card:hover {
+        background-color: #0d74d1;
+    }
+
+    #print_details:hover {
+        background-color: #0d74d1;
+    }
+
+    #download_attachment:hover {
+        background-color: #0d74d1;
+    }
+
+    #download_attachment2:hover {
+        background-color: #0d74d1;
+    }
+
+    #download_attachment3:hover {
+        background-color: #0d74d1;
+    }
+
+    #edit_modal:hover {
+        background-color: #0d74d1;
+    }
+
+    #save_modal:hover {
+        background-color: #0d74d1;
+    }
+
+    #close:hover {
+        background-color: #cc0000;
+    }
+
+    #change_picture,
+    #print_card {
+        margin: 0 0 10px 0;
+    }
+
+    /* Style the label as button */
+    #change_picture.file-button,
+    #change_attachment.file-button,
+    #change_attachment2.file-button,
+    #change_attachment3.file-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
+        padding: 10px 0;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #e4e4e4;
+        border-radius: 10px;
+        color: #fff;
+        background-color: #1e90ff;
+        user-select: none;
+        /* Prevent text selection on double click */
+        transition: background-color 0.3s ease;
+        margin-bottom: 10px;
+    }
+
+    #change_attachment.file-button,
+    #change_attachment2.file-button,
+    #change_attachment3.file-button {
+        display: none;
+    }
+
+    #change_picture.file-button:hover {
+        background-color: #0d74d1;
+    }
+
+    #change_attachment.file-button:hover {
+        background-color: #0d74d1;
+    }
+
+    #change_attachment2.file-button:hover {
+        background-color: #0d74d1;
+    }
+
+    #change_attachment3.file-button:hover {
+        background-color: #0d74d1;
+    }
 </style>
