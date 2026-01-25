@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ps" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         /* Table */
-        #rparent{
+        #rparent {
             display: flex;
             flex-direction: row !important;
             justify-content: space-between;
@@ -14,157 +15,168 @@
             width: 100%;
             height: 100%;
         }
-        #transport_registration{
+
+        #transport_registration {
             width: 30%;
             height: fit-content;
             display: flex;
             flex-direction: column;
         }
-        #transport_show{
+
+        #transport_show {
             width: 69%;
             display: flex;
             flex-direction: column;
         }
-        #transport_show #rcontent{
+
+        #transport_show #rcontent {
             width: 100%;
             height: 650px;
         }
-        #one{
+
+        #one {
             display: flex;
             flex-direction: column;
             width: 100%;
             height: 350px;
         }
-        #one *{
+
+        #one * {
             width: 100%;
         }
-        
-        .th:nth-child(1),.th:nth-child(6){
+
+        .th:nth-child(1),
+        .th:nth-child(6) {
             width: 5%;
         }
-        tr td:nth-child(6){
+
+        tr td:nth-child(6) {
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 5px;
         }
-        #right{
+
+        #right {
             width: 100%;
         }
     </style>
 </head>
+
 <body>
     <div id="rparent">
-    <form id="transport_registration" class="rcover">
-        <div id="rheader">ثبت وسایط نقلیه</div>
-        <div id="rcontent">
-            <input type="hidden" id="id">
-            <div id="one">
-                <label for="name">مودل موتر:<input id="name" name="name" type="text" required></label>
-                <label for="numberplate">نمبر پلیت:<input id="numberplate" name="plate" type="text" required></label>
-                <label for="companyname">اسم کمپنی:<input id="companyname" name="company" type="text" required></label>
-                <label for="driver">اسم راننده:<input id="driver" name="driver" type="text" required></label>
+        <form id="transport_registration" class="rcover">
+            <div id="rheader">ثبت وسایط نقلیه</div>
+            <div id="rcontent">
+                <input type="hidden" id="id">
+                <div id="one">
+                    <label for="name">مودل موتر:<input id="name" name="name" type="text" required></label>
+                    <label for="numberplate">نمبر پلیت:<input id="numberplate" name="plate" type="text"
+                            required></label>
+                    <label for="companyname">اسم کمپنی:<input id="companyname" name="company" type="text"
+                            required></label>
+                    <label for="driver">اسم راننده:<input id="driver" name="driver" type="text" required></label>
+                </div>
             </div>
-        </div>
-        <div id="rfooter">
-            <input type="submit" id="save" value="ثبت کردن" />
-            <input type="button" value="ثبت کردن" id="save1" style="display: none;">
-            <input type="reset" id="exit" value="پاک کردن" />
-        </div>
-    </form>
+            <div id="rfooter">
+                <input type="submit" id="save" value="ثبت کردن" />
+                <input type="button" value="ثبت کردن" id="save1" style="display: none;">
+                <input type="reset" id="exit" value="پاک کردن" />
+            </div>
+        </form>
 
-    
-    <div id="transport_show" class="rcover">
-        <div id="rheader">ترانسپورت </div>
-        <div id="rcontent">
-            <div id="searchbar" class="search_bar">
-            <div id="right" class="sright">
-              <input type="text" class="search_table" id="searchtable" placeholder="جستجو . . ."/>
+
+        <div id="transport_show" class="rcover">
+            <div id="rheader">ترانسپورت </div>
+            <div id="rcontent">
+                <div id="searchbar" class="search_bar">
+                    <div id="right" class="sright">
+                        <input type="text" class="search_table" id="searchtable" placeholder="جستجو . . ." />
+                    </div>
+                    <div id="left" class="sleft"></div>
+                </div>
+                <table>
+                    <thead>
+                        <th class="th">نمبر</th>
+                        <th class="th">مودل موتر</th>
+                        <th class="th">نمبر پلیت</th>
+                        <th class="th">نام کمپنی</th>
+                        <th class="th">راننده</th>
+                        <th class="th">عملکرد</th>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
             </div>
-            <div id="left" class="sleft"></div>
-          </div>
-            <table>
-                <thead>
-                    <th class="th">نمبر</th>
-                    <th class="th">مودل موتر</th>
-                    <th class="th">نمبر پلیت</th>
-                    <th class="th">نام کمپنی</th>
-                    <th class="th">راننده</th>
-                    <th class="th">عملکرد</th>
-                </thead>
-                <tbody id="tbody"></tbody>
-            </table>
-        </div>
-        <div id="rfooter">
-            <div id="pagination" style="text-align: center; margin-top: 20px">
-                <div id="pagination-buttons"></div>
+            <div id="rfooter">
+                <div id="pagination" style="text-align: center; margin-top: 20px">
+                    <div id="pagination-buttons"></div>
+                </div>
             </div>
         </div>
-    </div>
     </div>
     <script>
 
-            document.getElementById("transport_registration").addEventListener("submit", async function (e) {
-                e.preventDefault();
-                const form = e.target; 
-                // Build a JSON object from form fields
-                const data = {
-                    name: form.name.value,
-                    plate: form.plate.value,
-                    company: form.company.value,
-                    driver: form.driver.value,
-                }; 
-                try {
-                    const response = await fetch("http://localhost:3000/transport", {
-                        method: "POST",
-                        headers: {"Content-Type": "application/json",},
-                        body: JSON.stringify(data),
+        document.getElementById("transport_registration").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const form = e.target;
+            // Build a JSON object from form fields
+            const data = {
+                name: form.name.value,
+                plate: form.plate.value,
+                company: form.company.value,
+                driver: form.driver.value,
+            };
+            try {
+                const response = await fetch("http://localhost:3000/transport", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", },
+                    body: JSON.stringify(data),
+                });
+                if (response.ok) {
+                    showModal({
+                        title: "موفقیت",
+                        message: "ترانسپورت موفقانه ثبت شد.",
+                        icon: "success",
                     });
-                    if (response.ok) {
-                        showModal({
-                          	title: "موفقیت",
-                          	message: "ترانسپورت موفقانه ثبت شد.",
-                          	icon: "success",
-                        });
-                        form.reset();
-                        showTransportData();
-                    } else {
-                        alert("خطا در ثبت ترانسپورت.");
-                        console.log(response);
-                    }
-                } catch (error) {
-                    console.error("Error: ", error);
-                    alert("خطا در اتصال به سرور");
+                    form.reset();
+                    showTransportData();
+                } else {
+                    alert("خطا در ثبت ترانسپورت.");
+                    console.log(response);
                 }
-            });
+            } catch (error) {
+                console.error("Error: ", error);
+                alert("خطا در اتصال به سرور");
+            }
+        });
 
-            function showTransportData() {
-    const rowsPerPage = 10;
-    let currentPage = 1;
-    let totalPages = 1;
+        function showTransportData() {
+            const rowsPerPage = 10;
+            let currentPage = 1;
+            let totalPages = 1;
 
-    const searchInput = document.getElementById("searchtable");
-    const tbody = document.getElementById("tbody");
-    const paginationButtons = document.getElementById("pagination-buttons");
+            const searchInput = document.getElementById("searchtable");
+            const tbody = document.getElementById("tbody");
+            const paginationButtons = document.getElementById("pagination-buttons");
 
-    async function fetchAndRender() {
-        const searchValue = searchInput.value.trim();
+            async function fetchAndRender() {
+                const searchValue = searchInput.value.trim();
 
-        // ✅ Send search to backend
-        const response = await fetch(
-            `http://localhost:3000/transport?page=${currentPage}&limit=${rowsPerPage}&search=${encodeURIComponent(searchValue)}`
-        );
+                // ✅ Send search to backend
+                const response = await fetch(
+                    `http://localhost:3000/transport?page=${currentPage}&limit=${rowsPerPage}&search=${encodeURIComponent(searchValue)}`
+                );
 
-        const result = await response.json();
+                const result = await response.json();
 
-        if (!Array.isArray(result.data)) {
-            console.error("❌ result.data is not an array:", result);
-            return;
-        }
+                if (!Array.isArray(result.data)) {
+                    console.error("❌ result.data is not an array:", result);
+                    return;
+                }
 
-        tbody.innerHTML = "";
-        result.data.forEach((transport, index) => {
-            tbody.innerHTML += `
+                tbody.innerHTML = "";
+                result.data.forEach((transport, index) => {
+                    tbody.innerHTML += `
                 <tr data-transport-id='${transport.id}' ondblclick="editPart(this.dataset.transportId)">
                     <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
                     <td>${transport.name}</td>
@@ -179,71 +191,71 @@
                         </div>
                     </td>
                 </tr>`;
-        });
+                });
 
-        // ✅ SVG icons
-        setTimeout(() => {
-            document.querySelectorAll(".action3").forEach((el) => (el.innerHTML = del));
-        }, 0);
+                // ✅ SVG icons
+                setTimeout(() => {
+                    document.querySelectorAll(".action3").forEach((el) => (el.innerHTML = del));
+                }, 0);
 
-        totalPages = Math.ceil(result.total / rowsPerPage);
-        renderPagination();
-    }
+                totalPages = Math.ceil(result.total / rowsPerPage);
+                renderPagination();
+            }
 
-    function renderPagination() {
-        paginationButtons.innerHTML = "";
+            function renderPagination() {
+                paginationButtons.innerHTML = "";
 
-        function addButton(label, page, disabled = false, active = false) {
-            const btn = document.createElement("button");
-            btn.textContent = label;
-            btn.disabled = disabled;
-            if (active) btn.style.backgroundColor = "#357edd";
-            btn.addEventListener("click", () => {
-                currentPage = page;
+                function addButton(label, page, disabled = false, active = false) {
+                    const btn = document.createElement("button");
+                    btn.textContent = label;
+                    btn.disabled = disabled;
+                    if (active) btn.style.backgroundColor = "#357edd";
+                    btn.addEventListener("click", () => {
+                        currentPage = page;
+                        fetchAndRender();
+                    });
+                    paginationButtons.appendChild(btn);
+                }
+
+                addButton("<<", 1, currentPage === 1);
+                addButton("<", currentPage - 1, currentPage === 1);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === currentPage || i <= 4 || i === totalPages || Math.abs(currentPage - i) <= 1) {
+                        addButton(i, i, false, i === currentPage);
+                    }
+                }
+
+                addButton(">", currentPage + 1, currentPage === totalPages);
+                addButton(">>", totalPages, currentPage === totalPages);
+            }
+
+            const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
+
+            // ✅ Fetch again whenever user types in search
+            searchInput.addEventListener("input", () => {
+                currentPage = 1;
                 fetchAndRender();
             });
-            paginationButtons.appendChild(btn);
+
+            // First Load
+            fetchAndRender();
         }
 
-        addButton("<<", 1, currentPage === 1);
-        addButton("<", currentPage - 1, currentPage === 1);
+        showTransportData();
 
-        for (let i = 1; i <= totalPages; i++) {
-            if (i === currentPage || i <= 4 || i === totalPages || Math.abs(currentPage - i) <= 1) {
-                addButton(i, i, false, i === currentPage);
-            }
-        }
+        // Fee Delete function
+        function deleteTransport(id) {
+            async function apply() {
+                const confirmed = await showModal({
+                    title: "حذف",
+                    message: "آیا می‌خواهید ترانسپورت حذف شود؟",
+                    type: "ok-cancel"
+                });
 
-        addButton(">", currentPage + 1, currentPage === totalPages);
-        addButton(">>", totalPages, currentPage === totalPages);
-    }
-
-    const del = `<svg xmlns="http://www.w3.org/2000/svg" width='18px' viewBox="0 0 26 26"><path d="M12.1875 -0.03125C10.472656 -0.03125 9.097656 1.3125 9 3L5 3C4.398438 3 4 3.398438 4 4L3.59375 4C2.695313 4 2 4.695313 2 5.59375L2 6L24 6L24 5.59375C24 4.695313 23.304688 4 22.40625 4L22 4C22 3.398438 21.601563 3 21 3L17 3C16.902344 1.3125 15.527344 -0.03125 13.8125 -0.03125 Z M 12.1875 2.03125L13.8125 2.03125C14.367188 2.03125 14.839844 2.464844 14.9375 3L11.0625 3C11.160156 2.464844 11.632813 2.03125 12.1875 2.03125 Z M 3.09375 7L6 26L20 26L22.90625 7 Z M 5.90625 10L7 10L8.6875 23L7.6875 23 Z M 10.1875 10L11.3125 10L12 23L10.8125 23 Z M 14.6875 10L15.8125 10L15.1875 23L14.09375 23 Z M 19 10L20 10L18.3125 23L17.3125 23Z" fill="#FFFFFF" /></svg>`;
-      
-    // ✅ Fetch again whenever user types in search
-    searchInput.addEventListener("input", () => {
-        currentPage = 1;
-        fetchAndRender();
-    });
-
-    // First Load
-    fetchAndRender();
-}
-
-            showTransportData();
-
-            // Fee Delete function
-            function deleteTransport(id) {
-                async function apply(){
-            const confirmed = await showModal({
-            title: "حذف",
-            message: "آیا می‌خواهید ترانسپورت حذف شود؟",
-            type: "ok-cancel"
-          });
-        
-          if (confirmed) {
-            console.log("User confirmed ✅");
-                fetch(`http://localhost:3000/transport/${id}`, {
+                if (confirmed) {
+                    console.log("User confirmed ✅");
+                    fetch(`http://localhost:3000/transport/${id}`, {
                         method: "DELETE",
                     }).then(async (response) => {
                         if (!response.ok) {
@@ -256,68 +268,69 @@
                         console.error("❌ خطا در اتصال یا سرور:", error);
                         alert("خطا در اتصال یا سرور");
                     });
-          } else {
-            this.close();
-            console.log("User cancelled ❌");
-          }
+                } else {
+                    this.close();
+                    console.log("User cancelled ❌");
+                }
+            }
+            apply();
         }
-        apply();
-            }
 
-            function editPart(transportId){
-                document.getElementById('save').style.display = 'none';
-                document.getElementById('save1').style.display = 'flex';
-                fetch(`http://localhost:3000/transport/${transportId}`).then(res => res.json()).then(transport => {
-                    if(!transport) return;
-                    console.log(transport.id)
-                    document.getElementById('id').value = transport.id;
-                    document.getElementById('name').value = transport.name;
-                    document.getElementById('numberplate').value = transport.plate;
-                    document.getElementById('companyname').value = transport.company;
-                    document.getElementById('driver').value = transport.driver;
-                })
-            }
-            document.getElementById('save1').addEventListener('click', function () {
-                const form = document.getElementById('transport_registration');
+        function editPart(transportId) {
+            document.getElementById('save').style.display = 'none';
+            document.getElementById('save1').style.display = 'flex';
+            fetch(`http://localhost:3000/transport/${transportId}`).then(res => res.json()).then(transport => {
+                if (!transport) return;
+                console.log(transport.id)
+                document.getElementById('id').value = transport.id;
+                document.getElementById('name').value = transport.name;
+                document.getElementById('numberplate').value = transport.plate;
+                document.getElementById('companyname').value = transport.company;
+                document.getElementById('driver').value = transport.driver;
+            })
+        }
+        document.getElementById('save1').addEventListener('click', function () {
+            const form = document.getElementById('transport_registration');
 
-                // Collect form data as JSON object
-                const data = {
-                    name: form.name.value,
-                    plate: form.plate.value,
-                    company: form.company.value,
-                    driver: form.driver.value,
-    
-                };
+            // Collect form data as JSON object
+            const data = {
+                name: form.name.value,
+                plate: form.plate.value,
+                company: form.company.value,
+                driver: form.driver.value,
 
-                const id = document.getElementById('id').value.trim();
+            };
 
-                fetch(`/transport/${id}`, {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json',},
-                    body: JSON.stringify(data)
-                }).then(res => {
+            const id = document.getElementById('id').value.trim();
+
+            fetch(`/transport/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', },
+                body: JSON.stringify(data)
+            }).then(res => {
                 if (!res.ok) throw new Error("Server error");
-                    return res.json();
-                }).then(data => {
-                    showModal({
-                      	title: "موفقیت",
-                      	message: "تغییرات موفقانه ثبت شد.",
-                      	icon: "success",
-                    });
-                    showTransportData();
-                }).catch(err => {
-                    console.error("خطا در تغییر داده:", err);
-                    alert("خطا در ذخیره تغییرات ❌");
+                return res.json();
+            }).then(data => {
+                showModal({
+                    title: "موفقیت",
+                    message: "تغییرات موفقانه ثبت شد.",
+                    icon: "success",
                 });
+                showTransportData();
+            }).catch(err => {
+                console.error("خطا در تغییر داده:", err);
+                alert("خطا در ذخیره تغییرات ❌");
             });
+        });
 
 
 
-            document.getElementById('exit').addEventListener('click', ()=>{
-            document.getElementById('save1').style.display= 'none';
-            document.getElementById('save').style.display= 'flex';
-    })
+        document.getElementById('exit').addEventListener('click', () => {
+            document.getElementById('save1').style.display = 'none';
+            document.getElementById('save').style.display = 'flex';
+        })
 
-        </script>
+    </script>
 </body>
+
 </html>

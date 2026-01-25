@@ -85,7 +85,7 @@
             <thead>
                 <th class="th">نمبر</th>
                 <th class="th">اسم مشتری</th>
-                <th class="th">کتگوری/th>
+                <th class="th">کتگوری</th>
                 <th class="th">جنس</th>
                 <th class="th">قیمت</th>
                 <th class="th">تعداد</th>
@@ -140,8 +140,10 @@ barcodeInput.addEventListener("keypress", async function(e) {
 
         const existing = cart.find(p => p.barcode === product.barcode);
         if(existing) existing.quantity += 1;
-        else cart.push({...product, quantity: 1});
+        else cart.push({...product, quantity: 1, barcode: product.barcode});
 
+        console.log(cart);
+        
         renderCart();
         e.target.value = "";
         e.target.focus();
@@ -210,7 +212,8 @@ document.getElementById("save").addEventListener("click", async function(e){
             catagory: item.catagory,
             goods: item.name,
             price: item.sellamount,
-            quantity: item.quantity
+            quantity: item.quantity,
+            barcode: item.barcode,
         };
         await fetch("http://localhost:3000/sell", {
             method: "POST",
@@ -261,7 +264,7 @@ async function showSellData() {
                 <td>${sell.quantity}</td>
                 <td>${totalPrice}</td>
                 <td>${sell.createdAt ? toPersianDate(sell.createdAt) : ""}</td>
-                <td><button  class="action3"  onclick="deleteSell(${sell.id})"></button></td>
+                <td><button class="action3" onclick="deleteSell(${sell.id})"></button></td>
             </tr>
         `;
 
@@ -271,20 +274,47 @@ async function showSellData() {
         }, 0);
 }
 
-// Delete sold product
-function deleteSell(id){
-    if(!confirm("آیا می‌خواهید حذف شود؟")) return;
-    fetch(`http://localhost:3000/sell/${id}`, {method: "DELETE"})
-        .then(()=> showSellData());
-}
-
 // Reload data on search/filter change
 document.getElementById("searchtable").addEventListener("input", showSellData);
 document.getElementById("sffilter").addEventListener("change", showSellData);
 document.querySelectorAll("input[name='filter']").forEach(radio => radio.addEventListener("change", showSellData));
 
 showSellData();
+window.showSellData = showSellData;
+
   })();
+
+  
+
+  // Delete sold product
+function deleteSell(id){
+    async function apply(){
+            const confirmed = await showModal({
+                title: "حذف",
+                message: "آیا می‌خواهید جنس حذف شود؟",
+                type: "ok-cancel"
+            });
+        
+            if (confirmed) {
+                console.log("User confirmed ✅");
+                fetch(`http://localhost:3000/sell/${id}`, {
+                    method: "DELETE",
+                })
+                .then(async (response) => {
+                    if (!response.ok) {
+                        throw new Error("خطا در حذف جنس");
+                    }
+                    showSellData(); // ✅ Reload table
+                })
+                .catch((error) => {
+                    console.error("❌ خطا در اتصال یا سرور:", error);
+                });
+            } else {
+                // this.close();
+            }
+        }
+        apply();
+}
 </script>
 
 </body>

@@ -1,331 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>گزارش معاش اساتید</title>
-<style>
-*{margin:0; padding:0; box-sizing:border-box;}
-.reportsParent{display:flex; width:100%; height:100%; justify-content:center; align-items:center; padding:20px;}
-.reportsCover{display:flex; flex-direction:column; justify-content:center; align-items:start; width:100%; height:100%; background-color:#f4f4f4; border:1px solid #e4e4e4; border-radius:12px;}
-.reportsHeader{display:flex; align-items:center; justify-content:space-between; width:100%; height:12%; padding:8px 16px;}
-.tagline{display:flex; height:100%; width:fit-content; align-items:center; justify-content:start; font-size:2.2rem; font-weight:600;}
-.reportsFilter{display:flex; height:100%; width:75%; justify-content:start; align-items:center; gap:40px;}
-.reportsFilter select{width:fit-content; min-width:20%;}
-.reportsContent{display:flex; flex-direction:column; align-items:center; width:100%; height:78%; padding:20px 40px; background-color:#fff; border-top:1px solid #e4e4e4; border-bottom:1px solid #e4e4e4;}
-th:nth-child(1){width:5%;}
-.reportsFooter{
-  	display:flex; 
-	align-items:center; 
-	justify-content:space-between; 
-	width:100%; height:10%; 
-	padding:8px 16px;}
-#printReport{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: fit-content;
-    padding: 10px 20px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid #e4e4e4;
-    background-color: #1e90ff;
-    border-radius: 10px;
-    color: #fff;
-    margin-bottom: -10px;
-}
-#printReport:hover {
-    background-color: #0d74d1;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گزارش معاش اساتید</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-</style>
+        .reportsParent {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .reportsCover {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start;
+            width: 100%;
+            height: 100%;
+            background-color: #f4f4f4;
+            border: 1px solid #e4e4e4;
+            border-radius: 12px;
+        }
+
+        .reportsHeader {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 12%;
+            padding: 8px 16px;
+        }
+
+        .tagline {
+            display: flex;
+            height: 100%;
+            width: fit-content;
+            align-items: center;
+            justify-content: start;
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
+
+        .reportsFilter {
+            display: flex;
+            height: 100%;
+            width: 75%;
+            justify-content: start;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .reportsFilter select {
+            width: fit-content;
+            min-width: 20%;
+        }
+
+        .reportsContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 78%;
+            padding: 20px 40px;
+            background-color: #fff;
+            border-top: 1px solid #e4e4e4;
+            border-bottom: 1px solid #e4e4e4;
+        }
+
+        th:nth-child(1) {
+            width: 5%;
+        }
+
+        .reportsFooter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 10%;
+            padding: 8px 16px;
+        }
+
+        #printReport {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: fit-content;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #e4e4e4;
+            background-color: #1e90ff;
+            border-radius: 10px;
+            color: #fff;
+            margin-bottom: -10px;
+        }
+
+        #printReport:hover {
+            background-color: #0d74d1;
+        }
+    </style>
 </head>
+
 <body>
-<div class="reportsParent">
-  <div class="reportsCover">
-    <div class="reportsHeader">
-      <div class="tagline">گزارش معاش اساتید</div>
-      <div class="reportsFilter">
-        <select id="filterKind">
-          <option value="">انتخاب دوره</option>
-          <option value="yearly">سالانه</option>
-          <option value="halfyear">شش ماهه</option>
-          <option value="quarter">سه ماهه</option>
-          <option value="monthly">ماهوار</option>
-        </select>
-        <select id="filterYear"></select>
-        <select id="filterSplit"></select>
-      </div>
+    <div class="reportsParent">
+        <div class="reportsCover">
+            <div class="reportsHeader">
+                <div class="tagline">گزارش معاش اساتید</div>
+                <div class="reportsFilter">
+                    <select id="filterKind">
+                        <option value="">انتخاب دوره</option>
+                        <option value="yearly">سالانه</option>
+                        <option value="halfyear">شش ماهه</option>
+                        <option value="quarter">سه ماهه</option>
+                        <option value="monthly">ماهوار</option>
+                    </select>
+                    <select id="filterYear"></select>
+                    <select id="filterSplit"></select>
+                </div>
+            </div>
+            <div class="reportsContent">
+                <table>
+                    <thead id="heads"></thead>
+                    <tbody id="bodies"></tbody>
+                </table>
+            </div>
+            <div class="reportsFooter">
+                <div id="pagination" style="text-align:center; margin-top:20px">
+                    <div id="pagination-buttons"></div>
+                </div>
+                <div id="printReport">چاپ گزارش</div>
+            </div>
+        </div>
     </div>
-    <div class="reportsContent">
-      <table>
-        <thead id="heads"></thead>
-        <tbody id="bodies"></tbody>
-      </table>
-    </div>
-    <div class="reportsFooter">
-      <div id="pagination" style="text-align:center; margin-top:20px">
-        <div id="pagination-buttons"></div>
-      </div>
-      <div id="printReport">چاپ گزارش</div>
-    </div>
-  </div>
-</div>
-<script src="../../js/Date_Elemet.js"></script>
+    <script src="../../js/Date_Elemet.js"></script>
 
-<script>
-(() => {
-  // ✅ Safe variable setup (no redeclaration)
-  if (!window.persianMonthsArr) {
-    window.persianMonthsArr = ["حمل","ثور","جوزا","سرطان","اسد","سنبله","میزان","عقرب","قوس","جدی","دلو","حوت"];
-    window.seasons = ["سه ماه اول","سه ماه دوم","سه ماه سوم","سه ماه چهارم"];
-    window.half = ["شش ماه اول","شش ماه دوم"];
-  }
+    <script>
+        (() => {
+            // ✅ Safe variable setup (no redeclaration)
+            if (!window.persianMonthsArr) {
+                window.persianMonthsArr = ["حمل", "ثور", "جوزا", "سرطان", "اسد", "سنبله", "میزان", "عقرب", "قوس", "جدی", "دلو", "حوت"];
+                window.seasons = ["سه ماه اول", "سه ماه دوم", "سه ماه سوم", "سه ماه چهارم"];
+                window.half = ["شش ماه اول", "شش ماه دوم"];
+            }
 
-  const persianMonthsArr = window.persianMonthsArr;
-  const seasons = window.seasons;
-  const half = window.half;
+            const persianMonthsArr = window.persianMonthsArr;
+            const seasons = window.seasons;
+            const half = window.half;
 
-  const general_head = ["شماره","نام"];
-  const yearlyPart = persianMonthsArr.slice();
-  const halfPart1 = persianMonthsArr.slice(0,6);
-  const halfPart2 = persianMonthsArr.slice(6,12);
-  const quarterPart1 = persianMonthsArr.slice(0,3);
-  const quarterPart2 = persianMonthsArr.slice(3,6);
-  const quarterPart3 = persianMonthsArr.slice(6,9);
-  const quarterPart4 = persianMonthsArr.slice(9,12);
-  const monthlyPart = ["معاش","پرداخت شده","باقی","تاریخ پرداخت"];
+            const general_head = ["شماره", "نام"];
+            const yearlyPart = persianMonthsArr.slice();
+            const halfPart1 = persianMonthsArr.slice(0, 6);
+            const halfPart2 = persianMonthsArr.slice(6, 12);
+            const quarterPart1 = persianMonthsArr.slice(0, 3);
+            const quarterPart2 = persianMonthsArr.slice(3, 6);
+            const quarterPart3 = persianMonthsArr.slice(6, 9);
+            const quarterPart4 = persianMonthsArr.slice(9, 12);
+            const monthlyPart = ["معاش", "پرداخت شده", "باقی", "تاریخ پرداخت"];
 
-  const filterKind = document.getElementById('filterKind');
-  const filterSplit = document.getElementById('filterSplit');
-  const heads = document.getElementById('heads');
-  const tbody = document.getElementById('bodies');
-  const paginationButtons = document.getElementById('pagination-buttons');
-  filterSplit.style.display = 'none';
+            const filterKind = document.getElementById('filterKind');
+            const filterSplit = document.getElementById('filterSplit');
+            const heads = document.getElementById('heads');
+            const tbody = document.getElementById('bodies');
+            const paginationButtons = document.getElementById('pagination-buttons');
+            filterSplit.style.display = 'none';
 
-  let allData = [];
-  let rowsPerPage = 10;
-  let currentPage = 1;
+            let allData = [];
+            let rowsPerPage = 10;
+            let currentPage = 1;
 
-  // --- Load Years ---
-  async function loadYear() {
-    const yearList = document.getElementById('filterYear');
-    const res = await fetch('http://localhost:3000/teachers_payment');
-    const data = await res.json();
-    const years = data.data.map(payment => {
-      const date = new Date(yearPicker(payment.createdAt));
-      return date.getFullYear();
-    });
-    const uniqueYears = [...new Set(years)].sort((a,b)=>b-a);
-    yearList.innerHTML = `<option value="">انتخاب سال</option>`;
-    uniqueYears.forEach(y => yearList.innerHTML += `<option value="${y}">${y}</option>`);
-    yearList.value = "";
-  }
+            // --- Load Years ---
+            async function loadYear() {
+                const yearList = document.getElementById('filterYear');
+                const res = await fetch('http://localhost:3000/teachers_payment');
+                const data = await res.json();
+                const years = data.data.map(payment => {
+                    const date = new Date(yearPicker(payment.createdAt));
+                    return date.getFullYear();
+                });
+                const uniqueYears = [...new Set(years)].sort((a, b) => b - a);
+                yearList.innerHTML = `<option value="">انتخاب سال</option>`;
+                uniqueYears.forEach(y => yearList.innerHTML += `<option value="${y}">${y}</option>`);
+                yearList.value = "";
+            }
 
-  // --- Update Table Header ---
-  function updateHeader(){
-    heads.innerHTML = '';
-    let finalList = general_head.slice();
-    const kind = filterKind.value;
-    const split = filterSplit.value;
+            // --- Update Table Header ---
+            function updateHeader() {
+                heads.innerHTML = '';
+                let finalList = general_head.slice();
+                const kind = filterKind.value;
+                const split = filterSplit.value;
 
-    if(kind==='halfyear'){ 
-      finalList = finalList.concat(split==='شش ماه اول'? halfPart1 : halfPart2);
-      finalList.push('مجموعه');
-    } else if(kind==='quarter'){
-        if(split==='سه ماه اول') finalList = finalList.concat(quarterPart1);
-        else if(split==='سه ماه دوم') finalList = finalList.concat(quarterPart2);
-        else if(split==='سه ماه سوم') finalList = finalList.concat(quarterPart3);
-        else if(split==='سه ماه چهارم') finalList = finalList.concat(quarterPart4);
-        finalList.push('مجموعه');
-    } else if(kind==='monthly'){
-      finalList = finalList.concat(monthlyPart);
-    } else{
-      finalList = finalList.concat(yearlyPart);
-      finalList.push('مجموعه');
-    }
+                if (kind === 'halfyear') {
+                    finalList = finalList.concat(split === 'شش ماه اول' ? halfPart1 : halfPart2);
+                    finalList.push('مجموعه');
+                } else if (kind === 'quarter') {
+                    if (split === 'سه ماه اول') finalList = finalList.concat(quarterPart1);
+                    else if (split === 'سه ماه دوم') finalList = finalList.concat(quarterPart2);
+                    else if (split === 'سه ماه سوم') finalList = finalList.concat(quarterPart3);
+                    else if (split === 'سه ماه چهارم') finalList = finalList.concat(quarterPart4);
+                    finalList.push('مجموعه');
+                } else if (kind === 'monthly') {
+                    finalList = finalList.concat(monthlyPart);
+                } else {
+                    finalList = finalList.concat(yearlyPart);
+                    finalList.push('مجموعه');
+                }
 
-    finalList.forEach(item=>{
-      const th = document.createElement('th');
-      th.textContent = item;
-      heads.appendChild(th);
-    });
+                finalList.forEach(item => {
+                    const th = document.createElement('th');
+                    th.textContent = item;
+                    heads.appendChild(th);
+                });
 
-    loadReport();
-  }
+                loadReport();
+            }
 
-  // --- Load Report & store data ---
-  async function loadReport() {
-    const year = document.getElementById('filterYear').value;
-    const kind = filterKind.value;
-    const split = filterSplit.value;
+            // --- Load Report & store data ---
+            async function loadReport() {
+                const year = document.getElementById('filterYear').value;
+                const kind = filterKind.value;
+                const split = filterSplit.value;
 
-    let url = `http://localhost:3000/teacher_report?`;
-    if(year) url += `year=${encodeURIComponent(year)}&`;
+                let url = `http://localhost:3000/teacher_report?`;
+                if (year) url += `year=${encodeURIComponent(year)}&`;
 
-    if(kind==='halfyear') url += `period=${split==='شش ماه اول'?'half1':'half2'}`;
-    else if(kind==='quarter'){
-      const qMap = {'سه ماه اول':'q1','سه ماه دوم':'q2','سه ماه سوم':'q3','سه ماه چهارم':'q4'};
-      url += `period=${qMap[split]||''}`;
-    }
-    else if(kind==='yearly') url += `period=yearly`;
-    else if(kind==='monthly') {
-      const monthNumber = persianMonthsArr.indexOf(split) + 1;
-      url += `period=month&month=${monthNumber}`;
-    }
+                if (kind === 'halfyear') url += `period=${split === 'شش ماه اول' ? 'half1' : 'half2'}`;
+                else if (kind === 'quarter') {
+                    const qMap = { 'سه ماه اول': 'q1', 'سه ماه دوم': 'q2', 'سه ماه سوم': 'q3', 'سه ماه چهارم': 'q4' };
+                    url += `period=${qMap[split] || ''}`;
+                }
+                else if (kind === 'yearly') url += `period=yearly`;
+                else if (kind === 'monthly') {
+                    const monthNumber = persianMonthsArr.indexOf(split) + 1;
+                    url += `period=month&month=${monthNumber}`;
+                }
 
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      allData = data.success ? data.data : [];
-      currentPage = 1;
-      renderPage();
-    } catch(err){ 
-      console.error(err); 
-    }
-  }
+                try {
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    allData = data.success ? data.data : [];
+                    currentPage = 1;
+                    renderPage();
+                } catch (err) {
+                    console.error(err);
+                }
+            }
 
-  // --- Render Page ---
-  function renderPage() {
-    tbody.innerHTML = '';
-    const kind = filterKind.value;
-    const split = filterSplit.value;
+            // --- Render Page ---
+            function renderPage() {
+                tbody.innerHTML = '';
+                const kind = filterKind.value;
+                const split = filterSplit.value;
 
-    if(allData.length === 0){
-      tbody.innerHTML = `<tr><td colspan="${heads.children.length}" style="text-align:center">داده‌ای یافت نشد</td></tr>`;
-      paginationButtons.innerHTML = '';
-      return;
-    }
+                if (allData.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="${heads.children.length}" style="text-align:center">داده‌ای یافت نشد</td></tr>`;
+                    paginationButtons.innerHTML = '';
+                    return;
+                }
 
-    const start = (currentPage-1)*rowsPerPage;
-    const end = start+rowsPerPage;
-    const pageData = allData.slice(start,end);
+                const start = (currentPage - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+                const pageData = allData.slice(start, end);
 
-    pageData.forEach((teacher,index)=>{
-      const tr = document.createElement('tr');
-      [start+index+1, teacher.name].forEach(text=>{
-        const td = document.createElement('td');
-        td.textContent = text;
-        tr.appendChild(td);
-      });
+                pageData.forEach((teacher, index) => {
+                    const tr = document.createElement('tr');
+                    [start + index + 1, teacher.name].forEach(text => {
+                        const td = document.createElement('td');
+                        td.textContent = text;
+                        tr.appendChild(td);
+                    });
 
-      if(kind==='monthly'){
-        [teacher.payablea, teacher.payeda, teacher.payablea - teacher.payeda, teacher.createdAt].forEach(val=>{
-          const td = document.createElement('td');
-          td.textContent = val;
-          tr.appendChild(td);
-        });
-      } else {
-        const monthsToShow = (() => {
-          if(kind==='halfyear') return split==='شش ماه اول'? persianMonthsArr.slice(0,6): persianMonthsArr.slice(6,12);
-          if(kind==='quarter'){
-            if(split==='سه ماه اول') return persianMonthsArr.slice(0,3);
-            if(split==='سه ماه دوم') return persianMonthsArr.slice(3,6);
-            if(split==='سه ماه سوم') return persianMonthsArr.slice(6,9);
-            if(split==='سه ماه چهارم') return persianMonthsArr.slice(9,12);
-          }
-          return persianMonthsArr; // yearly
+                    if (kind === 'monthly') {
+                        [teacher.payablea, teacher.payeda, teacher.payablea - teacher.payeda, teacher.createdAt].forEach(val => {
+                            const td = document.createElement('td');
+                            td.textContent = val;
+                            tr.appendChild(td);
+                        });
+                    } else {
+                        const monthsToShow = (() => {
+                            if (kind === 'halfyear') return split === 'شش ماه اول' ? persianMonthsArr.slice(0, 6) : persianMonthsArr.slice(6, 12);
+                            if (kind === 'quarter') {
+                                if (split === 'سه ماه اول') return persianMonthsArr.slice(0, 3);
+                                if (split === 'سه ماه دوم') return persianMonthsArr.slice(3, 6);
+                                if (split === 'سه ماه سوم') return persianMonthsArr.slice(6, 9);
+                                if (split === 'سه ماه چهارم') return persianMonthsArr.slice(9, 12);
+                            }
+                            return persianMonthsArr; // yearly
+                        })();
+
+                        let total = 0;
+                        monthsToShow.forEach(m => {
+                            const value = teacher.months[m] ?? 0;
+                            total += value;
+                            const td = document.createElement('td');
+                            td.textContent = value;
+                            tr.appendChild(td);
+                        });
+
+                        const tdTotal = document.createElement('td');
+                        tdTotal.textContent = total;
+                        tr.appendChild(tdTotal);
+                    }
+
+                    tbody.appendChild(tr);
+                });
+
+                renderPagination();
+            }
+
+            // --- Render Pagination Buttons ---
+            function renderPagination() {
+                paginationButtons.innerHTML = '';
+                const totalPages = Math.ceil(allData.length / rowsPerPage);
+
+                function addButton(label, page, disabled = false, active = false) {
+                    const btn = document.createElement('button');
+                    btn.textContent = label;
+                    btn.disabled = disabled;
+                    if (active) btn.style.backgroundColor = "#357edd";
+                    btn.addEventListener('click', () => { currentPage = page; renderPage(); });
+                    paginationButtons.appendChild(btn);
+                }
+
+                addButton('<<', 1, currentPage === 1);
+                addButton('<', currentPage - 1, currentPage === 1);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || Math.abs(currentPage - i) <= 1) {
+                        addButton(i, i, false, i === currentPage);
+                    }
+                }
+
+                addButton('>', currentPage + 1, currentPage === totalPages);
+                addButton('>>', totalPages, currentPage === totalPages);
+            }
+
+            // --- Init ---
+            async function initReport() {
+                await loadYear();
+                filterKind.value = 'yearly';
+                filterSplit.style.display = 'none';
+                updateHeader();
+            }
+
+            // --- Event listeners ---
+            filterKind.addEventListener('change', () => {
+                filterSplit.innerHTML = '';
+                const kind = filterKind.value;
+                period = kind;
+                let choose = [];
+                if (kind === 'halfyear') choose = half;
+                else if (kind === 'quarter') choose = seasons;
+                else if (kind === 'monthly') choose = persianMonthsArr;
+
+                filterSplit.style.display = choose.length > 0 ? 'flex' : 'none';
+                choose.forEach((item, index) => {
+                    const option = document.createElement('option');
+                    option.value = item;
+                    option.textContent = item;
+                    option.dataset.index = (index + 1);
+                    filterSplit.appendChild(option);
+                });
+
+                if (choose.length > 0) filterSplit.value = choose[0];
+                updateHeader();
+            });
+
+            filterSplit.addEventListener('change', () => { currentPage = 1; updateHeader(); });
+            document.getElementById('filterYear').addEventListener('change', () => { currentPage = 1; loadReport(); });
+
+            initReport();
+
+            let period = filterKind.value;
+            document.getElementById('printReport').addEventListener('click', () => {
+                // Get table HTML
+                const thead = document.getElementById('heads').outerHTML;
+                const tbody = document.getElementById('bodies').outerHTML;
+
+                // Save to localStorage
+                localStorage.setItem('tableHead', thead);
+                localStorage.setItem('tableBody', tbody);
+                localStorage.setItem('period', period);
+                localStorage.setItem('dedicate', 'معاش اساتید');
+                // Open new page
+                window.open('/pages/inCome_OutGo_report/print_Report.html', '_blank');
+            });
         })();
-
-        let total = 0;
-        monthsToShow.forEach(m=>{
-          const value = teacher.months[m] ?? 0;
-          total += value;
-          const td = document.createElement('td');
-          td.textContent = value;
-          tr.appendChild(td);
-        });
-
-        const tdTotal = document.createElement('td');
-        tdTotal.textContent = total;
-        tr.appendChild(tdTotal);
-      }
-
-      tbody.appendChild(tr);
-    });
-
-    renderPagination();
-  }
-
-  // --- Render Pagination Buttons ---
-  function renderPagination() {
-    paginationButtons.innerHTML = '';
-    const totalPages = Math.ceil(allData.length/rowsPerPage);
-
-    function addButton(label, page, disabled=false, active=false){
-      const btn = document.createElement('button');
-      btn.textContent = label;
-      btn.disabled = disabled;
-      if(active) btn.style.backgroundColor="#357edd";
-      btn.addEventListener('click',()=>{currentPage=page; renderPage();});
-      paginationButtons.appendChild(btn);
-    }
-
-    addButton('<<',1,currentPage===1);
-    addButton('<',currentPage-1,currentPage===1);
-
-    for(let i=1;i<=totalPages;i++){
-      if(i===1 || i===totalPages || Math.abs(currentPage-i)<=1){
-        addButton(i,i,false,i===currentPage);
-      }
-    }
-
-    addButton('>',currentPage+1,currentPage===totalPages);
-    addButton('>>',totalPages,currentPage===totalPages);
-  }
-
-  // --- Init ---
-  async function initReport(){
-    await loadYear();
-    filterKind.value = 'yearly';
-    filterSplit.style.display = 'none';
-    updateHeader();
-  }
-
-  // --- Event listeners ---
-  filterKind.addEventListener('change', ()=>{
-    filterSplit.innerHTML = '';
-    const kind = filterKind.value;
-    period = kind;
-    let choose = [];
-    if(kind==='halfyear') choose = half;
-    else if(kind==='quarter') choose = seasons;
-    else if(kind==='monthly') choose = persianMonthsArr;
-
-    filterSplit.style.display = choose.length>0?'flex':'none';
-    choose.forEach((item, index) => {
-      const option = document.createElement('option');
-      option.value = item;
-      option.textContent = item;
-      option.dataset.index = (index + 1);
-      filterSplit.appendChild(option);
-    });
-    
-    if(choose.length>0) filterSplit.value = choose[0];
-    updateHeader();
-  });
-
-  filterSplit.addEventListener('change', ()=>{currentPage=1; updateHeader();});
-  document.getElementById('filterYear').addEventListener('change', ()=>{currentPage=1; loadReport();});
-
-  initReport();
-
-  let period = filterKind.value;
-document.getElementById('printReport').addEventListener('click', () => {
-  	// Get table HTML
-  	const thead = document.getElementById('heads').outerHTML;
-  	const tbody = document.getElementById('bodies').outerHTML;
-	
-  	// Save to localStorage
-  	localStorage.setItem('tableHead', thead);
-  	localStorage.setItem('tableBody', tbody);
-	localStorage.setItem('period', period);
-	localStorage.setItem('dedicate', 'معاش اساتید');
-  	// Open new page
-  	window.open('/pages/inCome_OutGo_report/print_Report.html', '_blank');
-});
-})();
-</script>
+    </script>
 </body>
+
 </html>

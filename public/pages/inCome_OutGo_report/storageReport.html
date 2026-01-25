@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گزارش انبار</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .reportsParent {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .reportsCover {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start;
+            width: 100%;
+            height: 100%;
+            background-color: #f4f4f4;
+            border: 1px solid #e4e4e4;
+            border-radius: 12px;
+        }
+
+        .reportsHeader {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 12%;
+            padding: 8px 16px;
+        }
+
+        .tagline {
+            display: flex;
+            height: 100%;
+            width: fit-content;
+            align-items: center;
+            justify-content: start;
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
+
+        .reportsFilter {
+            display: flex;
+            height: 100%;
+            width: 75%;
+            justify-content: start;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .reportsFilter select {
+            width: fit-content;
+            min-width: 20%;
+        }
+
+        .reportsContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 78%;
+            padding: 20px 40px;
+            background-color: #fff;
+            border-top: 1px solid #e4e4e4;
+            border-bottom: 1px solid #e4e4e4;
+        }
+
+        th:nth-child(1) {
+            width: 5%;
+        }
+
+        .rfooter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 10%;
+            padding: 8px 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reportsParent">
+        <div class="reportsCover">
+            <div class="reportsHeader">
+                <div class="tagline">گزارش گدام</div>
+                <div class="reportsFilter">
+                    <select id="filterKind"></select>
+                </div>
+            </div>
+            <div class="reportsContent">
+                <table>
+                    <thead id="heads">
+                        <th>نمبر</th>
+                        <th>جنس</th>
+                        <th>کتگوری</th>
+                        <th>خرید</th>
+                        <th>فروش</th>
+                        <th>تعداد</th>
+                        <th>قیمت مجموع</th>
+                    </thead>
+                    <tbody id="bodies"></tbody>
+                </table>
+            </div>
+            <div class="rfooter">
+                <div id="pagination" style="text-align: center; margin-top: 20px">
+                    <div id="pagination-buttons"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function getCatagory() {
+            try {
+                const res = await fetch('http://localhost:3000/catagory');
+                const data = await res.json();
+
+                const filterSelect = document.getElementById('filterKind');
+
+                let options = `<option value="">انتخاب کتگوری</option>`;
+                (data.data || []).forEach(element => {
+                    options += `<option value="${element.name}">${element.name}</option>`;
+                });
+
+                filterSelect.innerHTML = options;
+
+            } catch (err) {
+                console.error('Error fetching categories:', err);
+            }
+        }
+        getCatagory();
+
+        // ----------------------- STORAGE PAGINATION WITH CATEGORY -----------------------
+        function showStorageData() {
+            const rowsPerPage = 10;
+            let currentPage = 1;
+            let totalPages = 1;
+            let allData = []; // store all storage data
+
+            const tbody = document.getElementById("bodies");
+            const paginationButtons = document.getElementById("pagination-buttons");
+            const categorySelect = document.getElementById("filterKind");
+
+            async function fetchAndRender() {
+                try {
+                    const storageRes = await fetch(`http://localhost:3000/storage`);
+                    const sellRes = await fetch(`http://localhost:3000/sell`);
+
+                    const storageData = await storageRes.json();
+                    const sellData = await sellRes.json();
+
+                    let processed = {};
+
+                    storageData.data.forEach(item => {
+                        const barcode = item.barcode;
+                        const qty = Number(item.quantity); // convert to number
+
+                        if (processed[barcode]) {
+                            processed[barcode].quantity = Number(processed[barcode].quantity) + qty;
+                            // keep other fields from the last item
+                            processed[barcode].name = item.name;
+                            processed[barcode].catagory = item.catagory;
+                            processed[barcode].buyamount = item.buyamount;
+                            processed[barcode].sellamount = item.sellamount;
+                        } else {
+                            processed[barcode] = { ...item, quantity: qty }; // convert quantity here too
+                        }
+                    });
+
+                    // convert back to array
+                    let dataArray = Object.values(processed);
+
+                    // filter by selected category if any
+                    const selectedCategory = categorySelect.value;
+                    if (selectedCategory) {
+                        dataArray = dataArray.filter(item => item.catagory === selectedCategory);
+                    }
+
+                    totalPages = Math.ceil(dataArray.length / rowsPerPage);
+                    const start = (currentPage - 1) * rowsPerPage;
+                    const pageItems = dataArray.slice(start, start + rowsPerPage);
+
+                    
+
+                    tbody.innerHTML = "";
+
+                    pageItems.forEach((item, index) => {
+                        const soldItems = sellData.data.filter(s => s.barcode === item.barcode);
+                        const soldQuantity = soldItems.reduce((sum, s) => sum + Number(s.quantity), 0);
+
+                        const totalPrice = item.sellamount * (item.quantity - soldQuantity);
+
+                        tbody.innerHTML += `
+                <tr>
+                    <td>${start + index + 1}</td>
+                    <td>${item.name}</td>
+                    <td>${item.catagory}</td>
+                    <td>${item.buyamount}</td>
+                    <td>${item.sellamount}</td>
+                    <td>${item.quantity - soldQuantity}</td>
+                    <td>${totalPrice}</td>
+                </tr>`;
+                    });
+
+                    renderPagination(dataArray.length);
+
+                } catch (err) {
+                    console.error('Error fetching storage or sell data:', err);
+                }
+            }
+
+
+            function renderPagination(filteredLength) {
+                paginationButtons.innerHTML = "";
+
+                totalPages = Math.ceil(filteredLength / rowsPerPage);
+
+                function addButton(label, page, disabled = false, active = false) {
+                    const btn = document.createElement("button");
+                    btn.textContent = label;
+                    btn.disabled = disabled;
+                    if (active) btn.style.backgroundColor = "#357edd";
+                    btn.onclick = () => {
+                        currentPage = page;
+                        fetchAndRender();
+                    };
+                    paginationButtons.appendChild(btn);
+                }
+
+                addButton("<<", 1, currentPage === 1);
+                addButton("<", currentPage - 1, currentPage === 1);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === currentPage || i <= 4 || i === totalPages || Math.abs(currentPage - i) <= 1) {
+                        addButton(i, i, false, i === currentPage);
+                    }
+                }
+
+                addButton(">", currentPage + 1, currentPage === totalPages);
+                addButton(">>", totalPages, currentPage === totalPages);
+            }
+
+            // refresh when category changes
+            categorySelect.addEventListener("change", () => {
+                currentPage = 1;
+                fetchAndRender();
+            });
+
+            fetchAndRender();
+        }
+
+        showStorageData();
+    </script>
+
+</body>
+
+</html>

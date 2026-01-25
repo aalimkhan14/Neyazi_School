@@ -55,6 +55,7 @@ exports.create = async (req, res) => {
         goods,
         price,
         quantity,
+        barcode,
     } = req.body;
 
     const newSell = await Sell_model.create({
@@ -63,6 +64,7 @@ exports.create = async (req, res) => {
         goods,
         price,
         quantity,
+        barcode,
     });
 
     res.status(201).json(newSell);

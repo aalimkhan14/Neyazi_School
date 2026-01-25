@@ -7,6 +7,7 @@ const Sell = sequelize.define('sell',{
     goods:{type:DataTypes.STRING, allowNull:false},
     price:{type:DataTypes.STRING, allowNull:false},
     quantity:{type:DataTypes.STRING, allowNull:false},
+    barcode:{type:DataTypes.STRING},
 },{
     tableName: 'sells',
     freezeTableName: true,
