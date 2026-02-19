@@ -1,9 +1,7 @@
 const fee_model = require('../models/fee.model');
-const fee_routes = require('../routes/fee.routes');
 const { Op } = require("sequelize");
 
-
-
+// ✅ Get all fees with pagination & search
 exports.findAll = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -15,9 +13,7 @@ exports.findAll = async (req, res) => {
 
     const whereClause = {};
     if (search && (filterBy === "sid" || filterBy === "name")) {
-      whereClause[filterBy] = {
-        [Op.like]: `${search}%`
-      };
+      whereClause[filterBy] = { [Op.like]: `${search}%` };
     }
 
     const { count, rows } = await fee_model.findAndCountAll({
@@ -27,21 +23,16 @@ exports.findAll = async (req, res) => {
       order: [["id", "DESC"]],
     });
 
-    res.json({
-      data: rows,      // ✅ This matches frontend's forEach
-      total: count     // ✅ Used for pagination
-    });
+    res.json({ data: rows, total: count });
   } catch (err) {
     console.error("Error fetching fee data:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-
+// ✅ Create fee(s) with duplicate check
 exports.create = async (req, res) => {
   try {
-    console.log("REQUEST BODY:", req.body);
-
     const {
       sid,
       name,
@@ -53,7 +44,7 @@ exports.create = async (req, res) => {
       t_payed,
       r_f,
       r_t,
-      rdate,
+      comment,
       academicYear,
       months // array of selected months
     } = req.body;
@@ -71,24 +62,14 @@ exports.create = async (req, res) => {
       });
 
       if (existingFee) {
-        duplicateMonths.push(month); // track duplicates
+        duplicateMonths.push(month);
         continue;
       }
 
       const newFee = await fee_model.create({
-        sid,
-        name,
-        fname,
-        fclass,
-        month,
-        f_payable,
-        f_payed,
-        t_payable,
-        t_payed,
-        r_f,
-        r_t,
-        rdate,
-        academicYear
+        sid, name, fname, fclass, month,
+        f_payable, f_payed, t_payable, t_payed,
+        r_f, r_t, comment, academicYear
       });
 
       createdRecords.push(newFee);
@@ -106,112 +87,73 @@ exports.create = async (req, res) => {
   }
 };
 
+// ✅ Update fee with duplicate check
+exports.update = async (req, res) => {
+  try {
+    const { sid, month, academicYear } = req.body;
 
+    // 🔍 Check duplicate (exclude current record)
+    const existingFee = await fee_model.findOne({
+      where: {
+        sid,
+        month,
+        academicYear,
+        id: { [Op.ne]: req.params.id }
+      }
+    });
 
-
-exports.delete = async (req, res)=>{
-    try {
-        const deleted = await fee_model.destroy({
-            where: {id: req.params.id}
-        });
-        if (deleted) {
-            return res.status(200).json({ message: "فیس ثبت شده موفقانه حذف شد" });
-        }
-        res.status(404).json({message: 'fee not found'})
-    } catch (error) {
-        res.status(500).json({message: 'Error deleting Fee', error})
+    if (existingFee) {
+      return res.status(400).json({
+        message: "Duplicate fee record for this student, month and academic year"
+      });
     }
-}
 
-exports.update = async (req, res)=>{
-    try {
-        const[updated] = await fee_model.update(req.body,{
-            where: {id:req.params.id}
-        });
-        if(updated){
-            const updatedFee = await fee_model.findByPk(req.params.id);
-            return res.status(200).json(updatedFee);
-        }
-        res.status(404).json({message: 'Fee not found'});
-    } catch (error) {
-        res.status(500).json({message: 'Error updating fee', error})
+    const [updated] = await fee_model.update(req.body, {
+      where: { id: req.params.id }
+    });
+
+    if (updated) {
+      const updatedFee = await fee_model.findByPk(req.params.id);
+      return res.status(200).json(updatedFee);
     }
-}
 
+    res.status(404).json({ message: 'Fee not found' });
+  } catch (error) {
+    console.error("Error updating fee:", error);
+    res.status(500).json({ message: 'Error updating fee', error });
+  }
+};
+
+// ✅ Delete fee
+exports.delete = async (req, res) => {
+  try {
+    const deleted = await fee_model.destroy({
+      where: { id: req.params.id }
+    });
+    if (deleted) {
+      return res.status(200).json({ message: "فیس ثبت شده موفقانه حذف شد" });
+    }
+    res.status(404).json({ message: 'Fee not found' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting Fee', error });
+  }
+};
+
+// ✅ Find by PK
 exports.findByPk = async (req, res) => {
   try {
-    console.log("Requested fee ID:", req.params.id); // ✅ debug
-
     const getone = await fee_model.findByPk(req.params.id);
-
-    if (!getone) {
-      return res.status(404).json({ message: 'fee not found' });
-    }
+    if (!getone) return res.status(404).json({ message: 'Fee not found' });
     res.status(200).json(getone);
   } catch (error) {
-    res.status(500).json({ message: 'Error Finding fee', error });
+    res.status(500).json({ message: 'Error finding fee', error });
   }
 };
 
-// 📌 Get sales data based on time (today, this week, this month)
-exports.findByDate = async (req, res) => {
-  try {
-    const dateFilter = req.query.date || ""; // "today" | "week" | "month" | "year"
-
-    if (!dateFilter) {
-      return res.status(400).json({ error: "Please provide a date filter (today, week, month, year)" });
-    }
-
-    const now = new Date();
-    let startDate, endDate;
-
-    if (dateFilter === "today") {
-      startDate = new Date(now.setHours(0, 0, 0, 0));
-      endDate = new Date(now.setHours(23, 59, 59, 999));
-
-    } else if (dateFilter === "week") {
-      const firstDay = new Date(now.setDate(now.getDate() - now.getDay())); // Sunday start
-      startDate = new Date(firstDay.setHours(0, 0, 0, 0));
-      endDate = new Date();
-
-    } else if (dateFilter === "month") {
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-      endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-
-    } else if (dateFilter === "year") {
-      startDate = new Date(now.getFullYear(), 0, 1); // Jan 1st
-      endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999); // Dec 31st
-
-    } else {
-      return res.status(400).json({ error: "Invalid date filter. Use today, week, month, or year" });
-    }
-
-    console.log("📅 Date Range:", startDate, "to", endDate);
-
-    const data = await fee_model.findAll({
-      where: {
-        createdAt: { [Op.between]: [startDate, endDate] }
-      },
-      order: [["id", "DESC"]],
-    });
-
-    res.json({
-      filter: dateFilter,
-      total: data.length,
-      data
-    });
-
-  } catch (error) {
-    console.error("❌ Error fetching fees by date:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
+// ✅ Find by student ID
 exports.findBySid = async (req, res) => {
   try {
     const { sid } = req.params;
-
-    // Use findAll to get all fee records for this student
     const studentFees = await fee_model.findAll({ where: { sid } });
 
     if (!studentFees || studentFees.length === 0) {
@@ -221,10 +163,45 @@ exports.findBySid = async (req, res) => {
     res.json({ status: 'success', data: studentFees });
   } catch (err) {
     console.error('Error in findBySid:', err);
-    res.status(500).json({
-      status: 'error',
-      message: 'خطای سرور هنگام دریافت معلومات',
-      error: err.message
+    res.status(500).json({ status: 'error', message: 'خطای سرور هنگام دریافت معلومات', error: err.message });
+  }
+};
+
+// ✅ Find fees by date (today/week/month/year)
+exports.findByDate = async (req, res) => {
+  try {
+    const dateFilter = req.query.date || "";
+    if (!dateFilter) return res.status(400).json({ error: "Please provide a date filter (today, week, month, year)" });
+
+    const now = new Date();
+    let startDate, endDate;
+
+    if (dateFilter === "today") {
+      startDate = new Date(now.setHours(0, 0, 0, 0));
+      endDate = new Date(now.setHours(23, 59, 59, 999));
+    } else if (dateFilter === "week") {
+      const firstDay = new Date(now.setDate(now.getDate() - now.getDay()));
+      startDate = new Date(firstDay.setHours(0, 0, 0, 0));
+      endDate = new Date();
+    } else if (dateFilter === "month") {
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    } else if (dateFilter === "year") {
+      startDate = new Date(now.getFullYear(), 0, 1);
+      endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+    } else {
+      return res.status(400).json({ error: "Invalid date filter. Use today, week, month, or year" });
+    }
+
+    const data = await fee_model.findAll({
+      where: { createdAt: { [Op.between]: [startDate, endDate] } },
+      order: [["id", "DESC"]],
     });
+
+    res.json({ filter: dateFilter, total: data.length, data });
+
+  } catch (error) {
+    console.error("Error fetching fees by date:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

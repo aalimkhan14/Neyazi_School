@@ -13,7 +13,7 @@ const Fee = sequelize.define('fees', {
     t_payed: {type:DataTypes.INTEGER},
     r_f: {type:DataTypes.INTEGER},
     r_t: {type:DataTypes.INTEGER},
-    rdate: {type:DataTypes.STRING},
+    comment: {type:DataTypes.STRING},
     academicYear: {type:DataTypes.STRING}
 },{
     tableName: 'fees',

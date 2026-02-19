@@ -202,7 +202,6 @@
                     pageItems.forEach((item, index) => {
                         const soldItems = sellData.data.filter(s => s.barcode === item.barcode);
                         const soldQuantity = soldItems.reduce((sum, s) => sum + Number(s.quantity), 0);
-
                         const totalPrice = item.sellamount * (item.quantity - soldQuantity);
 
                         tbody.innerHTML += `
